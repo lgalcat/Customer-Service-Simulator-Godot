@@ -1,0 +1,5 @@
+{
+    "dotnet.testWindow.useTestingPlatformProtocol": true,
+    "dotnet.defaultSolution": "CustomerServiceSimulator.sln",
+    "dotnet.testSettingsPath": "test.runsettings"
+}
