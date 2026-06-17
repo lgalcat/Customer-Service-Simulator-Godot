@@ -14,6 +14,12 @@ config/name="CustomerServiceSimulator"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=360
+window/stretch/mode="viewport"
+
 [dotnet]
 
 project/assembly_name="CustomerServiceSimulator"
@@ -21,6 +27,18 @@ project/assembly_name="CustomerServiceSimulator"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://assets/scenes/": "blue",
+"res://assets/scripts/": "pink",
+"res://test/": "yellow"
+}
+
+[gdunit4]
+
+settings/test/test_discovery=true
 
 [physics]
 
