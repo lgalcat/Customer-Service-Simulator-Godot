@@ -13,6 +13,7 @@ export_credentials.cfg
 
 # GdUnit specific ignores
 reports/
+test_results/
 
 # Imported translations (automatically generated from CSV files)
 *.translation

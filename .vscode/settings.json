@@ -1,5 +1,7 @@
 {
     "dotnet.testWindow.useTestingPlatformProtocol": true,
     "dotnet.defaultSolution": "CustomerServiceSimulator.sln",
-    "dotnet.testSettingsPath": "test.runsettings"
+    "dotnet.testSettingsPath": "test.runsettings",
+    "dotnet.unitTests.runSettingsPath": "test.runsettings",
+    "FSharp.suggestGitignore": false
 }
