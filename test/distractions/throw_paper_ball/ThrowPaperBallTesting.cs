@@ -33,7 +33,6 @@ public class ThrowPaperBallTesting : DistractionTesting
 
     // Block containing base calls to inheritted TestCases, no class specific logic should be present further down
     [TestCase]
-    [RequireGodotRuntime]
     public override async Task CompletedEmited() { await base.CompletedEmited(); }
 
     [TestCase]

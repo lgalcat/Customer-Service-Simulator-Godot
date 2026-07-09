@@ -16,6 +16,10 @@ public abstract partial class Distraction : Node
     // appropiate moment of emision left to implementation
     [Signal] public delegate void DistractionCompletedEventHandler();
 
+    // Abstract method to invoke after instantiation but before insertion into the scene tree (EnterTree() and _Ready())
+    // Should be used to communicate external dependencies and set up instance specific variance elements
+    public abstract void Setup(int difficulty);
+
     // Abstract method to invoke when the win condition has been met
     // should emit DistractionCompleted at some point
     public abstract void Victory();
