@@ -33,7 +33,7 @@ public class ThrowPaperBallTesting : DistractionTesting
 
     // Block containing base calls to inheritted TestCases, no class specific logic should be present further down
     [TestCase]
-    public override async Task CompletedEmited() { await base.CompletedEmited(); }
+    public override void VictoryInvoked() { base.VictoryInvoked(); }
 
     [TestCase]
     public override void NonZeroExpectedViewport() { base.NonZeroExpectedViewport(); }

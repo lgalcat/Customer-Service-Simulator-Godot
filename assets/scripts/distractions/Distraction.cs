@@ -12,15 +12,16 @@ public abstract partial class Distraction : Node
     public abstract float ViewportX { get; }
     public abstract float ViewportY { get; }
 
-    // Signal to emit when the minigame ends
-    // appropiate moment of emision left to implementation
-    [Signal] public delegate void DistractionCompletedEventHandler();
+    // Action to invoke during the "victory" method to notify the upstream manager
+    // time of invocation left to decide in "victory" method implementation
+    public Action? OnVictory;
 
     // Abstract method to invoke after instantiation but before insertion into the scene tree (EnterTree() and _Ready())
     // Should be used to communicate external dependencies and set up instance specific variance elements
     public abstract void Setup(int difficulty);
 
     // Abstract method to invoke when the win condition has been met
-    // should emit DistractionCompleted at some point
+    // should invoke "OnVictory" at some point
     public abstract void Victory();
+
 }

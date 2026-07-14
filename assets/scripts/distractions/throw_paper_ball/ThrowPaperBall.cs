@@ -29,7 +29,7 @@ public partial class ThrowPaperBall : Distraction
         }
     }
 
-    // Find all necessary "son" nodes and set the minigame up before start
+    // Find all necessary "child" nodes and set the minigame up before start
     public override void Setup(int difficulty)
     {
         Difficulty = difficulty;

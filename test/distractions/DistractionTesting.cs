@@ -26,12 +26,13 @@ public abstract class DistractionTesting
     }
 
 
-    // Tests if the Victory function emits the corresponding DistractionCompleted signal
-    public virtual async Task CompletedEmited()
+    // Tests if the Victory function invokes the "OnVictory" action
+    public virtual void VictoryInvoked()
     {
-        AssertSignal(distraction).StartMonitoring();
+        bool _check = false;
+        distraction.OnVictory = () => { _check = true; };
         distraction.Victory();
-        await AssertSignal(distraction).IsEmitted(Distraction.SignalName.DistractionCompleted).WithTimeout(1000);
+        AssertThat(_check).IsTrue();
     }
 
     // Tests if the minigame has specified a desired size for its viewport
