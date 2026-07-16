@@ -1,7 +1,9 @@
 using Godot;
 using System;
 
-// Base class from which all distraction minigames are derived
+/// <summary>
+/// Base class from which all distraction minigames are derived
+/// </summary>
 // should contain abstract or virtual declarations of all common properties and methods for distractions
 public abstract partial class Distraction : Node
 {
@@ -14,7 +16,11 @@ public abstract partial class Distraction : Node
 
     // Action to invoke during the "victory" method to notify the upstream manager
     // time of invocation left to decide in "victory" method implementation
+    /// <summary>
+    /// Invoked when the minigame is completed
+    /// </summary>
     public Action? OnVictory;
+
 
     // Abstract method to invoke after instantiation but before insertion into the scene tree (EnterTree() and _Ready())
     // Should be used to communicate external dependencies and set up instance specific variance elements

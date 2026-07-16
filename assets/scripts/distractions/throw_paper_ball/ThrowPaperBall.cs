@@ -10,7 +10,7 @@ public partial class ThrowPaperBall : Distraction
     private readonly float _viewportY = 100;
     public override float ViewportY { get => _viewportY; }
 
-    private RigidBody2D _PaperBall;
+    private Ball? _PaperBall;
 
 
     // Called when the node enters the scene tree for the first time.
@@ -33,16 +33,14 @@ public partial class ThrowPaperBall : Distraction
     public override void Setup(int difficulty)
     {
         Difficulty = difficulty;
-        _PaperBall = (RigidBody2D)FindChild("Ball");
+        // Implement location and instancing of difficulty dependent layouts here
+        _PaperBall = GetNode<Ball>("Stage/Ball");
         if (_PaperBall == null) { throw new NullReferenceException(); }
-        else
-        {
-            _PaperBall.Freeze = true;
-        }
+        
         throw new NotImplementedException();
     }
 
-    // Invoked by the PaperBin, freezes simulations and notifies relevant systems upstream
+    // Invoked by PaperBin, freezes simulations and notifies relevant systems upstream
     public override void Victory()
     {
         throw new NotImplementedException();

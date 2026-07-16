@@ -3,11 +3,12 @@
 [ext_resource type="Script" uid="uid://hadrogx85gx4" path="res://assets/scripts/distractions/throw_paper_ball/ThrowPaperBall.cs" id="1_dtqkm"]
 [ext_resource type="Texture2D" uid="uid://dcfql1glhe88w" path="res://assets/textures/distractions/throw_paper_ball/PaperBallwip2.png" id="2_gaqh5"]
 [ext_resource type="Texture2D" uid="uid://c4gapodwft7dv" path="res://assets/textures/distractions/throw_paper_ball/PlaceHolderBackground340x220.png" id="2_u4k7e"]
+[ext_resource type="Script" uid="uid://be3fc681w2ont" path="res://assets/scripts/distractions/throw_paper_ball/Ball.cs" id="3_acv8d"]
 [ext_resource type="Texture2D" uid="uid://cudnpgv2l8h2s" path="res://assets/textures/distractions/throw_paper_ball/TrashCanwip2.png" id="4_qwt3n"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_u4k7e"]
 friction = 0.6
-bounce = 0.8
+bounce = 0.6
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u4k7e"]
 radius = 7.071068
@@ -15,39 +16,43 @@ radius = 7.071068
 [node name="ThrowPaperBall" type="Node" unique_id=619422973]
 script = ExtResource("1_dtqkm")
 
-[node name="Centre" type="Node2D" parent="." unique_id=514983727]
+[node name="Stage" type="Node2D" parent="." unique_id=514983727]
+editor_description = "The root Node2D for all physical nodes of the minigame. 
+Is located at the centre of local minigame space"
 position = Vector2(320, 180)
 
-[node name="Background" type="Sprite2D" parent="Centre" unique_id=987714246]
+[node name="Background" type="Sprite2D" parent="Stage" unique_id=987714246]
 texture = ExtResource("2_u4k7e")
 
-[node name="Ball" type="RigidBody2D" parent="Centre" unique_id=346813288]
+[node name="Ball" type="RigidBody2D" parent="Stage" unique_id=346813288]
+z_index = 2
 physics_material_override = SubResource("PhysicsMaterial_u4k7e")
 gravity_scale = 0.8
-linear_velocity = Vector2(0, 100)
+script = ExtResource("3_acv8d")
 
-[node name="BallShape" type="CollisionShape2D" parent="Centre/Ball" unique_id=4881694]
+[node name="BallShape" type="CollisionShape2D" parent="Stage/Ball" unique_id=4881694]
 shape = SubResource("CircleShape2D_u4k7e")
 
-[node name="BallSprite" type="Sprite2D" parent="Centre/Ball" unique_id=97512083]
-z_index = 2
+[node name="BallSprite" type="Sprite2D" parent="Stage/Ball" unique_id=97512083]
 texture = ExtResource("2_gaqh5")
 hframes = 2
 frame = 1
 
-[node name="TrashCan" type="Node2D" parent="Centre" unique_id=1785474339]
-z_index = 2
-position = Vector2(57, 68)
+[node name="TrashCan" type="Node2D" parent="Stage" unique_id=1785474339]
+z_index = 1
+position = Vector2(0, 68)
 
-[node name="TrashCanBody" type="AnimatableBody2D" parent="Centre/TrashCan" unique_id=353197318]
-
-[node name="TrashCanShape" type="CollisionPolygon2D" parent="Centre/TrashCan/TrashCanBody" unique_id=1677236118]
-polygon = PackedVector2Array(-26, -29, -19, 34, 19, 34, 26, -29, 23, -29, 16, 30, -16, 30, -23, -29)
-
-[node name="TrashCanSprite" type="Sprite2D" parent="Centre/TrashCan" unique_id=304060811]
+[node name="TrashCanSprite" type="Sprite2D" parent="Stage/TrashCan" unique_id=304060811]
 texture = ExtResource("4_qwt3n")
 
-[node name="TrashCanInside" type="Area2D" parent="Centre/TrashCan" unique_id=1946479884]
+[node name="TrashCanBody" type="AnimatableBody2D" parent="Stage/TrashCan" unique_id=353197318]
 
-[node name="TrashInsideArea" type="CollisionPolygon2D" parent="Centre/TrashCan/TrashCanInside" unique_id=1932954179]
+[node name="TrashCanShape" type="CollisionPolygon2D" parent="Stage/TrashCan/TrashCanBody" unique_id=1677236118]
+polygon = PackedVector2Array(-26, -29, -19, 34, 19, 34, 26, -29, 23, -29, 16, 30, -16, 30, -23, -29)
+
+[node name="TrashCanInside" type="Area2D" parent="Stage/TrashCan" unique_id=1946479884]
+gravity_space_override = 1
+gravity = 490.0
+
+[node name="TrashInsideArea" type="CollisionPolygon2D" parent="Stage/TrashCan/TrashCanInside" unique_id=1932954179]
 polygon = PackedVector2Array(-22, -24, -16, 30, 16, 30, 22, -24)
