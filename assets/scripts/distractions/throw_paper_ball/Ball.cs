@@ -43,11 +43,6 @@ public partial class Ball : RigidBody2D
         _spawnY = Position.Y;
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
-
     // Native Godot physics processing method
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
@@ -101,6 +96,9 @@ public partial class Ball : RigidBody2D
     }
 
     // Resumes the reset timer (ment for use by PaperBin)
+    /// <summary>
+    /// Resumes internal reset timer USE SPARINGLY
+    /// </summary>
     public void ResumeTime()
     {
         if (!_timer.Paused) { return; }

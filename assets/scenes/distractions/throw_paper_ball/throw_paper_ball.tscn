@@ -41,6 +41,7 @@ frame = 1
 [node name="TrashCan" type="Node2D" parent="Stage" unique_id=1785474339]
 z_index = 1
 position = Vector2(0, 68)
+script = ExtResource("1_dtqkm")
 
 [node name="TrashCanSprite" type="Sprite2D" parent="Stage/TrashCan" unique_id=304060811]
 texture = ExtResource("4_qwt3n")

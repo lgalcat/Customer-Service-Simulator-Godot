@@ -11,6 +11,7 @@ public partial class ThrowPaperBall : Distraction
     public override float ViewportY { get => _viewportY; }
 
     private Ball? _PaperBall;
+    private TrashCan? _PaperBin;
 
 
     // Called when the node enters the scene tree for the first time.
@@ -33,10 +34,20 @@ public partial class ThrowPaperBall : Distraction
     public override void Setup(int difficulty)
     {
         Difficulty = difficulty;
+
         // Implement location and instancing of difficulty dependent layouts here
+
+        // Find TrashCan and bind its Action(s)
+        _PaperBin = GetNode<TrashCan>("Stage/TrashCan");
+        if (_PaperBin == null) { throw new NullReferenceException(); }
+        _PaperBin.MinigameCompleted += Victory;
+
+        // Find Ball and bind its Action(s)
         _PaperBall = GetNode<Ball>("Stage/Ball");
         if (_PaperBall == null) { throw new NullReferenceException(); }
-        
+        _PaperBin.BallEntered += _PaperBall.PauseTime;
+        _PaperBin.BallExited += _PaperBall.ResumeTime;
+
         throw new NotImplementedException();
     }
 
