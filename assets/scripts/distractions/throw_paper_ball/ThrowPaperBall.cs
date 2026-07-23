@@ -16,12 +16,16 @@ public partial class ThrowPaperBall : Distraction
     public override float ViewportY { get => _viewportY; }
 
     // Ranges for the "throwing" angle and strength
-    private readonly float _minThrowAngle = 0;
-    private readonly float _maxThrowAngle = 60;
+    // Keep in mind angles grow CLOCKWISE
+    private readonly float _minThrowAngle = -45;
+    private readonly float _maxThrowAngle = 0;
+    private float _throwAngle = 0;
     private readonly float _minThrowStrength = 10;
     private readonly float _maxThrowStrength = 500;
-    // Time "throwing" takes to cycle between min and max values
-    private readonly float _ThrowCycle= 3;
+    private float _throwStrength = 0;
+    // Frames "throwing" takes to cycle between min and max values
+    private readonly float _throwCycle= 10;
+    private int _cycleScalar = 1;
 
     private Ball? _PaperBall;
     private TrashCan? _PaperBin;
@@ -35,6 +39,9 @@ public partial class ThrowPaperBall : Distraction
         Setup(1);
 
         _state = ThrowingState.aiming;
+        _throwAngle = _maxThrowAngle;
+        _throwStrength = _minThrowStrength;
+        GD.Print(_throwAngle);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -45,7 +52,15 @@ public partial class ThrowPaperBall : Distraction
         {
             case ThrowingState.aiming:
                 // [22/07/2026] Implement aiming projection
-                _Projection.Project(/*Change for real vector*/Vector2.Up, 1, 0.1f);
+                // [23/07/2026] There seem to be issues with the unitary vector generation (may be caused by expected radian based values)
+                // Calculate angle increase from last frame
+                float cycleDelta = (float)(delta / _throwCycle);
+                float angleDelta = (_maxThrowAngle - _minThrowAngle) * cycleDelta;
+                if (_throwAngle >= _maxThrowAngle) { _cycleScalar = -1; GD.Print("Minus"); }
+                if (_throwAngle <= _minThrowAngle) { _cycleScalar = 1; GD.Print("Plus"); }
+                _throwAngle += angleDelta * _cycleScalar;
+
+                _Projection.Project(Vector2.FromAngle(_throwAngle)*100, 1, 0.1f);
 
                 // Check for input to update state machine
                 if (Input.IsActionJustPressed("JumpKey"))
@@ -62,7 +77,7 @@ public partial class ThrowPaperBall : Distraction
                 if (Input.IsActionJustReleased("JumpKey"))
                 {
                     // Trigger "Throw" action
-                    _PaperBall.Throw(/*Change for real vector*/Vector2.Right);
+                    _PaperBall.Throw(/*Change for real vector*/new Vector2(500, 0));
                     _state = ThrowingState.disabled;
                     _Projection.HideAllSteps();
                 }
@@ -97,7 +112,7 @@ public partial class ThrowPaperBall : Distraction
         _Projection._damp = _PaperBall.LinearDamp;
         _Projection._gravityScale = _PaperBall.GravityScale;
 
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
     }
 
     // Invoked by PaperBin, freezes simulations and notifies relevant systems upstream
@@ -110,6 +125,9 @@ public partial class ThrowPaperBall : Distraction
     private void ResetState()
     {
         _state = ThrowingState.aiming;
+        _throwAngle = _maxThrowAngle;
+        _throwStrength = _minThrowStrength;
+        _cycleScalar = 1;
         _Projection.DrawOneStep();
     }
 

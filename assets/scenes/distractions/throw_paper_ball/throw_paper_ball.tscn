@@ -66,6 +66,10 @@ polygon = PackedVector2Array(-22, -24, -16, 30, 16, 30, 22, -24)
 script = ExtResource("6_b6un0")
 
 [node name="ProjectionPoint" type="Sprite2D" parent="Stage/Projection" unique_id=248479682]
+modulate = Color(1, 1, 1, 0.3137255)
+texture = ExtResource("2_gaqh5")
+hframes = 2
+frame = 1
 
 [node name="ProjectionPoint2" type="Sprite2D" parent="Stage/Projection" unique_id=896619349]
 

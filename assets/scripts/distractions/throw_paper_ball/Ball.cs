@@ -51,8 +51,10 @@ public partial class Ball : RigidBody2D
         // Erase all possible momentum kept from previous attempt
         state.AngularVelocity = 0;
         state.LinearVelocity = Vector2.Zero;
+        // Find the final spawn point in absolute coordinates
+        Vector2 globalSpawn = GetParent<Node2D>().ToGlobal(_spawn);
         // Return the body to its default position
-        state.Transform = new Transform2D(0, _spawn);
+        state.Transform = new Transform2D(0, globalSpawn);
         // Update state machine
         _state = BallState.idle;
 
@@ -65,8 +67,8 @@ public partial class Ball : RigidBody2D
         // Check correct state
         if (_state != BallState.idle) { return; }
         // Start the motion
-        ApplyImpulse(force);
         Freeze = false;
+        ApplyImpulse(force);
         // Start reset timer
         _timer.Start();
         // Update state machine
