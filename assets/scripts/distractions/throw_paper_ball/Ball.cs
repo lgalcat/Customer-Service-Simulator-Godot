@@ -19,7 +19,7 @@ public partial class Ball : RigidBody2D
     private Vector2 _spawn = new Vector2();
 
     // Internal timer that controls how long the ball is left free moving before it resets
-    private Timer _timer;
+    private Timer _timer = null!;
     private float _lifeTime = 3;
 
     public Action? BallReset;
@@ -90,7 +90,7 @@ public partial class Ball : RigidBody2D
         _state = BallState.overdue;
     }
 
-    // Pauses the reset timer (ment for use by PaperBin)
+    // Pauses the reset timer (meant for use by PaperBin)
     /// <summary>
     /// Pauses the internal reset timer <b>USE SPARINGLY</b>
     /// </summary>
@@ -100,14 +100,14 @@ public partial class Ball : RigidBody2D
         _timer.Paused = true;
     }
 
-    // Resumes the reset timer (ment for use by PaperBin)
+    // Resumes the reset timer (meant for use by PaperBin)
     /// <summary>
     /// Resumes internal reset timer <b>USE SPARINGLY</b>
     /// </summary>
     public void ResumeTime()
     {
         if (!_timer.Paused) { return; }
-        else { _timer.Paused = false; }
+        _timer.Paused = false;
     }
 
 }

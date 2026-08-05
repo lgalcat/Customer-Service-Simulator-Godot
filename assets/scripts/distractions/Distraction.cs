@@ -7,11 +7,19 @@ using System;
 // should contain abstract or virtual declarations of all common properties and methods for distractions
 public abstract partial class Distraction : Node
 {
-    // Property that sets the local difficulty of the minigame
+    /// <summary>
+    /// The local difficulty of the minigame, set via <see cref="Setup"/>.
+    /// </summary>
     public int Difficulty { get; protected set; }
 
-    // Expected size of the viewport assigned to the minigame
+    /// <summary>
+    /// Expected viewport width by the minigame.
+    /// </summary>
     public abstract float ViewportX { get; }
+
+    /// <summary>
+    /// Expected viewport height by the minigame.
+    /// </summary>
     public abstract float ViewportY { get; }
 
     /// <summary>

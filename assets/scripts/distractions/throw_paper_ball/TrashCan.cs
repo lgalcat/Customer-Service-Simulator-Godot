@@ -1,21 +1,33 @@
 using Godot;
 using System;
 
-// Main script of the paper bin in "ThrowPaperBall"
-// Handles possible movement patterns and win condition detection
+/// <summary>
+/// Main script of the paper bin in "ThrowPaperBall"
+/// <para>Handles possible movement patterns and win condition detection</para>
+/// </summary>
 public partial class TrashCan : Node2D
 {
     // [18/07/2026] Implementation of movement attributes and logic pending
 
     // Area the ball needs to reach to win
-    private Area2D _winSpace;
+    private Area2D _winSpace = null!;
     // Checks the minimum time the win condition needs to be met to be validated
-    private Timer _winCounter;
+    private Timer _winCounter = null!;
     private float _winTime = 1;
 
-    // Events emmited at key points in the win condition cycle
+    /// <summary>
+    /// Invoked when the paper ball enters the win-condition area.
+    /// </summary>
     public Action? BallEntered;
+
+    /// <summary>
+    /// Invoked when the paper ball leaves the win-condition area before the win timer completes.
+    /// </summary>
     public Action? BallExited;
+
+    /// <summary>
+    /// Invoked once the paper ball has remained inside the win-condition area for long enough to win.
+    /// </summary>
     public Action? MinigameCompleted;
 
     // Called when the node enters the scene tree for the first time.

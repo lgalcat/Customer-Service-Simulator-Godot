@@ -4,10 +4,17 @@ using System.Linq;
 
 public partial class Projection : Node2D
 {
-    // Should be set externally
-    public float _gravityScale = 1;
-    // Should be set externally
-    public float _damp = 0;
+    /// <summary>
+    /// Gravity scale applied during simulation.
+    /// <para><b>Should be set externally</b> to match the simulated body.</para>
+    /// </summary>
+    public float GravityScale { get; set; } = 1;
+
+    /// <summary>
+    /// Linear damping applied during simulation.
+    /// <para><b>Should be set externally</b> to match the simulated body.</para>
+    /// </summary>
+    public float Damp { get; set; } = 0;
     private Vector2 _gravity;
     private int _steps;
     // Number of drawn steps
@@ -29,6 +36,7 @@ public partial class Projection : Node2D
     /// Simulation of the movement of a body given a starting impulse and initialized parameters
     /// <para>By default simulates as many steps as drawn sprites, see <see cref="ModifyProjectionSteps"/></para>
     /// </summary>
+    // [5/08/2026] Consider implementing a variant that doesn't apply gravity to widen use cases
     public void Project(Vector2 impulse, float timeStep, int? steps = null)
     {
         // Safeguard for default and overflowing parameter values
@@ -41,8 +49,8 @@ public partial class Projection : Node2D
         // Iterate main simulation additively looping "steps" times
         for ( int i = 0; i < steps; i++)
         {
-            velocity += _gravity * _gravityScale * timeStep;
-            velocity *= Mathf.Max(0f, 1 - _damp * timeStep);
+            velocity += _gravity * GravityScale * timeStep;
+            velocity *= Mathf.Max(0f, 1 - Damp * timeStep);
             position += velocity * timeStep;
             _sprites[i].Position = position;
         }
