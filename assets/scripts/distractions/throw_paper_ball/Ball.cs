@@ -43,6 +43,7 @@ public partial class Ball : RigidBody2D
     }
 
     // Godot's native physics processing method
+    //Limit direct tampering of physics properties to this method
     public override void _IntegrateForces(PhysicsDirectBodyState2D state)
     {
         // Handles physics reset when necessary
@@ -61,16 +62,18 @@ public partial class Ball : RigidBody2D
         BallReset?.Invoke();
     }
 
-    // Gives the ball an initial impulse and lets it move freely
+    /// <summary>
+    /// Gives the ball an initial impulse and lets it move freely
+    /// </summary>
     public void Throw(Vector2 force)
     {
-        // Check correct state
+        // Safeguard for correct state
         if (_state != BallState.idle) { return; }
-        // Start the motion
+
         Freeze = false;
         ApplyImpulse(force);
-        // Start reset timer
         _timer.Start();
+
         // Update state machine
         _state = BallState.thrown;
     }
@@ -89,7 +92,7 @@ public partial class Ball : RigidBody2D
 
     // Pauses the reset timer (ment for use by PaperBin)
     /// <summary>
-    /// Pauses the internal reset timer USE SPARINGLY
+    /// Pauses the internal reset timer <b>USE SPARINGLY</b>
     /// </summary>
     public void PauseTime()
     {
@@ -99,7 +102,7 @@ public partial class Ball : RigidBody2D
 
     // Resumes the reset timer (ment for use by PaperBin)
     /// <summary>
-    /// Resumes internal reset timer USE SPARINGLY
+    /// Resumes internal reset timer <b>USE SPARINGLY</b>
     /// </summary>
     public void ResumeTime()
     {

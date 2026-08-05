@@ -28,3 +28,5 @@ mono_crash.*.json
 
 # VScode specific ignores
 .vs/
+
+CLAUDE.local.md

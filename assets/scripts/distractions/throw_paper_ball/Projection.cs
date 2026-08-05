@@ -10,6 +10,8 @@ public partial class Projection : Node2D
     public float _damp = 0;
     private Vector2 _gravity;
     private int _steps;
+    // Number of drawn steps
+    private int _visibleSteps = 0;
     private Sprite2D[] _sprites = [];
 
     // Called when the node enters the scene tree for the first time.
@@ -23,12 +25,20 @@ public partial class Projection : Node2D
         _gravity = (Vector2)ProjectSettings.GetSetting("physics/2d/default_gravity_vector") * (float)ProjectSettings.GetSetting("physics/2d/default_gravity");
     }
 
-    // Simulation of the movement of a body given a starting impulse and initialized parameters
-    public void Project(Vector2 impulse, int steps, float timeStep)
+    /// <summary>
+    /// Simulation of the movement of a body given a starting impulse and initialized parameters
+    /// <para>By default simulates as many steps as drawn sprites, see <see cref="ModifyProjectionSteps"/></para>
+    /// </summary>
+    public void Project(Vector2 impulse, float timeStep, int? steps = null)
     {
+        // Safeguard for default and overflowing parameter values
+        steps ??= _visibleSteps;
         if (steps > _steps) { steps = _steps; }
+
         Vector2 velocity = impulse;
         Vector2 position = Vector2.Zero;
+
+        // Iterate main simulation additively looping "steps" times
         for ( int i = 0; i < steps; i++)
         {
             velocity += _gravity * _gravityScale * timeStep;
@@ -38,27 +48,27 @@ public partial class Projection : Node2D
         }
     }
 
-    // [22/07/2026] Consider implementing dynamic detection of steps set to "Visible" before simulation
     /// <summary>
     /// Modulate the amount of projection steps drawn, overflow and underflow are normalized
     /// </summary>
-    /// <param name="num"></param>
     public void ModifyProjectionSteps(int num)
     {
-        int steps = num;
+        _visibleSteps = num;
         // Normalize negative and overflowing values
-        if (num < 0) { steps = 0; }
-        if (num > _steps) { steps = _steps; }
+        if (num < 0) { _visibleSteps = 0; }
+        if (num > _steps) { _visibleSteps = _steps; }
+
         // Set visibility of each "step" accordingly
         for (int i = 0; i < _steps; i++)
         {
-            if (i < num) { _sprites[i].Visible = true; }
+            if (i < _visibleSteps) { _sprites[i].Visible = true; }
             else { _sprites[i].Visible = false; }
         }
     }
 
     /// <summary>
     /// Sets the maximum number of projection steps available to draw
+    /// <para>Parameterless call to <see cref="ModifyProjectionSteps"/></para>
     /// </summary>
     public void DrawMaxSteps()
     {
@@ -67,6 +77,7 @@ public partial class Projection : Node2D
 
     /// <summary>
     /// Hides all projection steps
+    /// <para>Parameterless call to <see cref="ModifyProjectionSteps"/></para>
     /// </summary>
     public void HideAllSteps()
     {
@@ -75,6 +86,7 @@ public partial class Projection : Node2D
 
     /// <summary>
     /// Sets only the first projection step to draw
+    /// <para>Parameterless call to <see cref="ModifyProjectionSteps"/></para>
     /// </summary>
     public void DrawOneStep()
     {

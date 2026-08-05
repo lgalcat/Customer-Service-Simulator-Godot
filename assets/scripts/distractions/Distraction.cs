@@ -14,20 +14,24 @@ public abstract partial class Distraction : Node
     public abstract float ViewportX { get; }
     public abstract float ViewportY { get; }
 
-    // Action to invoke during the "victory" method to notify the upstream manager
-    // time of invocation left to decide in "victory" method implementation
     /// <summary>
-    /// Invoked when the minigame is completed
+    /// Invoked when the minigame is completed, during <see cref="Victory"/>
     /// </summary>
+    // Time of invocation left to decide in "victory" method implementation
     public Action? OnVictory;
 
 
-    // Abstract method to invoke after instantiation but before insertion into the scene tree (EnterTree() and _Ready())
-    // Should be used to communicate external dependencies and set up instance specific variance elements
+    /// <summary>
+    /// Abstract factory method to invoke after instantiation but <b>before</b> insertion into the scene tree
+    /// <para>Should be used to bind external dependencies and set up instance specific variance elements </para>
+    /// </summary>
     public abstract void Setup(int difficulty);
 
-    // Abstract method to invoke when the win condition has been met
-    // should invoke "OnVictory" at some point
+    /// <summary>
+    /// Abstract method to invoke when the win condition has been met
+    /// <para>Invokes <see cref="OnVictory"/></para>
+    /// </summary>
+    // Exact moment of "OnVictory" invocation left to implementation
     public abstract void Victory();
 
 }
