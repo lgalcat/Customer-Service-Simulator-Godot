@@ -1,41 +1,50 @@
 using Godot;
 using GdUnit4;
 using static GdUnit4.Assertions;
-using System.Threading.Tasks;
 
 // Abstract boilerplate testcases for all implementations of the Distractions abstract class
 // Limitations on the GdUnit test discovery pipeline prevent inheritted methods to register as testcases
 // All implementations of this class should explicitly declare an override + base for all testcases below
 public abstract class DistractionTesting
 {
-    protected Distraction distraction;
+    protected Distraction distraction = null!;
 
-    // Instantiation method to inject with individual initialization steps and artifacts
+    /// <summary>
+    /// Instantiation method to inject with individual initialization steps and artifacts
+    /// </summary>
     protected abstract Distraction CreateDistraction();
 
-    // Common setup steps for all tests
+    /// <summary>
+    /// Common setup steps for all tests
+    /// </summary>
     public virtual void Setup()
     {
         distraction = AutoFree(CreateDistraction());
     }
 
-    // Common teardown for all tests
+    /// <summary>
+    /// Common teardown for all tests
+    /// </summary>
     public virtual void Teardown()
     {
-        distraction?.QueueFree();
+        // Cleanup is handled by AutoFree(...) in Setup(), no explicit freeing needed here
     }
 
 
-    // Tests if the Victory function invokes the "OnVictory" action
+    /// <summary>
+    /// Tests if the Victory function invokes the "OnVictory" action
+    /// </summary>
     public virtual void VictoryInvoked()
     {
-        bool _check = false;
-        distraction.OnVictory = () => { _check = true; };
+        bool check = false;
+        distraction.OnVictory = () => { check = true; };
         distraction.Victory();
-        AssertThat(_check).IsTrue();
+        AssertThat(check).IsTrue();
     }
 
-    // Tests if the minigame has specified a desired size for its viewport
+    /// <summary>
+    /// Tests if the minigame has specified a desired size for its viewport
+    /// </summary>
     public virtual void NonZeroExpectedViewport()
     {
         AssertThat(distraction.ViewportX).IsGreater(0);

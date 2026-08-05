@@ -1,6 +1,5 @@
 using Godot;
 using GdUnit4;
-using System.Threading.Tasks;
 using static GdUnit4.Assertions;
 
 // TestSuite for testing of the ThrowPaperBall class
