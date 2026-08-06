@@ -6,7 +6,6 @@ using System;
 public partial class Ball : RigidBody2D
 {
     // State machine
-    // [22/07/2026] May be redundant, only used internally for extra validation
     private enum BallState{ err, idle, thrown, overdue }
     private BallState _state = BallState.err;
     // Public accessor to check state machine
@@ -65,13 +64,13 @@ public partial class Ball : RigidBody2D
     /// <summary>
     /// Gives the ball an initial impulse and lets it move freely
     /// </summary>
-    public void Throw(Vector2 force)
+    public void Throw(Vector2 impulse)
     {
         // Safeguard for correct state
         if (_state != BallState.idle) { return; }
 
         Freeze = false;
-        ApplyImpulse(force);
+        ApplyImpulse(impulse);
         _timer.Start();
 
         // Update state machine

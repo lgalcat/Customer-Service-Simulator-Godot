@@ -48,12 +48,9 @@ public partial class ThrowPaperBall : Distraction
         switch (_state)
         {
             case ThrowingState.aiming:
-                // Calculate angle increase from last frame
-                float aimingDelta = (float)(delta / _throwCycle);
-                float angleDelta = (_maxThrowAngle - _minThrowAngle) * aimingDelta;
-                if (_throwAngle >= _maxThrowAngle) { _cycleScalar = -1; }
-                if (_throwAngle <= _minThrowAngle) { _cycleScalar = 1; }
-                _throwAngle += angleDelta * _cycleScalar;
+                // _cycleScalar is intentionally carried over into "charging" (not reset here), so the two animated
+                // steps keep a continuous back-and-forth motion instead of each restarting its own cycle
+                _throwAngle = Oscillate(_throwAngle, _minThrowAngle, _maxThrowAngle, delta, ref _cycleScalar);
 
                 _projection.ProjectWithoutGravity(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * 250, 0.1f);
 
@@ -65,12 +62,8 @@ public partial class ThrowPaperBall : Distraction
                 }
                 break;
             case ThrowingState.charging:
-                // Calculate strength increase
-                float throwDelta = (float)(delta / _throwCycle);
-                float strengthDelta = (_maxThrowStrength - _minThrowStrength) * throwDelta;
-                if (_throwStrength >= _maxThrowStrength) { _cycleScalar = -1; }
-                if (_throwStrength <= _minThrowStrength) { _cycleScalar = 1; }
-                _throwStrength += strengthDelta * _cycleScalar;
+                // Continues the _cycleScalar left over from "aiming" (see comment above)
+                _throwStrength = Oscillate(_throwStrength, _minThrowStrength, _maxThrowStrength, delta, ref _cycleScalar);
 
                 _projection.Project(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _throwStrength, 0.12f);
                 
@@ -117,7 +110,18 @@ public partial class ThrowPaperBall : Distraction
     // Invoked by PaperBin, freezes simulations and notifies relevant systems upstream
     public override void Victory()
     {
-        throw new NotImplementedException();
+        // Insert any additional victory animations and logic here
+        
+        OnVictory?.Invoke();
+    }
+
+    // Moves "value" toward max/min and back, flipping "scalar" at either bound; drives both the aiming and charging animated steps
+    private float Oscillate(float value, float min, float max, double delta, ref int scalar)
+    {
+        float step = (float)(delta / _throwCycle) * (max - min);
+        if (value >= max) { scalar = -1; }
+        if (value <= min) { scalar = 1; }
+        return value + step * scalar;
     }
 
     // Resets the state machine to default "aiming" state

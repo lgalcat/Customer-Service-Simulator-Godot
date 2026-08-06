@@ -36,12 +36,9 @@ public partial class TrashCan : Node2D
         // Find the win condition area within children
         _winSpace = GetNode<Area2D>("TrashCanInside");
         if (_winSpace == null) { throw new NullReferenceException(); }
-        else
-        {
-            // Bind area events to win condition handling
-            _winSpace.BodyEntered += OnBodyEntered;
-            _winSpace.BodyExited += OnBodyExited;
-        }
+        // Bind area events to win condition handling
+        _winSpace.BodyEntered += OnBodyEntered;
+        _winSpace.BodyExited += OnBodyExited;
 
         // Create and configure the _winCounter object
         _winCounter = new Timer
@@ -57,9 +54,8 @@ public partial class TrashCan : Node2D
     // Gets called when an object enters the bin (via _winArea)
     private void OnBodyEntered(Node body)
     {
-        // Check if the body is relevant (the paper ball), via name for better class decoupling
-        // [18/07/2026] Object name is hardcoded, consider parametrization for more flexibility
-        if (body.Name == "Ball")
+        // Check if the body is relevant (the paper ball)
+        if (body is Ball)
         {
             // Notify other components of the match
             BallEntered?.Invoke();
@@ -71,9 +67,8 @@ public partial class TrashCan : Node2D
     // Gets called when an object leaves the bin (via _winArea)
     private void OnBodyExited(Node body)
     {
-        // Check if the body is relevant, via name for better class decoupling
-        // [18/07/2026] Object name is hardcoded, consider parametrization for more flexibility
-        if (body.Name == "Ball")
+        // Check if the body is relevant
+        if (body is Ball)
         {
             // Notify other components of the abortion
             BallExited?.Invoke();

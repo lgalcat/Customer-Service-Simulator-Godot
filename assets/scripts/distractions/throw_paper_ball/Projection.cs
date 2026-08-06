@@ -39,11 +39,7 @@ public partial class Projection : Node2D
     /// </summary>
     public void Project(Vector2 impulse, float timeStep, int? steps = null)
     {
-        // Safeguard for default and overflowing parameter values
-        steps ??= _visibleSteps;
-        if (steps > _steps) { steps = _steps; }
-
-        Simulate(impulse, timeStep, steps.Value, _gravity * GravityScale);
+        Simulate(impulse, timeStep, steps, _gravity * GravityScale);
     }
 
     /// <summary>
@@ -52,16 +48,16 @@ public partial class Projection : Node2D
     /// </summary>
     public void ProjectWithoutGravity(Vector2 impulse, float timeStep, int? steps = null)
     {
+        Simulate(impulse, timeStep, steps, Vector2.Zero);
+    }
+
+    // Shared additive simulation loop used by both Project and ProjectWithoutGravity
+    private void Simulate(Vector2 impulse, float timeStep, int? steps, Vector2 gravity)
+    {
         // Safeguard for default and overflowing parameter values
         steps ??= _visibleSteps;
         if (steps > _steps) { steps = _steps; }
 
-        Simulate(impulse, timeStep, steps.Value, Vector2.Zero);
-    }
-
-    // Shared additive simulation loop used by both Project and ProjectWithoutGravity
-    private void Simulate(Vector2 impulse, float timeStep, int steps, Vector2 gravity)
-    {
         Vector2 velocity = impulse;
         Vector2 position = Vector2.Zero;
 
