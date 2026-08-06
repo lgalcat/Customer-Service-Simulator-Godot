@@ -19,7 +19,7 @@ public partial class ThrowPaperBall : Distraction
     private readonly float _minThrowAngle = -60;
     private readonly float _maxThrowAngle = 0;
     private float _throwAngle = 0;
-    private readonly float _minThrowStrength = 10;
+    private readonly float _minThrowStrength = 100;
     private readonly float _maxThrowStrength = 500;
     private float _throwStrength = 0;
     // Time (in seconds) "throwing" takes to cycle between min and max values
@@ -48,7 +48,6 @@ public partial class ThrowPaperBall : Distraction
         switch (_state)
         {
             case ThrowingState.aiming:
-                // [22/07/2026] Implement aiming projection
                 // Calculate angle increase from last frame
                 float aimingDelta = (float)(delta / _throwCycle);
                 float angleDelta = (_maxThrowAngle - _minThrowAngle) * aimingDelta;
@@ -56,8 +55,7 @@ public partial class ThrowPaperBall : Distraction
                 if (_throwAngle <= _minThrowAngle) { _cycleScalar = 1; }
                 _throwAngle += angleDelta * _cycleScalar;
 
-                // [5/08/2026] Consider ignoring gravity in this projection for cleaner visuals
-                _projection.Project(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * 200, 0.1f);
+                _projection.ProjectWithoutGravity(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * 250, 0.1f);
 
                 // Check for input to update state machine
                 if (Input.IsActionJustPressed("JumpKey"))
@@ -67,7 +65,6 @@ public partial class ThrowPaperBall : Distraction
                 }
                 break;
             case ThrowingState.charging:
-                // [22/07/2026] Implement charging simulation
                 // Calculate strength increase
                 float throwDelta = (float)(delta / _throwCycle);
                 float strengthDelta = (_maxThrowStrength - _minThrowStrength) * throwDelta;
@@ -75,13 +72,13 @@ public partial class ThrowPaperBall : Distraction
                 if (_throwStrength <= _minThrowStrength) { _cycleScalar = 1; }
                 _throwStrength += strengthDelta * _cycleScalar;
 
-                _projection.Project(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _throwStrength, 0.5f);
+                _projection.Project(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _throwStrength, 0.12f);
                 
                 // Check for input to update state machine
                 if (Input.IsActionJustReleased("JumpKey"))
                 {
                     // Trigger "Throw" action
-                    _paperBall.Throw(/*Change for real vector*/new Vector2(500, 0));
+                    _paperBall.Throw(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _throwStrength);
                     _state = ThrowingState.disabled;
                     _projection.HideAllSteps();
                 }
@@ -129,7 +126,7 @@ public partial class ThrowPaperBall : Distraction
     {
         _state = ThrowingState.aiming;
         _throwAngle = _maxThrowAngle;
-        _throwStrength = _minThrowStrength;
+        _throwStrength = (_maxThrowStrength - _minThrowStrength) / 2;
         _cycleScalar = 1;
         _projection.DrawOneStep();
     }

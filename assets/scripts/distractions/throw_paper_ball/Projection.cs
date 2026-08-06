@@ -29,27 +29,45 @@ public partial class Projection : Node2D
         _steps = _sprites.Length;
 
         // Query the necessary physics parameters
-        _gravity = (Vector2)ProjectSettings.GetSetting("physics/2d/default_gravity_vector") * (float)ProjectSettings.GetSetting("physics/2d/default_gravity");
+        _gravity = (Vector2)ProjectSettings.GetSetting("physics/2d/default_gravity_vector")
+         * (float)ProjectSettings.GetSetting("physics/2d/default_gravity");
     }
 
     /// <summary>
     /// Simulation of the movement of a body given a starting impulse and initialized parameters
     /// <para>By default simulates as many steps as drawn sprites, see <see cref="ModifyProjectionSteps"/></para>
     /// </summary>
-    // [5/08/2026] Consider implementing a variant that doesn't apply gravity to widen use cases
     public void Project(Vector2 impulse, float timeStep, int? steps = null)
     {
         // Safeguard for default and overflowing parameter values
         steps ??= _visibleSteps;
         if (steps > _steps) { steps = _steps; }
 
+        Simulate(impulse, timeStep, steps.Value, _gravity * GravityScale);
+    }
+
+    /// <summary>
+    /// Simulation of the movement of a body given a starting impulse and initialized parameters, ignoring gravity
+    /// <para>By default simulates as many steps as drawn sprites, see <see cref="ModifyProjectionSteps"/></para>
+    /// </summary>
+    public void ProjectWithoutGravity(Vector2 impulse, float timeStep, int? steps = null)
+    {
+        // Safeguard for default and overflowing parameter values
+        steps ??= _visibleSteps;
+        if (steps > _steps) { steps = _steps; }
+
+        Simulate(impulse, timeStep, steps.Value, Vector2.Zero);
+    }
+
+    // Shared additive simulation loop used by both Project and ProjectWithoutGravity
+    private void Simulate(Vector2 impulse, float timeStep, int steps, Vector2 gravity)
+    {
         Vector2 velocity = impulse;
         Vector2 position = Vector2.Zero;
 
-        // Iterate main simulation additively looping "steps" times
-        for ( int i = 0; i < steps; i++)
+        for (int i = 0; i < steps; i++)
         {
-            velocity += _gravity * GravityScale * timeStep;
+            velocity += gravity * timeStep;
             velocity *= Mathf.Max(0f, 1 - Damp * timeStep);
             position += velocity * timeStep;
             _sprites[i].Position = position;
