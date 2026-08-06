@@ -5,12 +5,19 @@ using static GdUnit4.Assertions;
 // TestSuite for testing of the ThrowPaperBall class
 [TestSuite]
 [RequireGodotRuntime]
-public class ThrowPaperBallTesting : DistractionTesting
+public class ThrowPaperBallDistractionTesting : DistractionTesting
 {
     protected override Distraction CreateDistraction()
     {
-        // [16/6/2026] Further logic pending complete implementation of the ThrowPaperBall class
-        return new ThrowPaperBall();
+        // Barebones stand-in tree matching only the node names/types Setup() looks up
+        // (Stage/TrashCan, Stage/Ball, Stage/Projection) - not the full production scene
+        var throwPaperBall = new ThrowPaperBall();
+        var stage = new Node2D { Name = "Stage" };
+        throwPaperBall.AddChild(stage);
+        stage.AddChild(new TrashCan { Name = "TrashCan" });
+        stage.AddChild(new Ball { Name = "Ball" });
+        stage.AddChild(new Projection { Name = "Projection" });
+        return throwPaperBall;
     }
 
     // Setup before each test
@@ -36,4 +43,10 @@ public class ThrowPaperBallTesting : DistractionTesting
 
     [TestCase]
     public override void NonZeroExpectedViewport() { base.NonZeroExpectedViewport(); }
+
+    [TestCase]
+    public override void SetupAssignsDifficulty() { base.SetupAssignsDifficulty(); }
+
+    [TestCase]
+    public override void VictoryDoesNotThrowWhenOnVictoryUnset() { base.VictoryDoesNotThrowWhenOnVictoryUnset(); }
 }

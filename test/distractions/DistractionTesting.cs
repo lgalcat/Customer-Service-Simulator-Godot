@@ -32,14 +32,14 @@ public abstract class DistractionTesting
 
 
     /// <summary>
-    /// Tests if the Victory function invokes the "OnVictory" action
+    /// Tests if the Victory function invokes the "OnVictory" action exactly once
     /// </summary>
     public virtual void VictoryInvoked()
     {
-        bool check = false;
-        distraction.OnVictory = () => { check = true; };
+        int invocationCount = 0;
+        distraction.OnVictory = () => { invocationCount++; };
         distraction.Victory();
-        AssertThat(check).IsTrue();
+        AssertThat(invocationCount).IsEqual(1);
     }
 
     /// <summary>
@@ -49,5 +49,25 @@ public abstract class DistractionTesting
     {
         AssertThat(distraction.ViewportX).IsGreater(0);
         AssertThat(distraction.ViewportY).IsGreater(0);
+    }
+
+    /// <summary>
+    /// Tests if Setup assigns the given difficulty to the Difficulty property
+    /// </summary>
+    public virtual void SetupAssignsDifficulty()
+    {
+        const int difficulty = 3;
+        distraction.Setup(difficulty);
+        AssertThat(distraction.Difficulty).IsEqual(difficulty);
+    }
+
+    /// <summary>
+    /// Tests that Victory does not throw when no listener has subscribed to OnVictory,
+    /// since OnVictory is declared optional/nullable
+    /// </summary>
+    public virtual void VictoryDoesNotThrowWhenOnVictoryUnset()
+    {
+        AssertThat(distraction.OnVictory).IsNull();
+        distraction.Victory();
     }
 }
