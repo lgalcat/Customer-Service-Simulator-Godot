@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4gapodwft7dv"
-path="res://.godot/imported/PlaceHolderBackground340x220.png-e3ab1dbe6ff4846f4315ddeddcff596f.ctex"
+uid="uid://beub0naxnglkp"
+path="res://.godot/imported/swatter_PLACEHOLDER.png-0300f75d47435e5b2bcfd6a501402a22.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/distractions/throw_paper_ball/PlaceHolderBackground340x220.png"
-dest_files=["res://.godot/imported/PlaceHolderBackground340x220.png-e3ab1dbe6ff4846f4315ddeddcff596f.ctex"]
+source_file="res://assets/textures/distractions/fly_swatter/swatter_PLACEHOLDER.png"
+dest_files=["res://.godot/imported/swatter_PLACEHOLDER.png-0300f75d47435e5b2bcfd6a501402a22.ctex"]
 
 [params]
 

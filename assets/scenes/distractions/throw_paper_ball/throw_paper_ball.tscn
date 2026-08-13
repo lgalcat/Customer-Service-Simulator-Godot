@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://cgikecmcwxjr4"]
 
 [ext_resource type="Script" uid="uid://hadrogx85gx4" path="res://assets/scripts/distractions/throw_paper_ball/ThrowPaperBall.cs" id="1_dtqkm"]
-[ext_resource type="Texture2D" uid="uid://dcfql1glhe88w" path="res://assets/textures/distractions/throw_paper_ball/PaperBallwip2.png" id="2_gaqh5"]
-[ext_resource type="Texture2D" uid="uid://c4gapodwft7dv" path="res://assets/textures/distractions/throw_paper_ball/PlaceHolderBackground340x220.png" id="2_u4k7e"]
+[ext_resource type="Texture2D" uid="uid://dcfql1glhe88w" path="res://assets/textures/distractions/throw_paper_ball/paper_ball_wip2.png" id="2_gaqh5"]
+[ext_resource type="Texture2D" uid="uid://c4gapodwft7dv" path="res://assets/textures/distractions/throw_paper_ball/place_holder_background_340x220.png" id="2_u4k7e"]
 [ext_resource type="Script" uid="uid://be3fc681w2ont" path="res://assets/scripts/distractions/throw_paper_ball/Ball.cs" id="3_acv8d"]
-[ext_resource type="Texture2D" uid="uid://cudnpgv2l8h2s" path="res://assets/textures/distractions/throw_paper_ball/TrashCanwip2.png" id="4_qwt3n"]
+[ext_resource type="Texture2D" uid="uid://cudnpgv2l8h2s" path="res://assets/textures/distractions/throw_paper_ball/trash_can_wip2.png" id="4_qwt3n"]
 [ext_resource type="Script" uid="uid://di3ybi0dhfft1" path="res://assets/scripts/distractions/throw_paper_ball/TrashCan.cs" id="5_33pyq"]
 [ext_resource type="Script" uid="uid://dnop6cdr1gu6r" path="res://assets/scripts/distractions/throw_paper_ball/Projection.cs" id="7_33pyq"]
 

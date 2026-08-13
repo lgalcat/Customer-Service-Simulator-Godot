@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cudnpgv2l8h2s"
-path="res://.godot/imported/TrashCanwip2.png-8dfd7a2e6b56f5d8fcdc0af398c466c4.ctex"
+path="res://.godot/imported/trash_can_wip2.png-7c123350afc994dba60cd78571887dfd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/distractions/throw_paper_ball/TrashCanwip2.png"
-dest_files=["res://.godot/imported/TrashCanwip2.png-8dfd7a2e6b56f5d8fcdc0af398c466c4.ctex"]
+source_file="res://assets/textures/distractions/throw_paper_ball/trash_can_wip2.png"
+dest_files=["res://.godot/imported/trash_can_wip2.png-7c123350afc994dba60cd78571887dfd.ctex"]
 
 [params]
 

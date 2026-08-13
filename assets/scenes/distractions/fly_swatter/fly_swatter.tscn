@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://2ewws5oitx35"]
+
+[ext_resource type="Script" uid="uid://d4cf12a4osrsn" path="res://assets/scripts/distractions/fly_swatter/FlySwatter.cs" id="1_2f1be"]
+[ext_resource type="Texture2D" uid="uid://cjx5tm14vcpih" path="res://assets/textures/distractions/fly_swatter/place_holder_background_220x220.png" id="2_uy12n"]
+
+[node name="FlySwatter" type="Node" unique_id=592884100]
+script = ExtResource("1_2f1be")
+
+[node name="Stage" type="Node2D" parent="." unique_id=1815319675]
+position = Vector2(320, 180)
+
+[node name="Background" type="Sprite2D" parent="Stage" unique_id=1351348644]
+texture = ExtResource("2_uy12n")
