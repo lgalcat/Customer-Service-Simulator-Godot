@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 /// <summary>
-/// Main script of the paper bin in "ThrowPaperBall"
+/// Handler script purpose built for the paper bin in "ThrowPaperBall"
 /// <para>Handles possible movement patterns and win condition detection</para>
 /// </summary>
 public partial class TrashCan : Node2D
@@ -13,6 +13,7 @@ public partial class TrashCan : Node2D
     private Area2D _winSpace = null!;
     // Checks the minimum time the win condition needs to be met to be validated
     private Timer _winCounter = null!;
+    [Export]
     private float _winTime = 1;
 
     /// <summary>

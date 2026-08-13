@@ -2,6 +2,10 @@ using Godot;
 using System;
 using System.Linq;
 
+/// <summary>
+/// Handler class for simple physics based trajectory projections
+/// <para>Originally built around ThrowPaperBall, scope allows alternative uses</para>
+/// </summary>
 public partial class Projection : Node2D
 {
     /// <summary>

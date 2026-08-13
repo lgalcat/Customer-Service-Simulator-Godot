@@ -1,8 +1,10 @@
 using Godot;
 using System;
 
-// Main script for the paper ball in "ThrowPaperBall"
-// handles all logic local to the physics object and its state machine
+/// <summary>
+/// Handler script purpose built for the paper ball in "ThrowPaperBall"
+/// <para>Handles all logic local to the physics object and its state machine</para>
+/// </summary>
 public partial class Ball : RigidBody2D
 {
     // State machine
@@ -19,6 +21,7 @@ public partial class Ball : RigidBody2D
 
     // Internal timer that controls how long the ball is left free moving before it resets
     private Timer _timer = null!;
+    [Export]
     private float _lifeTime = 3;
 
     public Action? BallReset;
@@ -105,6 +108,7 @@ public partial class Ball : RigidBody2D
     /// </summary>
     public void ResumeTime()
     {
+        if (_state == BallState.err) { return; }
         if (!_timer.Paused) { return; }
         _timer.Paused = false;
     }

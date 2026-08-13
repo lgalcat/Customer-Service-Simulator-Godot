@@ -16,14 +16,14 @@ public partial class ThrowPaperBall : Distraction
 
     // Ranges for the "throwing" angle and strength
     // Keep in mind angles grow CLOCKWISE
-    private readonly float _minThrowAngle = -60;
-    private readonly float _maxThrowAngle = 0;
+    private float _minThrowAngle = -60;
+    private float _maxThrowAngle = 0;
     private float _throwAngle = 0;
-    private readonly float _minThrowStrength = 100;
-    private readonly float _maxThrowStrength = 500;
+    private float _minThrowStrength = 100;
+    private float _maxThrowStrength = 500;
     private float _throwStrength = 0;
     // Time (in seconds) "throwing" takes to cycle between min and max values
-    private readonly float _throwCycle= 1;
+    private float _throwCycle= 1;
     private int _cycleScalar = 1;
 
     // Child node references found during "Setup"
@@ -111,7 +111,8 @@ public partial class ThrowPaperBall : Distraction
     public override void Victory()
     {
         // Insert any additional victory animations and logic here
-        
+
+        GD.Print("ThrowPaperBall Completed!!!");
         OnVictory?.Invoke();
     }
 

@@ -15,6 +15,10 @@ bounce = 0.6
 [sub_resource type="CircleShape2D" id="CircleShape2D_u4k7e"]
 radius = 7.071068
 
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_33pyq"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_v3cl7"]
+
 [node name="ThrowPaperBall" type="Node" unique_id=619422973]
 script = ExtResource("1_dtqkm")
 
@@ -28,6 +32,7 @@ texture = ExtResource("2_u4k7e")
 
 [node name="Ball" type="RigidBody2D" parent="Stage" unique_id=346813288]
 z_index = 2
+position = Vector2(-120, 20)
 physics_material_override = SubResource("PhysicsMaterial_u4k7e")
 gravity_scale = 0.8
 linear_damp_mode = 1
@@ -44,7 +49,7 @@ frame = 1
 
 [node name="TrashCan" type="Node2D" parent="Stage" unique_id=1785474339]
 z_index = 1
-position = Vector2(0, 68)
+position = Vector2(80, 69)
 script = ExtResource("5_33pyq")
 
 [node name="TrashCanSprite" type="Sprite2D" parent="Stage/TrashCan" unique_id=304060811]
@@ -53,16 +58,23 @@ texture = ExtResource("4_qwt3n")
 [node name="TrashCanBody" type="AnimatableBody2D" parent="Stage/TrashCan" unique_id=353197318]
 
 [node name="TrashCanShape" type="CollisionPolygon2D" parent="Stage/TrashCan/TrashCanBody" unique_id=1677236118]
-polygon = PackedVector2Array(-26, -29, -19, 34, 19, 34, 26, -29, 23, -29, 16, 30, -16, 30, -23, -29)
+polygon = PackedVector2Array(-26, -29, -19, 35, 19, 35, 26, -29, 23, -29, 16, 30, -16, 30, -23, -29)
+
+[node name="EdgeA" type="Marker2D" parent="Stage/TrashCan/TrashCanBody" unique_id=614306286]
+position = Vector2(-23, -29)
+
+[node name="EdgeB" type="Marker2D" parent="Stage/TrashCan/TrashCanBody" unique_id=1956362912]
+position = Vector2(23, -29)
 
 [node name="TrashCanInside" type="Area2D" parent="Stage/TrashCan" unique_id=1946479884]
 gravity_space_override = 1
-gravity = 490.0
+gravity = 180.0
 
 [node name="TrashInsideArea" type="CollisionPolygon2D" parent="Stage/TrashCan/TrashCanInside" unique_id=1932954179]
 polygon = PackedVector2Array(-22, -24, -16, 30, 16, 30, 22, -24)
 
 [node name="Projection" type="Node2D" parent="Stage" unique_id=468000200]
+position = Vector2(-120, 20)
 script = ExtResource("7_33pyq")
 
 [node name="ProjectionPoint" type="Sprite2D" parent="Stage/Projection" unique_id=248479682]
@@ -90,3 +102,23 @@ hframes = 2
 modulate = Color(1, 1, 1, 0.3137255)
 texture = ExtResource("2_gaqh5")
 hframes = 2
+
+[node name="Floor" type="StaticBody2D" parent="Stage" unique_id=1264836006]
+position = Vector2(0, 105)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stage/Floor" unique_id=1697055919]
+shape = SubResource("WorldBoundaryShape2D_33pyq")
+
+[node name="WallRight" type="StaticBody2D" parent="Stage" unique_id=881120318]
+position = Vector2(165, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stage/WallRight" unique_id=796841537]
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_v3cl7")
+
+[node name="WallLeft" type="StaticBody2D" parent="Stage" unique_id=1766309170]
+position = Vector2(-165, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stage/WallLeft" unique_id=1051974785]
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_v3cl7")

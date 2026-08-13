@@ -25,7 +25,6 @@ public class ThrowPaperBallDistractionTesting : DistractionTesting
     public override void Setup()
     {
         base.Setup();
-        // Insert class specific logic here
     }
 
     // Teardown after each test
@@ -33,7 +32,6 @@ public class ThrowPaperBallDistractionTesting : DistractionTesting
     public override void Teardown()
     {
         base.Teardown();
-        // Insert class specific logic here
     }
 
 
