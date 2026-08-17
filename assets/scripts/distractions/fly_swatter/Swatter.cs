@@ -21,6 +21,12 @@ public partial class Swatter : Node2D
     // Time before another swing is allowed after one lands
     [Export]
     private float _cooldownDuration = 1f;
+    // Racket sprite tint applied while on cooldown, to convey the altered state
+    [Export]
+    private Color _cooldownModulate = new Color(0.8f, 0.8f, 0.8f, 0.6f);
+    // Playspace limits (Stage-local space) the anchor (Position) is clamped into every frame
+    [Export]
+    private Rect2 _movementBounds = new Rect2(-110, -110, 220, 220);
 
     // Internal timer that gates how soon another swing is allowed
     private Timer _cooldownTimer = null!;
@@ -28,6 +34,7 @@ public partial class Swatter : Node2D
     // Child node references found during "_Ready"
     private ShapeCast2D _hitScan = null!;
     private AnimatedSprite2D _smackFx = null!;
+    private Sprite2D _racketSprite = null!;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -41,6 +48,9 @@ public partial class Swatter : Node2D
         _smackFx.Visible = false;
         _smackFx.AnimationFinished += () => _smackFx.Visible = false;
 
+        _racketSprite = GetNode<Sprite2D>("SwatterSprite");
+        if (_racketSprite == null) { throw new NullReferenceException(); }
+
         // Create and configure the internal cooldown timer
         _cooldownTimer = new Timer
         {
@@ -48,7 +58,7 @@ public partial class Swatter : Node2D
             WaitTime = _cooldownDuration
         };
         AddChild(_cooldownTimer);
-        _cooldownTimer.Timeout += () => _state = SwatterState.idle;
+        _cooldownTimer.Timeout += EndCooldown;
 
         // Sets the initial state of the state machine
         _state = SwatterState.idle;
@@ -60,6 +70,8 @@ public partial class Swatter : Node2D
         // Trailing mouse-follow, independent of state - the swatter keeps tracking the cursor through cooldown
         Vector2 target = GetParent<Node2D>().ToLocal(GetGlobalMousePosition());
         Position = Position.Lerp(target, 1f - Mathf.Exp(-_followSharpness * (float)delta));
+        // Keep the anchor within the playspace regardless of state, mirroring Fly's own containment
+        Position = Position.Clamp(_movementBounds.Position, _movementBounds.End);
     }
 
     // Called for input events not already consumed elsewhere in the pipeline
@@ -93,10 +105,18 @@ public partial class Swatter : Node2D
         _smackFx.Visible = true;
         _smackFx.Play("smack");
 
+        _racketSprite.Modulate = _cooldownModulate;
         _cooldownTimer.Start();
 
         // Update state machine
         _state = SwatterState.cooldown;
+    }
+
+    // Reverts the cooldown tint and re-allows swinging
+    private void EndCooldown()
+    {
+        _racketSprite.Modulate = Colors.White;
+        _state = SwatterState.idle;
     }
 
 }
