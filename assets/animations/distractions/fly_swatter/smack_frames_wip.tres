@@ -1,0 +1,67 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://baymo7wwdk1tb"]
+
+[ext_resource type="Texture2D" uid="uid://b5821y2df3aho" path="res://assets/textures/distractions/fly_swatter/smack_FX_wip.png" id="1_hxq6o"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0fqn"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_72fbg"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8cj3"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sunun"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dgbbh"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pcdsj"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3uf7k"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nbv6v"]
+atlas = ExtResource("1_hxq6o")
+region = Rect2(448, 0, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q0fqn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_72fbg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v8cj3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sunun")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dgbbh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pcdsj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3uf7k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nbv6v")
+}],
+"loop": false,
+"name": &"smack",
+"speed": 32.0
+}]

@@ -32,6 +32,7 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 [file_customization]
 
 folder_colors={
+"res://assets/animations/": "purple",
 "res://assets/scenes/": "blue",
 "res://assets/scripts/": "pink",
 "res://assets/textures/": "green",

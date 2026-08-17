@@ -1,0 +1,37 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bv7opye16va46"]
+
+[ext_resource type="Texture2D" uid="uid://udnrvbk8pwtl" path="res://assets/textures/distractions/fly_swatter/fly_wip2.png" id="1_x7vvp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fd2yy"]
+atlas = ExtResource("1_x7vvp")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p580d"]
+atlas = ExtResource("1_x7vvp")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bey7f"]
+atlas = ExtResource("1_x7vvp")
+region = Rect2(16, 0, 16, 16)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fd2yy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p580d")
+}],
+"loop": true,
+"name": &"alive",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bey7f")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
+}]
