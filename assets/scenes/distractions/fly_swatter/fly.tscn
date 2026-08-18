@@ -4,7 +4,7 @@
 [ext_resource type="SpriteFrames" uid="uid://bv7opye16va46" path="res://assets/animations/distractions/fly_swatter/fly_frames_wip2.tres" id="2_a718f"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j7phg"]
-radius = 4.0
+radius = 3.0
 
 [node name="Fly" type="Area2D" unique_id=1928602365]
 script = ExtResource("1_0uk61")
@@ -20,7 +20,7 @@ _spriteFacingOffsetDeg = -90.0
 
 [node name="FlySprite" type="AnimatedSprite2D" parent="." unique_id=1790747449]
 sprite_frames = ExtResource("2_a718f")
-animation = &"alive"
+animation = &"dead"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1978581127]
 shape = SubResource("CircleShape2D_j7phg")

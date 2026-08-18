@@ -3,12 +3,13 @@
 [ext_resource type="Script" uid="uid://d4cf12a4osrsn" path="res://assets/scripts/distractions/fly_swatter/FlySwatter.cs" id="1_2f1be"]
 [ext_resource type="Texture2D" uid="uid://cjx5tm14vcpih" path="res://assets/textures/distractions/fly_swatter/place_holder_background_220x220.png" id="2_uy12n"]
 [ext_resource type="PackedScene" uid="uid://byc337x6flld2" path="res://assets/scenes/distractions/fly_swatter/fly.tscn" id="3_0o7l6"]
+[ext_resource type="Script" uid="uid://biyd5t1bnl7xu" path="res://assets/scripts/distractions/fly_swatter/FlySpawner.cs" id="3_l4oyu"]
 [ext_resource type="Script" uid="uid://dfmkiuawcfhgi" path="res://assets/scripts/distractions/fly_swatter/Swatter.cs" id="5_0o7l6"]
 [ext_resource type="SpriteFrames" uid="uid://baymo7wwdk1tb" path="res://assets/animations/distractions/fly_swatter/smack_frames_wip.tres" id="6_jegjh"]
 [ext_resource type="Texture2D" uid="uid://beub0naxnglkp" path="res://assets/textures/distractions/fly_swatter/swatter_PLACEHOLDER.png" id="6_l4oyu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mvg5u"]
-size = Vector2(26, 26)
+size = Vector2(24, 23)
 
 [node name="FlySwatter" type="Node" unique_id=592884100]
 script = ExtResource("1_2f1be")
@@ -19,10 +20,15 @@ position = Vector2(320, 180)
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=1351348644]
 texture = ExtResource("2_uy12n")
 
-[node name="Fly" parent="Stage" unique_id=1928602365 instance=ExtResource("3_0o7l6")]
+[node name="FlySpawner" type="Node2D" parent="Stage" unique_id=200466434]
+script = ExtResource("3_l4oyu")
+_flyScene = ExtResource("3_0o7l6")
+
+[node name="Fly" parent="Stage/FlySpawner" unique_id=1928602365 instance=ExtResource("3_0o7l6")]
 
 [node name="Swatter" type="Node2D" parent="Stage" unique_id=1519731171]
 script = ExtResource("5_0o7l6")
+_movementBounds = Rect2(-100, -80, 200, 200)
 
 [node name="SmackFx" type="AnimatedSprite2D" parent="Stage/Swatter" unique_id=1587858214]
 position = Vector2(-1, -19)

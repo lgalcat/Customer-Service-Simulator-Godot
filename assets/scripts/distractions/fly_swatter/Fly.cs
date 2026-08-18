@@ -2,6 +2,23 @@ using Godot;
 using System;
 
 /// <summary>
+/// Difficulty-relevant subset of Fly's movement tunables, applied via <see cref="Fly.Configure"/>
+/// </summary>
+public struct FlyDifficultyProfile
+{
+    public float MinSpeed;
+    public float MaxSpeed;
+    public float MinStepDuration;
+    public float MaxStepDuration;
+    public float ArcChance;
+    public float MinTurnRate;
+    public float MaxTurnRate;
+    public float MinHeadingDeviation;
+    public float MaxHeadingDeviation;
+    public float SpeedChangeChance;
+}
+
+/// <summary>
 /// Handler script purpose built for a fly in "FlySwatter"
 /// <para>Handles all logic local to the fly and its state machine</para>
 /// </summary>
@@ -26,34 +43,34 @@ public partial class Fly : Area2D
     private float _deathDuration = 2;
     // Constant drift applied to Position while dead
     [Export]
-    private Vector2 _deadVelocity = new Vector2(0, 40);
+    private Vector2 _deadVelocity = new Vector2(0, 80);
 
     // Alive-state movement: speed range a step can roll into
     [Export]
-    private float _minSpeed = 30;
+    private float _minSpeed = 50;
     [Export]
-    private float _maxSpeed = 80;
+    private float _maxSpeed = 120;
     // Alive-state movement: how long a single step (straight or arc) lasts before a new one is rolled
     [Export]
     private float _minStepDuration = 0.3f;
     [Export]
-    private float _maxStepDuration = 0.8f;
+    private float _maxStepDuration = 1.2f;
     // Alive-state movement: chance a new step is a sweeping arc rather than a straight line
     [Export]
-    private float _arcChance = 0.7f;
+    private float _arcChance = 0.8f;
     // Alive-state movement: angular velocity range (magnitude, sign rolled separately) for arc steps
     [Export]
-    private float _minTurnRate = 120;
+    private float _minTurnRate = 60;
     [Export]
     private float _maxTurnRate = 300;
     // Alive-state movement: magnitude range (sign rolled separately) of the drastic per-step redirect
     [Export]
-    private float _minHeadingDeviation = 60;
+    private float _minHeadingDeviation = 0;
     [Export]
-    private float _maxHeadingDeviation = 160;
+    private float _maxHeadingDeviation = 90;
     // Alive-state movement: chance a new step also re-rolls speed, rather than carrying the previous one over
     [Export]
-    private float _speedChangeChance = 0.6f;
+    private float _speedChangeChance = 0.8f;
     // Alive-state movement: playspace limits (Stage-local space) Position is clamped into every frame
     [Export]
     private Rect2 _movementBounds = new Rect2(-110, -110, 220, 220);
@@ -169,6 +186,25 @@ public partial class Fly : Area2D
 
         if (clampedX) { _headingDeg = Mathf.Wrap(180f - _headingDeg, 0f, 360f); }
         if (clampedY) { _headingDeg = Mathf.Wrap(360f - _headingDeg, 0f, 360f); }
+    }
+
+    /// <summary>
+    /// Applies difficulty-relevant movement tunables and the playspace bounds. Must be called before this
+    /// node enters the scene tree, mirroring <see cref="Distraction.Setup"/>'s own "before entering the tree" contract.
+    /// </summary>
+    public void Configure(FlyDifficultyProfile profile, Rect2 movementBounds)
+    {
+        _minSpeed = profile.MinSpeed;
+        _maxSpeed = profile.MaxSpeed;
+        _minStepDuration = profile.MinStepDuration;
+        _maxStepDuration = profile.MaxStepDuration;
+        _arcChance = profile.ArcChance;
+        _minTurnRate = profile.MinTurnRate;
+        _maxTurnRate = profile.MaxTurnRate;
+        _minHeadingDeviation = profile.MinHeadingDeviation;
+        _maxHeadingDeviation = profile.MaxHeadingDeviation;
+        _speedChangeChance = profile.SpeedChangeChance;
+        _movementBounds = movementBounds;
     }
 
     /// <summary>
