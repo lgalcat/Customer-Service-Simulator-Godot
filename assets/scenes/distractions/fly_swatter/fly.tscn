@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://byc337x6flld2"]
+
+[ext_resource type="Script" uid="uid://djq0wnou8mxcn" path="res://assets/scripts/distractions/fly_swatter/Fly.cs" id="1_0uk61"]
+[ext_resource type="SpriteFrames" uid="uid://bv7opye16va46" path="res://assets/animations/distractions/fly_swatter/fly_frames_wip2.tres" id="2_a718f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j7phg"]
+radius = 4.0
+
+[node name="Fly" type="Area2D" unique_id=1928602365]
+script = ExtResource("1_0uk61")
+_minSpeed = 50.0
+_maxSpeed = 120.0
+_maxStepDuration = 1.2
+_arcChance = 0.8
+_minTurnRate = 60.0
+_minHeadingDeviation = 0.0
+_maxHeadingDeviation = 90.0
+_speedChangeChance = 0.8
+_spriteFacingOffsetDeg = -90.0
+
+[node name="FlySprite" type="AnimatedSprite2D" parent="." unique_id=1790747449]
+sprite_frames = ExtResource("2_a718f")
+animation = &"alive"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1978581127]
+shape = SubResource("CircleShape2D_j7phg")
