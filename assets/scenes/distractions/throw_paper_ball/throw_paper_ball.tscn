@@ -30,25 +30,7 @@ position = Vector2(320, 180)
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=987714246]
 texture = ExtResource("2_u4k7e")
 
-[node name="Ball" type="RigidBody2D" parent="Stage" unique_id=346813288]
-z_index = 2
-position = Vector2(-120, 20)
-physics_material_override = SubResource("PhysicsMaterial_u4k7e")
-gravity_scale = 0.8
-linear_damp_mode = 1
-linear_damp = 0.1
-script = ExtResource("3_acv8d")
-
-[node name="BallShape" type="CollisionShape2D" parent="Stage/Ball" unique_id=4881694]
-shape = SubResource("CircleShape2D_u4k7e")
-
-[node name="BallSprite" type="Sprite2D" parent="Stage/Ball" unique_id=97512083]
-texture = ExtResource("2_gaqh5")
-hframes = 2
-frame = 1
-
 [node name="TrashCan" type="Node2D" parent="Stage" unique_id=1785474339]
-z_index = 1
 position = Vector2(80, 69)
 script = ExtResource("5_33pyq")
 
@@ -72,6 +54,22 @@ gravity = 180.0
 
 [node name="TrashInsideArea" type="CollisionPolygon2D" parent="Stage/TrashCan/TrashCanInside" unique_id=1932954179]
 polygon = PackedVector2Array(-22, -24, -16, 30, 16, 30, 22, -24)
+
+[node name="Ball" type="RigidBody2D" parent="Stage" unique_id=346813288]
+position = Vector2(-120, 20)
+physics_material_override = SubResource("PhysicsMaterial_u4k7e")
+gravity_scale = 0.8
+linear_damp_mode = 1
+linear_damp = 0.1
+script = ExtResource("3_acv8d")
+
+[node name="BallShape" type="CollisionShape2D" parent="Stage/Ball" unique_id=4881694]
+shape = SubResource("CircleShape2D_u4k7e")
+
+[node name="BallSprite" type="Sprite2D" parent="Stage/Ball" unique_id=97512083]
+texture = ExtResource("2_gaqh5")
+hframes = 2
+frame = 1
 
 [node name="Projection" type="Node2D" parent="Stage" unique_id=468000200]
 position = Vector2(-120, 20)
