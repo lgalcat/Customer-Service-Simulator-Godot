@@ -9,10 +9,13 @@ public class FlySwatterDistractionTesting : DistractionTesting
 {
     protected override Distraction CreateDistraction()
     {
-        // Setup() doesn't look up any child nodes yet (Fly/Swatter/spawner wiring is pending) -
-        // a bare instance satisfies today's contract tests. Once Setup() wiring lands this will
-        // need a Stage/... stand-in tree, mirroring ThrowPaperBallDistractionTesting.CreateDistraction()
-        return new FlySwatter();
+        // Barebones stand-in tree matching only the node name/type Setup() looks up
+        // (Stage/FlySpawner) - not the full production scene
+        var flySwatter = new FlySwatter();
+        var stage = new Node2D { Name = "Stage" };
+        flySwatter.AddChild(stage);
+        stage.AddChild(new FlySpawner { Name = "FlySpawner" });
+        return flySwatter;
     }
 
     // Setup before each test

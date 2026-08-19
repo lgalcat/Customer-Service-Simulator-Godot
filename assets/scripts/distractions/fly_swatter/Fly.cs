@@ -43,7 +43,7 @@ public partial class Fly : Area2D
     private float _deathDuration = 2;
     // Constant drift applied to Position while dead
     [Export]
-    private Vector2 _deadVelocity = new Vector2(0, 80);
+    private Vector2 _deadVelocity = new Vector2(0, 60);
 
     // Alive-state movement: speed range a step can roll into
     [Export]
@@ -232,7 +232,7 @@ public partial class Fly : Area2D
         switch(_sprite.Animation)
         {
             case "alive":
-                _sprite.Modulate = new Color(1f, 1f, 1f, 1f);
+                _sprite.Modulate = Colors.White;
                 break;
             case "dead":
                 _sprite.Modulate = new Color(1f, 1f, 1f, 0.6f);

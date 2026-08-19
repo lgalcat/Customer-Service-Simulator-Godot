@@ -14,7 +14,7 @@ public partial class FlySpawner : Node2D
 
     // Wave pacing
     [Export]
-    private int _firstWaveSize = 3;
+    private int _firstWaveSize = 6;
     [Export]
     private int _fliesPerWave = 3;
     [Export]

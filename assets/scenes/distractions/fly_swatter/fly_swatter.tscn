@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://beub0naxnglkp" path="res://assets/textures/distractions/fly_swatter/swatter_PLACEHOLDER.png" id="6_l4oyu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mvg5u"]
-size = Vector2(24, 23)
+size = Vector2(25, 23)
 
 [node name="FlySwatter" type="Node" unique_id=592884100]
 script = ExtResource("1_2f1be")
@@ -23,8 +23,6 @@ texture = ExtResource("2_uy12n")
 [node name="FlySpawner" type="Node2D" parent="Stage" unique_id=200466434]
 script = ExtResource("3_l4oyu")
 _flyScene = ExtResource("3_0o7l6")
-
-[node name="Fly" parent="Stage/FlySpawner" unique_id=1928602365 instance=ExtResource("3_0o7l6")]
 
 [node name="Swatter" type="Node2D" parent="Stage" unique_id=1519731171]
 script = ExtResource("5_0o7l6")
