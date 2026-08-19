@@ -1,7 +1,9 @@
 using Godot;
 using System;
 
-// Main script of the Throw Paper Ball minigame
+/// <summary>
+/// Main script of the Throw Paper Ball minigame
+/// </summary>
 public partial class ThrowPaperBall : Distraction
 {
     // Control state machine
