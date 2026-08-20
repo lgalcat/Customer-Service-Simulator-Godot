@@ -25,6 +25,8 @@ public partial class FlySwatter : Distraction
 
     // Child node references found during "Setup"
     private FlySpawner _flySpawner = null!;
+    // Not core to the game loop - unlike other child lookups, a missing tracker doesn't throw
+    private Label? _scoreTracker;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -46,7 +48,9 @@ public partial class FlySwatter : Distraction
         _flySpawner = GetNode<FlySpawner>("Stage/FlySpawner");
         if (_flySpawner == null) { throw new NullReferenceException(); }
         _flySpawner.FlyDied += UpdateScore;
-        // [19/08/2026] Implementation and wiring of visual score tracker pending
+        // Find ingame score tracker and set initial values (if existing)
+        _scoreTracker = GetNode<Label>("Stage/ScoreTracker");
+        if (_scoreTracker != null) { _scoreTracker.Text = _winScore.ToString(); }
     }
 
     /// <summary>
@@ -70,7 +74,9 @@ public partial class FlySwatter : Distraction
     private void UpdateScore()
     {
         _currentScore++;
-        // [19/08/2026] Implementation of a score indicator pending, insert update calls here
+        // Update the ingame progress tracker
+        if (_scoreTracker != null) { _scoreTracker.Text = (_winScore - _currentScore).ToString(); }
+
         if (_currentScore >= _winScore) { Victory(); }
     }
 }

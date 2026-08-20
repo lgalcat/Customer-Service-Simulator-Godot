@@ -118,6 +118,66 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         AssertThat(waveTimer.IsStopped()).IsTrue();
     }
 
+    // Tests that the ScoreTracker label counts down in step with real FlyDied events and lands
+    // on exactly "0" when Victory fires. Bounded by the tracker's own starting reading rather
+    // than the private _winScore, to avoid tailoring the test to today's magic number
+    [TestCase]
+    public void ScoreTrackerCountsDownToZeroAtVictory()
+    {
+        distraction.Setup(1);
+        FlySpawner flySpawner = distraction.GetNode<FlySpawner>("Stage/FlySpawner");
+        Label scoreTracker = distraction.GetNode<Label>("Stage/ScoreTracker");
+        // FlySpawner never entered a live SceneTree here, but Victory() (via UpdateScore) calls
+        // FlySpawner.StopSpawning(), which needs the wave Timer _Ready() creates - which in turn
+        // also spawns the first wave of real Fly children. All created mid-test, after distraction
+        // was already wrapped, so they need explicit AutoFree cleanup registration
+        flySpawner._Ready();
+        foreach (Node child in flySpawner.GetChildren()) { AutoFree(child); }
+        bool victoryCalled = false;
+        distraction.OnVictory = () => { victoryCalled = true; };
+        int startingCount = int.Parse(scoreTracker.Text);
+
+        for (int i = 0; i < startingCount; i++)
+        {
+            flySpawner.FlyDied?.Invoke();
+            AssertThat(int.Parse(scoreTracker.Text)).IsEqual(startingCount - (i + 1));
+        }
+
+        AssertThat(scoreTracker.Text).IsEqual("0");
+        AssertThat(victoryCalled).IsTrue();
+    }
+
+    // Tests that a missing ScoreTracker node doesn't break Setup()/scoring/Victory() - the
+    // tracker is explicitly optional (nullable field, no throw on a failed lookup), unlike
+    // FlySpawner's own mandatory lookup
+    [TestCase]
+    public void SetupToleratesMissingScoreTracker()
+    {
+        // Barebones stand-in tree without a ScoreTracker node, mirroring
+        // FlySwatterDistractionTesting.CreateDistraction()'s stand-in shape
+        var flySwatter = AutoFree(new FlySwatter())!;
+        var stage = new Node2D { Name = "Stage" };
+        flySwatter.AddChild(stage);
+        var flySpawner = new FlySpawner { Name = "FlySpawner" };
+        // _Ready() requires a real _flyScene; reuse the real fly.tscn rather than duplicating
+        // FlySpawnerTesting's PackedScene.Pack() helper into a fourth file for this one test
+        flySpawner.Set("_flyScene", GD.Load<PackedScene>(FlyScenePath));
+        stage.AddChild(flySpawner);
+
+        flySwatter.Setup(1);
+        flySpawner._Ready();
+        foreach (Node child in flySpawner.GetChildren()) { AutoFree(child); }
+        bool victoryCalled = false;
+        flySwatter.OnVictory = () => { victoryCalled = true; };
+
+        for (int i = 0; i < flySpawner._maxTotalFlies; i++)
+        {
+            flySpawner.FlyDied?.Invoke();
+        }
+
+        AssertThat(victoryCalled).IsTrue();
+    }
+
     // Tests that the swatter's hit-scan area is big enough to actually catch a fly, not just
     // theoretically overlap it - checked against a freshly instanced fly.tscn, not a hardcoded size
     [TestCase]

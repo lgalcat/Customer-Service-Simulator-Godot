@@ -20,6 +20,23 @@ position = Vector2(320, 180)
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=1351348644]
 texture = ExtResource("2_uy12n")
 
+[node name="ScoreTracker" type="Label" parent="Stage" unique_id=734482975]
+modulate = Color(1, 1, 1, 0.5)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -114.5
+offset_top = -123.0
+offset_right = 114.5
+offset_bottom = 123.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 180
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="FlySpawner" type="Node2D" parent="Stage" unique_id=200466434]
 script = ExtResource("3_l4oyu")
 _flyScene = ExtResource("3_0o7l6")
