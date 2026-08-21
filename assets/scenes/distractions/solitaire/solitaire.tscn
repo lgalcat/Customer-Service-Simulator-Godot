@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://crvy5uqrukhyx"]
+
+[ext_resource type="Script" uid="uid://b87o2bky6ber7" path="res://assets/scripts/distractions/solitaire/Solitaire.cs" id="2_solitaire"]
+[ext_resource type="Texture2D" uid="uid://bgt8futvfwq5l" path="res://assets/textures/distractions/solitaire/placeholder_background_410x240.png" id="2_xybw0"]
+
+[node name="Solitaire" type="Node" unique_id=1042936534]
+script = ExtResource("2_solitaire")
+
+[node name="Stage" type="Node2D" parent="." unique_id=165803047]
+position = Vector2(320, 180)
+
+[node name="Background" type="Sprite2D" parent="Stage" unique_id=1894314873]
+texture = ExtResource("2_xybw0")
