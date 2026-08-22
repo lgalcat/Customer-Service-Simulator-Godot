@@ -24,6 +24,11 @@ public partial class TableauPile : Pile
     /// </summary>
     [Export] private float _dropZoneWidth = 50f;
 
+    /// <summary>
+    /// Distance this column's drop zone is displaced vertically (measuring from its center)
+    /// </summary>
+    [Export] private float _dropZoneVerticalOffset = 25f;
+
     public override bool CanAccept(IReadOnlyList<Card> run)
     {
         Card lead = run[0];
@@ -50,7 +55,7 @@ public partial class TableauPile : Pile
     public override Rect2 GetDropZoneGlobalRect()
     {
         Vector2 origin = GlobalPosition;
-        return new Rect2(origin.X - _dropZoneWidth / 2f, origin.Y, _dropZoneWidth, DropZoneOverflow);
+        return new Rect2(origin.X - _dropZoneWidth / 2f, origin.Y - _dropZoneVerticalOffset, _dropZoneWidth, DropZoneOverflow);
     }
 
     protected override Vector2 GetLocalOffset(int index)

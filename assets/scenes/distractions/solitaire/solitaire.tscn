@@ -1,17 +1,20 @@
 [gd_scene format=3 uid="uid://crvy5uqrukhyx"]
 
+[ext_resource type="PackedScene" uid="uid://ctcb2y3xu2u8s" path="res://assets/scenes/distractions/solitaire/card.tscn" id="2_fsgdk"]
 [ext_resource type="Script" uid="uid://b87o2bky6ber7" path="res://assets/scripts/distractions/solitaire/Solitaire.cs" id="2_solitaire"]
 [ext_resource type="Texture2D" uid="uid://bgt8futvfwq5l" path="res://assets/textures/distractions/solitaire/placeholder_background_410x240.png" id="2_xybw0"]
 [ext_resource type="Texture2D" uid="uid://d3tu2mfi87e0q" path="res://assets/textures/distractions/solitaire/card_pile_tilemap_wip2.png" id="3_kende"]
 [ext_resource type="Script" uid="uid://lb7l7xo04tum" path="res://assets/scripts/distractions/solitaire/TableauPile.cs" id="3_sklub"]
 [ext_resource type="Script" uid="uid://dol805c3xocns" path="res://assets/scripts/distractions/solitaire/FoundationPile.cs" id="5_30xke"]
 [ext_resource type="Script" uid="uid://cpk4ci35bwesi" path="res://assets/scripts/distractions/solitaire/StockPile.cs" id="6_fsgdk"]
+[ext_resource type="Script" uid="uid://cew8cpv6ies27" path="res://assets/scripts/distractions/solitaire/WastePile.cs" id="7_30xke"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lveow"]
 size = Vector2(40, 60)
 
 [node name="Solitaire" type="Node" unique_id=1042936534]
 script = ExtResource("2_solitaire")
+_cardScene = ExtResource("2_fsgdk")
 
 [node name="Stage" type="Node2D" parent="." unique_id=165803047]
 position = Vector2(320, 180)
@@ -19,97 +22,101 @@ position = Vector2(320, 180)
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=1894314873]
 texture = ExtResource("2_xybw0")
 
-[node name="TableauPile0" type="Node2D" parent="Stage" unique_id=1371647899 groups=["piles"]]
+[node name="TableauPiles" type="Node2D" parent="Stage" unique_id=1283035269]
+
+[node name="TableauPile0" type="Node2D" parent="Stage/TableauPiles" unique_id=1371647899 groups=["piles"]]
 position = Vector2(-174, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile0" unique_id=1315476124]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile0" unique_id=1315476124]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="TableauPile1" type="Node2D" parent="Stage" unique_id=576399970 groups=["piles"]]
+[node name="TableauPile1" type="Node2D" parent="Stage/TableauPiles" unique_id=576399970 groups=["piles"]]
 position = Vector2(-116, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile1" unique_id=1815598241]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile1" unique_id=1815598241]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="TableauPile2" type="Node2D" parent="Stage" unique_id=1976909304 groups=["piles"]]
+[node name="TableauPile2" type="Node2D" parent="Stage/TableauPiles" unique_id=1976909304 groups=["piles"]]
 position = Vector2(-58, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile2" unique_id=658637653]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile2" unique_id=658637653]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="TableauPile3" type="Node2D" parent="Stage" unique_id=490619631 groups=["piles"]]
+[node name="TableauPile3" type="Node2D" parent="Stage/TableauPiles" unique_id=490619631 groups=["piles"]]
 position = Vector2(0, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile3" unique_id=303756225]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile3" unique_id=303756225]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="TableauPile4" type="Node2D" parent="Stage" unique_id=1599443681 groups=["piles"]]
+[node name="TableauPile4" type="Node2D" parent="Stage/TableauPiles" unique_id=1599443681 groups=["piles"]]
 position = Vector2(58, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile4" unique_id=1916351718]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile4" unique_id=1916351718]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="TableauPile5" type="Node2D" parent="Stage" unique_id=320287556 groups=["piles"]]
+[node name="TableauPile5" type="Node2D" parent="Stage/TableauPiles" unique_id=320287556 groups=["piles"]]
 position = Vector2(116, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile5" unique_id=2057154106]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile5" unique_id=2057154106]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="TableauPile6" type="Node2D" parent="Stage" unique_id=2023576848 groups=["piles"]]
+[node name="TableauPile6" type="Node2D" parent="Stage/TableauPiles" unique_id=2023576848 groups=["piles"]]
 position = Vector2(174, -1)
 script = ExtResource("3_sklub")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPile6" unique_id=127733564]
+[node name="PileOutline" type="Sprite2D" parent="Stage/TableauPiles/TableauPile6" unique_id=127733564]
 texture = ExtResource("3_kende")
 hframes = 5
 
-[node name="FoundationHearts" type="Node2D" parent="Stage" unique_id=264421206 groups=["piles"]]
+[node name="FoundationPiles" type="Node2D" parent="Stage" unique_id=1233882707]
+
+[node name="FoundationHearts" type="Node2D" parent="Stage/FoundationPiles" unique_id=264421206 groups=["piles"]]
 position = Vector2(0, -77)
 script = ExtResource("5_30xke")
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationHearts" unique_id=1625303544]
+[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationPiles/FoundationHearts" unique_id=1625303544]
 texture = ExtResource("3_kende")
 hframes = 5
 frame = 1
 
-[node name="FoundationClubs" type="Node2D" parent="Stage" unique_id=907409245 groups=["piles"]]
+[node name="FoundationClubs" type="Node2D" parent="Stage/FoundationPiles" unique_id=907409245 groups=["piles"]]
 position = Vector2(58, -77)
 script = ExtResource("5_30xke")
 Suit = 2
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationClubs" unique_id=588595614]
+[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationPiles/FoundationClubs" unique_id=588595614]
 texture = ExtResource("3_kende")
 hframes = 5
 frame = 2
 
-[node name="FoundationDiamonds" type="Node2D" parent="Stage" unique_id=1621847412 groups=["piles"]]
+[node name="FoundationDiamonds" type="Node2D" parent="Stage/FoundationPiles" unique_id=1621847412 groups=["piles"]]
 position = Vector2(116, -77)
 script = ExtResource("5_30xke")
 Suit = 1
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationDiamonds" unique_id=851415]
+[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationPiles/FoundationDiamonds" unique_id=851415]
 texture = ExtResource("3_kende")
 hframes = 5
 frame = 3
 
-[node name="FoundationSpades" type="Node2D" parent="Stage" unique_id=849303455 groups=["piles"]]
+[node name="FoundationSpades" type="Node2D" parent="Stage/FoundationPiles" unique_id=849303455 groups=["piles"]]
 position = Vector2(174, -77)
 script = ExtResource("5_30xke")
 Suit = 3
 
-[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationSpades" unique_id=240686950]
+[node name="PileOutline" type="Sprite2D" parent="Stage/FoundationPiles/FoundationSpades" unique_id=240686950]
 texture = ExtResource("3_kende")
 hframes = 5
 frame = 4
@@ -123,12 +130,15 @@ texture = ExtResource("3_kende")
 hframes = 5
 
 [node name="ClickZone" type="Area2D" parent="Stage/StockPile" unique_id=1385908989]
+monitoring = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Stage/StockPile/ClickZone" unique_id=549880143]
 shape = SubResource("RectangleShape2D_lveow")
 
 [node name="WastePile" type="Node2D" parent="Stage" unique_id=61238889 groups=["piles"]]
 position = Vector2(-116, -77)
+script = ExtResource("7_30xke")
 
 [node name="PileOutline" type="Sprite2D" parent="Stage/WastePile" unique_id=548147253]
 texture = ExtResource("3_kende")

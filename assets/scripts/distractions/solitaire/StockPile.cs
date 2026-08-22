@@ -41,6 +41,20 @@ public partial class StockPile : Pile
         return Vector2.Zero;
     }
 
+    // Stock-resident cards must not compete with ClickZone for input picking - all sit at the same position,
+    // and being added after ClickZone in tree order would otherwise win picking priority over the whole zone
+    public override void AddCards(IReadOnlyList<Card> run)
+    {
+        base.AddCards(run);
+        foreach (Card card in run) { card.InputPickable = false; }
+    }
+
+    public override void RemoveCards(IReadOnlyList<Card> run)
+    {
+        foreach (Card card in run) { card.InputPickable = true; }
+        base.RemoveCards(run);
+    }
+
     private void OnClickZoneInputEvent(Node viewport, InputEvent @event, long shapeIdx)
     {
         if (@event is not InputEventMouseButton mouseButton || mouseButton.ButtonIndex != MouseButton.Left || !mouseButton.Pressed) { return; }
