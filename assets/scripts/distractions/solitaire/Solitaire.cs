@@ -18,6 +18,11 @@ public partial class Solitaire : Distraction
     /// </summary>
     public override float ViewportY { get => _viewportY; }
 
+    // "Switch" to alternate randomized deal generation and serialized deal loading
+    // [23/08/2026] As of today only randomized deal generation is implemented, so by default no cards are dealt
+    [Export]
+    private bool _randomizeDeal = false;
+
     /// <summary>
     /// Scene instanced once per card during dealing.
     /// </summary>
@@ -70,7 +75,7 @@ public partial class Solitaire : Distraction
         stock.Waste = waste;
 
         // [22/08/2026] TODO: alternate data-driven deal source goes here once implemented, in place of/alongside DealBuilder
-        DealBuilder.Deal(_cardScene, dragLayer, _tableaus, stock);
+        if (_randomizeDeal) { DealBuilder.Deal(_cardScene, dragLayer, _tableaus, stock); }
     }
 
     /// <summary>

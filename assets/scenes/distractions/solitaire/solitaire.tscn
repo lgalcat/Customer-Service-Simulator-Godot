@@ -14,6 +14,7 @@ size = Vector2(40, 60)
 
 [node name="Solitaire" type="Node" unique_id=1042936534]
 script = ExtResource("2_solitaire")
+_randomizeDeal = true
 _cardScene = ExtResource("2_fsgdk")
 
 [node name="Stage" type="Node2D" parent="." unique_id=165803047]
