@@ -4,13 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://ckmj2tffp5l5w" path="res://assets/textures/distractions/solitaire/cards_tilemap_wip2.png" id="2_ediw2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_card"]
-size = Vector2(42, 60)
+size = Vector2(38, 56)
 
 [node name="Card" type="Area2D" unique_id=945989596]
 script = ExtResource("1_card")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1898831797]
-position = Vector2(-0.5, -0.25)
 shape = SubResource("RectangleShape2D_card")
 
 [node name="CardSprite" type="Sprite2D" parent="." unique_id=1280903130]

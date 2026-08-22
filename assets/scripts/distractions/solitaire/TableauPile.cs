@@ -17,7 +17,7 @@ public partial class TableauPile : Pile
     /// <summary>
     /// Vertical cascade step contributed by a face-up card to whatever is stacked on top of it.
     /// </summary>
-    [Export] private float _faceUpOffsetY = 18f;
+    [Export] private float _faceUpOffsetY = 11f;
 
     /// <summary>
     /// Width of this column's drop zone, independent from the card's own collision size.
