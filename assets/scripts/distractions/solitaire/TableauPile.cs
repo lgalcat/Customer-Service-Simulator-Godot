@@ -25,7 +25,7 @@ public partial class TableauPile : Pile
     [Export] private float _dropZoneWidth = 50f;
 
     /// <summary>
-    /// Distance this column's drop zone is displaced vertically (measuring from its center)
+    /// Distance this column's drop zone is displaced vertically (measuring from root Node2D center)
     /// </summary>
     [Export] private float _dropZoneVerticalOffset = 25f;
 

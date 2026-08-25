@@ -136,7 +136,11 @@ public partial class Card : Area2D
         _state = CardState.dragging;
     }
 
-    // Handle where the card(s) should move after being dropped by the player
+    // Handle where the card(s) should move after being dropped by the player.
+    // Always fires on the lead card, never a follower: the cursor's position relative to the stack of cards
+    // is fixed for the whole drag - so the relative geometry never changes between press and release. 
+    // Since the original press necessarily landed on the lead no follower's shape will
+    // register a mouse input event during the duration of the drag.
     private void Release()
     {
         if (_state != CardState.dragging) { return; }
