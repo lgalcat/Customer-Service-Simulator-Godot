@@ -13,12 +13,16 @@ public abstract partial class Distraction : Node
     public int Difficulty { get; protected set; }
 
     /// <summary>
-    /// Expected viewport width by the minigame.
+    /// Expected width, in pixels, of the display window this minigame occupies when hosted.
+    /// <para>For minigames whose content fits entirely within this window, it also describes total
+    /// content size; a minigame whose level is larger than its window (e.g. a scrolling minigame)
+    /// instead renders a window of this size onto that larger content.</para>
     /// </summary>
     public abstract float ViewportX { get; }
 
     /// <summary>
-    /// Expected viewport height by the minigame.
+    /// Expected height, in pixels, of the display window this minigame occupies when hosted.
+    /// <para>See <see cref="ViewportX"/> for the full contract.</para>
     /// </summary>
     public abstract float ViewportY { get; }
 
