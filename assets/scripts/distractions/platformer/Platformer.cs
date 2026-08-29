@@ -11,6 +11,10 @@ public partial class Platformer : Distraction
     private readonly float _viewportX = 240;
     public override float ViewportX { get => _viewportX; }
     private readonly float _viewportY = 240;
+
+    // Child node reference found during "Setup"
+    private Goal _goal = null!;
+    
     public override float ViewportY { get => _viewportY; }
 
     // Called when the node enters the scene tree for the first time.
@@ -32,14 +36,18 @@ public partial class Platformer : Distraction
 
         // Implement location and instancing of difficulty dependent elements here
 
-        // Node lookups/event wiring (Player, Goal, SubViewport sizing) land here once
-        // those pieces of the scene/scripts exist - deliberately left for a later stage
+        // SubViewport/Window sizing from ViewportX/ViewportY still pending - left for a later stage
+
+        _goal = GetNode<Goal>("Window/SubViewport/Stage/Goal");
+        if (_goal == null) { throw new NullReferenceException(); }
+        _goal.Reached += Victory;
     }
 
     // Invoked by Goal, notifies relevant systems upstream
     public override void Victory()
     {
         // Insert any additional victory animations and logic here
+        _goal.Reached -= Victory;
 
         GD.Print("Platformer Completed!!!");
         OnVictory?.Invoke();

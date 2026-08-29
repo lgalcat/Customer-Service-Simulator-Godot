@@ -5,7 +5,9 @@ using System;
 /// Player-controlled character for the Platformer minigame. Ground movement uses separate
 /// acceleration/deceleration/skid rates, airborne movement has its own (frictionless) acceleration,
 /// and jump height varies with how long JumpKey is held - loosely modelled after NES Super Mario Bros.
-/// Tuning values are placeholders pending a follow-up pass against a real SMB physics reference.
+/// Tuning values are derived from a condensed NES SMB physics reference (per-frame hex values converted
+/// to px/sec). No further tile-scale correction is applied - this project's tiles are 16px, matching
+/// SMB's own tile size exactly, so the converted values are used as-is.
 /// </summary>
 public partial class Player : CharacterBody2D
 {
@@ -18,21 +20,26 @@ public partial class Player : CharacterBody2D
     // Below this horizontal speed the player counts as "idle" rather than "walking"
     private const float WalkingSpeedThreshold = 1f;
 
-    [Export] private float _moveSpeed = 100f;
-    [Export] private float _groundAcceleration = 800f;
-    [Export] private float _groundDeceleration = 600f;
-    [Export] private float _skidDeceleration = 1600f;
-    [Export] private float _airAcceleration = 500f;
-    [Export] private float _jumpVelocity = 260f;
-    [Export] private float _gravity = 900f;
+    [Export] private float _moveSpeed = 94f;
+    [Export] private float _groundAcceleration = 183f;
+    [Export] private float _groundDeceleration = 183f;
+    [Export] private float _skidDeceleration = 365.5f;
+    // Below this speed, input opposing current motion just re-accelerates the other way instead of skidding first
+    [Export] private float _skidTurnaroundSpeed = 34f;
+    [Export] private float _airAcceleration = 133.5f;
+    [Export] private float _jumpVelocity = 240f;
+    [Export] private float _gravity = 1350f;
     // Gravity scale applied while still rising and JumpKey is held - lower means a taller jump the longer it's held
-    [Export] private float _jumpHoldGravityScale = 0.5f;
+    [Export] private float _jumpHoldGravityScale = 0.31f;
+    [Export] private float _maxFallSpeed = 270f;
 
     private AnimatedSprite2D _sprite = null!;
 
     public override void _Ready()
     {
         _sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        // Lets other components (e.g. Goal) identify the player without a direct class reference
+        AddToGroup("player");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -64,7 +71,7 @@ public partial class Player : CharacterBody2D
 
         bool sustainingJump = Velocity.Y < 0 && Input.IsActionPressed("JumpKey");
         float gravity = sustainingJump ? _gravity * _jumpHoldGravityScale : _gravity;
-        Velocity = new Vector2(Velocity.X, Velocity.Y + gravity * delta);
+        Velocity = new Vector2(Velocity.X, Mathf.Min(Velocity.Y + gravity * delta, _maxFallSpeed));
     }
 
     // Eases horizontal velocity toward the input-scaled target speed. Picks one of three rates:
@@ -84,7 +91,7 @@ public partial class Player : CharacterBody2D
         {
             rate = _groundDeceleration;
         }
-        else if (!Mathf.IsZeroApprox(Velocity.X) && Mathf.Sign(inputAxis) != Mathf.Sign(Velocity.X))
+        else if (Mathf.Abs(Velocity.X) > _skidTurnaroundSpeed && Mathf.Sign(inputAxis) != Mathf.Sign(Velocity.X))
         {
             rate = _skidDeceleration;
         }
