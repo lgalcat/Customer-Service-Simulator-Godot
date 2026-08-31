@@ -18,7 +18,7 @@ public partial class Player : CharacterBody2D
     private PlayerState _state = PlayerState.err;
 
     // Below this horizontal speed the player counts as "idle" rather than "walking"
-    private const float WalkingSpeedThreshold = 1f;
+    [Export] private float _walkingSpeedThreshold = 1f;
 
     [Export] private float _moveSpeed = 94f;
     [Export] private float _groundAcceleration = 183f;
@@ -118,7 +118,7 @@ public partial class Player : CharacterBody2D
     {
         PlayerState next = !IsOnFloor()
             ? (Velocity.Y < 0 ? PlayerState.jumping : PlayerState.falling)
-            : (Mathf.Abs(Velocity.X) > WalkingSpeedThreshold ? PlayerState.walking : PlayerState.idle);
+            : (Mathf.Abs(Velocity.X) > _walkingSpeedThreshold ? PlayerState.walking : PlayerState.idle);
 
         if (next == _state) { return; }
         _state = next;

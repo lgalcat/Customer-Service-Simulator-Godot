@@ -11,11 +11,10 @@ public partial class Platformer : Distraction
     private readonly float _viewportX = 240;
     public override float ViewportX { get => _viewportX; }
     private readonly float _viewportY = 240;
+    public override float ViewportY { get => _viewportY; }
 
     // Child node reference found during "Setup"
     private Goal _goal = null!;
-    
-    public override float ViewportY { get => _viewportY; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -36,7 +35,7 @@ public partial class Platformer : Distraction
 
         // Implement location and instancing of difficulty dependent elements here
 
-        // SubViewport/Window sizing from ViewportX/ViewportY still pending - left for a later stage
+        // [29/08/2026] SubViewport/Window sizing from ViewportX/ViewportY still pending - left for a later stage
 
         _goal = GetNode<Goal>("Window/SubViewport/Stage/Goal");
         if (_goal == null) { throw new NullReferenceException(); }

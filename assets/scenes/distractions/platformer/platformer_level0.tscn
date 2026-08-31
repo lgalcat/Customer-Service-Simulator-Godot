@@ -103,7 +103,7 @@ shape = SubResource("RectangleShape2D_goal")
 color = Color(1, 0.85, 0.1, 1)
 polygon = PackedVector2Array(-6, -6, 6, -6, 6, 6, -6, 6)
 
-[node name="ParticleEmiter" type="GPUParticles2D" parent="Goal" unique_id=986185360]
+[node name="ParticleEmitter" type="GPUParticles2D" parent="Goal" unique_id=986185360]
 amount = 18
 visibility_rect = Rect2(-24, -24, 48, 48)
 process_material = SubResource("ParticleProcessMaterial_i2han")
