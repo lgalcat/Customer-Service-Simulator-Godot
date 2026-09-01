@@ -46,7 +46,9 @@ public partial class Platformer : Distraction
     public override void Victory()
     {
         // Insert any additional victory animations and logic here
-        _goal.Reached -= Victory;
+        // Guarded: Victory() must be safely callable even if Setup() never ran (matches
+        // FlySwatter.Victory()'s equivalent _flySpawner null-check)
+        if (_goal != null) { _goal.Reached -= Victory; }
 
         GD.Print("Platformer Completed!!!");
         OnVictory?.Invoke();

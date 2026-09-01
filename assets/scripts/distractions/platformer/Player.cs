@@ -80,6 +80,12 @@ public partial class Player : CharacterBody2D
     // Airborne movement uses its own rate and never "brakes" on its own - momentum just holds.
     private void ApplyHorizontalMovement(float inputAxis, float delta)
     {
+        if (!IsOnFloor() && Mathf.IsZeroApprox(inputAxis))
+        {
+            // True momentum conservation while airborne with no input - matches classic NES SMB
+            return;
+        }
+
         float target = inputAxis * _moveSpeed;
         float rate;
 
