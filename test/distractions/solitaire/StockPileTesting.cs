@@ -18,14 +18,12 @@ public class StockPileTesting : PileTesting
         return stock;
     }
 
-    // Setup before each test
     [BeforeTest]
     public override void Setup()
     {
         base.Setup();
     }
 
-    // Teardown after each test
     [AfterTest]
     public override void Teardown()
     {
@@ -40,7 +38,7 @@ public class StockPileTesting : PileTesting
     }
 
 
-    // Block containing base calls to inheritted TestCases, no class specific logic should be present further down
+    // Block containing base calls to inherited TestCases, no class specific logic should be present further down
     [TestCase]
     public override void AddCardsAppendsReparentsAndSetsCurrentPile() { base.AddCardsAppendsReparentsAndSetsCurrentPile(); }
 

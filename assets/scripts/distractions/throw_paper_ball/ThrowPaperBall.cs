@@ -18,15 +18,21 @@ public partial class ThrowPaperBall : Distraction
 
     // Ranges for the "throwing" angle and strength
     // Keep in mind angles grow CLOCKWISE
-    private float _minThrowAngle = -60;
-    private float _maxThrowAngle = 0;
+    [Export] private float _minThrowAngle = -60;
+    [Export] private float _maxThrowAngle = 0;
     private float _throwAngle = 0;
-    private float _minThrowStrength = 100;
-    private float _maxThrowStrength = 500;
+    [Export] private float _minThrowStrength = 100;
+    [Export] private float _maxThrowStrength = 500;
     private float _throwStrength = 0;
     // Time (in seconds) "throwing" takes to cycle between min and max values
-    private float _throwCycle= 1;
+    [Export] private float _throwCycle = 1;
     private int _cycleScalar = 1;
+
+    // Fixed speed used to draw the aim-preview arc before a throw is charged
+    [Export] private float _aimPreviewSpeed = 250;
+    // Per-step time deltas fed to the trajectory projection (aiming shows a short stub, charging the full arc)
+    [Export] private float _aimProjectionTimeStep = 0.1f;
+    [Export] private float _chargeProjectionTimeStep = 0.12f;
 
     // Child node references found during "Setup"
     private Ball _paperBall = null!;
@@ -54,7 +60,7 @@ public partial class ThrowPaperBall : Distraction
                 // steps keep a continuous back-and-forth motion instead of each restarting its own cycle
                 _throwAngle = Oscillate(_throwAngle, _minThrowAngle, _maxThrowAngle, delta, ref _cycleScalar);
 
-                _projection.ProjectWithoutGravity(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * 250, 0.1f);
+                _projection.ProjectWithoutGravity(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _aimPreviewSpeed, _aimProjectionTimeStep);
 
                 // Check for input to update state machine
                 if (Input.IsActionJustPressed("JumpKey"))
@@ -67,7 +73,7 @@ public partial class ThrowPaperBall : Distraction
                 // Continues the _cycleScalar left over from "aiming" (see comment above)
                 _throwStrength = Oscillate(_throwStrength, _minThrowStrength, _maxThrowStrength, delta, ref _cycleScalar);
 
-                _projection.Project(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _throwStrength, 0.12f);
+                _projection.Project(Vector2.FromAngle( Mathf.DegToRad(_throwAngle) ) * _throwStrength, _chargeProjectionTimeStep);
                 
                 // Check for input to update state machine
                 if (Input.IsActionJustReleased("JumpKey"))
@@ -92,19 +98,19 @@ public partial class ThrowPaperBall : Distraction
 
         // Find TrashCan and bind its Action(s)
         _paperBin = GetNode<TrashCan>("Stage/TrashCan");
-        if (_paperBin == null) { throw new NullReferenceException(); }
+        if (_paperBin == null) { throw new NullReferenceException("ThrowPaperBall: missing required child 'Stage/TrashCan'"); }
         _paperBin.MinigameCompleted += Victory;
 
         // Find Ball and bind its Action(s)
         _paperBall = GetNode<Ball>("Stage/Ball");
-        if (_paperBall == null) { throw new NullReferenceException(); }
+        if (_paperBall == null) { throw new NullReferenceException("ThrowPaperBall: missing required child 'Stage/Ball'"); }
         _paperBin.BallEntered += _paperBall.PauseTime;
         _paperBin.BallExited += _paperBall.ResumeTime;
         _paperBall.BallReset += ResetState;
 
         // Find Projection and set its parameters
         _projection = GetNode<Projection>("Stage/Projection");
-        if (_projection == null) { throw new NullReferenceException(); }
+        if (_projection == null) { throw new NullReferenceException("ThrowPaperBall: missing required child 'Stage/Projection'"); }
         _projection.Damp = _paperBall.LinearDamp;
         _projection.GravityScale = _paperBall.GravityScale;
     }

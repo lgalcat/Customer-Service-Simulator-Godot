@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -15,7 +16,9 @@ public partial class StockPile : Pile
     public override void _Ready()
     {
         base._Ready();
-        GetNode<Area2D>("ClickZone").InputEvent += OnClickZoneInputEvent;
+        Area2D clickZone = GetNode<Area2D>("ClickZone");
+        if (clickZone == null) { throw new NullReferenceException("StockPile: missing required child 'ClickZone'"); }
+        clickZone.InputEvent += OnClickZoneInputEvent;
     }
 
     public override bool CanAccept(IReadOnlyList<Card> run)

@@ -30,3 +30,4 @@ mono_crash.*.json
 .vs/
 
 CLAUDE.local.md
+test/CLAUDE.local.md

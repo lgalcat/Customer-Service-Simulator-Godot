@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -55,23 +56,31 @@ public partial class Solitaire : Distraction
         // Add any difficulty dependent location and instancing here
 
         Node2D dragLayer = GetNode<Node2D>("Stage/DragLayer");
+        if (dragLayer == null) { throw new NullReferenceException("Solitaire: missing required child 'Stage/DragLayer'"); }
 
         _tableaus.Clear();
         for (int i = 0; i < 7; i++)
         {
-            _tableaus.Add(GetNode<TableauPile>($"Stage/TableauPiles/TableauPile{i}"));
+            string path = $"Stage/TableauPiles/TableauPile{i}";
+            TableauPile tableau = GetNode<TableauPile>(path);
+            if (tableau == null) { throw new NullReferenceException($"Solitaire: missing required child '{path}'"); }
+            _tableaus.Add(tableau);
         }
 
         _foundations.Clear();
         for (int i = 0; i < 4; i++)
         {
-            FoundationPile foundation = GetNode<FoundationPile>($"Stage/FoundationPiles/Foundation{(Suit)i}");
+            string path = $"Stage/FoundationPiles/Foundation{(Suit)i}";
+            FoundationPile foundation = GetNode<FoundationPile>(path);
+            if (foundation == null) { throw new NullReferenceException($"Solitaire: missing required child '{path}'"); }
             foundation.Filled += OnFoundationFilled;
             _foundations.Add(foundation);
         }
 
         StockPile stock = GetNode<StockPile>("Stage/StockPile");
+        if (stock == null) { throw new NullReferenceException("Solitaire: missing required child 'Stage/StockPile'"); }
         WastePile waste = GetNode<WastePile>("Stage/WastePile");
+        if (waste == null) { throw new NullReferenceException("Solitaire: missing required child 'Stage/WastePile'"); }
         stock.Waste = waste;
 
         // [22/08/2026] TODO: alternate data-driven deal source goes here once implemented, in place of/alongside DealBuilder

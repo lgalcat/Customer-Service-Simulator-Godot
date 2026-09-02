@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 [RequireGodotRuntime]
 public class CardTesting
 {
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(CardTesting));
+
     // No shared fixture: tests split between tree-less (manual _Ready()) and live-tree (ISceneRunner)
     // shapes that don't share a common base instance, unlike SwatterTesting/FlyTesting's single _fly/_swatter field
     [BeforeTest]
     public void Setup()
     {
     }
-
-    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
-    // process, from whichever sensitive suite runs first
-    [Before]
-    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(CardTesting));
 
     [AfterTest]
     public void Teardown()

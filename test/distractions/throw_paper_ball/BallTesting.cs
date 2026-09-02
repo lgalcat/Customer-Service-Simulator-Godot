@@ -23,14 +23,12 @@ public class BallTesting
     {
         // Barebones setup for a Ball object (testing independent from any scene)
         _ball = AutoFree(new Ball())!;
-        // Implement any additional pre test logic here
     }
 
     [AfterTest]
     public void Teardown()
     {
         // Cleanup is handled by AutoFree(...)
-        // Implement any additional post test logic here
     }
 
     // _lifeTime has no public accessor, so this can only check the Timer picked up some
@@ -38,7 +36,7 @@ public class BallTesting
     [TestCase]
     public void ReadySetsIdleStateFreezesAndCreatesTimer()
     {
-        // Manual call for setup, no SceneTree to call _Ready()
+        // Manual _Ready() call - no SceneTree to auto-trigger it (applies to every test below)
         _ball._Ready();
         Timer timer = AutoFree(_ball.GetChildren().OfType<Timer>().First())!;
 
@@ -52,7 +50,6 @@ public class BallTesting
     [TestCase]
     public void ThrowFromIdleUnfreezesAndSetsThrownState()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _ball._Ready();
         AutoFree(_ball.GetChildren().OfType<Timer>().First());
 
@@ -66,7 +63,6 @@ public class BallTesting
     [TestCase]
     public void ThrowIsIgnoredWhenNotIdle()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _ball._Ready();
         AutoFree(_ball.GetChildren().OfType<Timer>().First());
         _ball.Throw(Vector2.Right * 100);
@@ -82,7 +78,6 @@ public class BallTesting
     [TestCase]
     public void TimerTimeoutTriggersResetToOverdueAndRefreezes()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _ball._Ready();
         Timer timer = AutoFree(_ball.GetChildren().OfType<Timer>().First())!;
         _ball.Throw(Vector2.Right * 100);
@@ -95,12 +90,9 @@ public class BallTesting
     }
 
     // Verify Reset's Timer attribute reset (safeguard feature intended for edge case error prevention)
-    // [11/08/2026] This case makes me think a more black-box approach to test specification 
-    // [11/08/2026] ...focused on edge values/timings could be a better fit, need time to meditate it
     [TestCase]
     public void TimeoutClearsAnExistingPause()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _ball._Ready();
         Timer timer = AutoFree(_ball.GetChildren().OfType<Timer>().First())!;
         _ball.Throw(Vector2.Right * 100);
@@ -116,7 +108,6 @@ public class BallTesting
     [TestCase]
     public void PauseTimeHasNoEffectWhenNotThrown()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _ball._Ready();
         Timer timer = AutoFree(_ball.GetChildren().OfType<Timer>().First())!;
 
@@ -129,7 +120,6 @@ public class BallTesting
     [TestCase]
     public void PauseTimeAndResumeTimeToggleTimerPause()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _ball._Ready();
         Timer timer = AutoFree(_ball.GetChildren().OfType<Timer>().First())!;
         _ball.Throw(Vector2.Right * 100);
@@ -143,8 +133,6 @@ public class BallTesting
 
     // Verify state machine Overdue -> Idle update path and related position reset updates
     // This case requires a working SceneTree
-    // [11/08/2026] Consider splitting position, state and action updates into separate tests
-    // [11/08/2026] ...(although both run sequentially during same engine method call)
     [TestCase]
     public async Task OverdueBallResetsPositionAndBecomesIdleAfterPhysicsStep()
     {

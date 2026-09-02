@@ -41,15 +41,15 @@ public partial class Swatter : Node2D
     {
         // Find the hit-scan and smack FX components
         _hitScan = GetNode<ShapeCast2D>("HitScan");
-        if (_hitScan == null) { throw new NullReferenceException(); }
+        if (_hitScan == null) { throw new NullReferenceException("Swatter: missing required child 'HitScan'"); }
 
         _smackFx = GetNode<AnimatedSprite2D>("SmackFx");
-        if (_smackFx == null) { throw new NullReferenceException(); }
+        if (_smackFx == null) { throw new NullReferenceException("Swatter: missing required child 'SmackFx'"); }
         _smackFx.Visible = false;
         _smackFx.AnimationFinished += () => _smackFx.Visible = false;
 
         _racketSprite = GetNode<Sprite2D>("SwatterSprite");
-        if (_racketSprite == null) { throw new NullReferenceException(); }
+        if (_racketSprite == null) { throw new NullReferenceException("Swatter: missing required child 'SwatterSprite'"); }
 
         // Create and configure the internal cooldown timer
         _cooldownTimer = new Timer
@@ -78,7 +78,7 @@ public partial class Swatter : Node2D
     public override void _UnhandledInput(InputEvent @event)
     {
         // [17/08/2026] Currently discussing whether to create an input event bound to Left Click
-        // [17/08/2026] Maybe this should be JustPressed instead of only Pressed ¿?
+        // (Pressed vs. JustPressed is a non-issue here: mouse buttons send no echo, so Pressed == the press edge)
         if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed)
         {
             Swing();

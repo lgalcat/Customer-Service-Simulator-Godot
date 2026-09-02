@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 [RequireGodotRuntime]
 public class GoalTesting
 {
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(GoalTesting));
+
     // No shared fixture: tests split between tree-less (manual _Ready(), fires BodyEntered
     // directly) and live-tree (ISceneRunner, to prove the deferred Monitoring change actually
     // takes effect) shapes - mirrors CardTesting/PlayerTesting's no-shared-fixture pattern
@@ -15,11 +20,6 @@ public class GoalTesting
     public void Setup()
     {
     }
-
-    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
-    // process, from whichever sensitive suite runs first
-    [Before]
-    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(GoalTesting));
 
     [AfterTest]
     public void Teardown()

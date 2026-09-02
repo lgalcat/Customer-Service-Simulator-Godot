@@ -3,7 +3,7 @@ using GdUnit4;
 using static GdUnit4.Assertions;
 
 // Abstract boilerplate testcases for all implementations of the Distractions abstract class
-// Limitations on the GdUnit test discovery pipeline prevent inheritted methods to register as testcases
+// Limitations on the GdUnit test discovery pipeline prevent inherited methods to register as testcases
 // All implementations of this class should explicitly declare an override + base for all testcases below
 public abstract class DistractionTesting
 {

@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 
 // Dedicated component suite for TrashCan, independent of the Distraction hierarchy.
-// Covers TrashCan's own state (dwell-timer, body-type filtering), not whether
+// Covers TrashCan's own state (dwell-timer, "ball"-group filtering), not whether
 // ThrowPaperBall wires it correctly (see ThrowPaperBallBehaviourTesting for that)
 [TestSuite]
 [RequireGodotRuntime]
@@ -26,14 +26,12 @@ public class TrashCanTesting
         _trashCan = AutoFree(new TrashCan())!;
         _winArea = new Area2D { Name = "TrashCanInside" };
         _trashCan.AddChild(_winArea);
-        // Implement any additional pre-test logic here
     }
 
     [AfterTest]
     public void Teardown()
     {
         // Node cleanup is handled by AutoFree()
-        // Implement any additional post-testing logic here
     }
 
     // This test only checks Timer instancing and non default WaitTime values
@@ -41,7 +39,7 @@ public class TrashCanTesting
     [TestCase]
     public void ReadySpawnsWinCounterWithConfiguredWaitTime()
     {
-        // Manual call for setup, no SceneTree to auto call _Ready()
+        // Manual _Ready() call - no SceneTree to auto-trigger it (applies to every test below)
         _trashCan._Ready();
         Timer winCounter = AutoFree(_trashCan.GetChildren().OfType<Timer>().First())!;
 
@@ -63,6 +61,9 @@ public class TrashCanTesting
         Area2D winArea = trashCan.GetNode<Area2D>("TrashCanInside");
         Timer winCounter = trashCan.GetChildren().OfType<Timer>().First();
         Ball ball = AutoFree(new Ball())!;
+        // TrashCan identifies the ball by "ball"-group membership, not a type check; this bare Ball
+        // never runs _Ready() (which is what joins the group), so join it explicitly here
+        ball.AddToGroup("ball");
         // Assert specific setup
         bool ballEntered = false;
         bool ballExited = false;
@@ -81,11 +82,11 @@ public class TrashCanTesting
     }
 
     // Defensive test to verify irrelevant objects don't trigger false positives
-    // Only desired "Ball" objects should affect win condition logic
+    // Only bodies in the "ball" group should affect win condition logic - a plain Node2D
+    // (in no group) is the negative case
     [TestCase]
     public void NonBallBodyIsIgnoredOnEnterAndExit()
     {
-        // Manual call for setup, no SceneTree calling _Ready() 
         _trashCan._Ready();
         Timer winCounter = AutoFree(_trashCan.GetChildren().OfType<Timer>().First())!;
         Node2D notABall = AutoFree(new Node2D())!;
@@ -109,7 +110,6 @@ public class TrashCanTesting
     [TestCase]
     public void WinCounterTimeoutTriggersMinigameCompleted()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _trashCan._Ready();
         Timer winCounter = AutoFree(_trashCan.GetChildren().OfType<Timer>().First())!;
         // Assert specific setup

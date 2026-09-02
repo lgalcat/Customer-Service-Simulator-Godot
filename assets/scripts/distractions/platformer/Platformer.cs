@@ -23,11 +23,6 @@ public partial class Platformer : Distraction
         Setup(1);
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
-
     // Find all necessary "child" nodes and set the minigame up before start
     public override void Setup(int difficulty)
     {
@@ -38,7 +33,7 @@ public partial class Platformer : Distraction
         // [29/08/2026] SubViewport/Window sizing from ViewportX/ViewportY still pending - left for a later stage
 
         _goal = GetNode<Goal>("Window/SubViewport/Stage/Goal");
-        if (_goal == null) { throw new NullReferenceException(); }
+        if (_goal == null) { throw new NullReferenceException("Platformer: missing required child 'Window/SubViewport/Stage/Goal'"); }
         _goal.Reached += Victory;
     }
 

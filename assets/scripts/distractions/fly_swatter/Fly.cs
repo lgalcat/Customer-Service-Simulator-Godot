@@ -92,7 +92,7 @@ public partial class Fly : Area2D
     {
         // Find the sprite component and start the "alive" animation
         _sprite = GetNode<AnimatedSprite2D>("FlySprite");
-        if (_sprite == null) { throw new NullReferenceException(); }
+        if (_sprite == null) { throw new NullReferenceException("Fly: missing required child 'FlySprite'"); }
         _sprite.AnimationChanged += OnAnimationChanged;
         _sprite.Play("alive");
 
@@ -129,7 +129,7 @@ public partial class Fly : Area2D
                 _sprite.Rotation = Mathf.DegToRad(_headingDeg + _spriteFacingOffsetDeg);
                 break;
             case FlyState.dead:
-                // Prospective death movement pattern, refine later
+                // [02/09/2026] Prospective death movement pattern, refine later
                 Position += _deadVelocity * (float)delta;
                 _sprite.Rotation = _deadVelocity.Angle() + Mathf.DegToRad(_spriteFacingOffsetDeg);
                 break;

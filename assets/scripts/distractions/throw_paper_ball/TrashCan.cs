@@ -36,7 +36,7 @@ public partial class TrashCan : Node2D
     {
         // Find the win condition area within children
         _winSpace = GetNode<Area2D>("TrashCanInside");
-        if (_winSpace == null) { throw new NullReferenceException(); }
+        if (_winSpace == null) { throw new NullReferenceException("TrashCan: missing required child 'TrashCanInside'"); }
         // Bind area events to win condition handling
         _winSpace.BodyEntered += OnBodyEntered;
         _winSpace.BodyExited += OnBodyExited;
@@ -55,11 +55,9 @@ public partial class TrashCan : Node2D
     // Gets called when an object enters the bin (via _winArea)
     private void OnBodyEntered(Node body)
     {
-        // [29/08/2026] Consider replacing this and the "body is Ball" check below with a group-tag
-        // check instead (see Platformer's Goal.cs / Player.cs "player" group for the precedent) -
-        // decouples this class from a direct Ball reference. Not done here, flagged only.
-        // Check if the body is relevant (the paper ball)
-        if (body is Ball)
+        // Identify the paper ball by group membership rather than a direct type check, keeping this
+        // class decoupled from Ball (mirrors Platformer's Goal.cs / Player.cs "player" group)
+        if (body.IsInGroup("ball"))
         {
             // Notify other components of the match
             BallEntered?.Invoke();
@@ -71,8 +69,8 @@ public partial class TrashCan : Node2D
     // Gets called when an object leaves the bin (via _winArea)
     private void OnBodyExited(Node body)
     {
-        // Check if the body is relevant
-        if (body is Ball)
+        // Check if the body is relevant (see OnBodyEntered)
+        if (body.IsInGroup("ball"))
         {
             // Notify other components of the abortion
             BallExited?.Invoke();

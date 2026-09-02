@@ -48,11 +48,9 @@ public class FlySpawnerTesting
     {
         _flySpawner.Set("_firstWaveSize", 4);
 
-        // Manual call for setup, no SceneTree to auto call _Ready()
+        // Manual _Ready() call - no SceneTree to auto-trigger it (applies to every test below)
         _flySpawner._Ready();
-        // The wave Timer and the whole first wave of flies are created mid-test-body, after
-        // _flySpawner was already wrapped, so they need explicit AutoFree cleanup registration
-        foreach (Node child in _flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(_flySpawner);
         Timer waveTimer = _flySpawner.GetChildren().OfType<Timer>().First();
 
         AssertThat(_flySpawner.GetChildren().OfType<Fly>().Count()).IsEqual(4);
@@ -66,11 +64,8 @@ public class FlySpawnerTesting
     public void SpawnedFlyDeathForwardsFlyDiedUpstream()
     {
         _flySpawner.Set("_firstWaveSize", 1);
-        // Manual call for setup, no SceneTree to auto call _Ready()
         _flySpawner._Ready();
-        // Created mid-test-body, after _flySpawner was already wrapped, so they need explicit
-        // AutoFree cleanup registration
-        foreach (Node child in _flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(_flySpawner);
         Fly fly = _flySpawner.GetChildren().OfType<Fly>().First();
         bool flyDied = false;
         _flySpawner.FlyDied = () => { flyDied = true; };
@@ -88,15 +83,12 @@ public class FlySpawnerTesting
         _flySpawner.Set("_firstWaveSize", 2);
         _flySpawner.Set("_fliesPerWave", 3);
         _flySpawner.Set("_maxTotalFlies", 100);
-        // Manual call for setup, no SceneTree to auto call _Ready()
         _flySpawner._Ready();
         Timer waveTimer = _flySpawner.GetChildren().OfType<Timer>().First();
         int countAfterFirstWave = _flySpawner.GetChildren().OfType<Fly>().Count();
 
         waveTimer.EmitSignal(Timer.SignalName.Timeout);
-        // The wave Timer and every spawned fly (both waves) are created mid-test-body, after
-        // _flySpawner was already wrapped, so they need explicit AutoFree cleanup registration
-        foreach (Node child in _flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(_flySpawner);
 
         AssertThat(_flySpawner.GetChildren().OfType<Fly>().Count()).IsEqual(countAfterFirstWave + 3);
     }
@@ -108,11 +100,8 @@ public class FlySpawnerTesting
     {
         _flySpawner.Set("_maxTotalFlies", 5);
         _flySpawner.Set("_firstWaveSize", 20);
-        // Manual call for setup, no SceneTree to auto call _Ready()
         _flySpawner._Ready();
-        // The wave Timer and every spawned fly are created mid-test-body, after _flySpawner was
-        // already wrapped, so they need explicit AutoFree cleanup registration
-        foreach (Node child in _flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(_flySpawner);
 
         AssertThat(_flySpawner.GetChildren().OfType<Fly>().Count()).IsEqual(5);
     }
@@ -129,11 +118,8 @@ public class FlySpawnerTesting
         _flySpawner.Set("_corridorWidth", corridorWidth);
         _flySpawner.Set("_maxTotalFlies", 100);
         _flySpawner.Set("_firstWaveSize", 100);
-        // Manual call for setup, no SceneTree to auto call _Ready()
         _flySpawner._Ready();
-        // The wave Timer and every spawned fly are created mid-test-body, after _flySpawner was
-        // already wrapped, so they need explicit AutoFree cleanup registration
-        foreach (Node child in _flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(_flySpawner);
 
         Vector2 min = stageBounds.Position;
         Vector2 max = stageBounds.End;
@@ -152,7 +138,7 @@ public class FlySpawnerTesting
         }
     }
 
-    // Verify the publicly accesible StopSpawning() method's internal component update
+    // Verify the publicly accessible StopSpawning() method's internal component update
     // This test case requires a working SceneTree
     [TestCase]
     public void StopSpawningStopsTheWaveTimer()
@@ -218,5 +204,13 @@ public class FlySpawnerTesting
         // Pack() copies the node's state into the resource, it doesn't take ownership
         sourceFly.Free();
         return packedScene;
+    }
+
+    // AutoFrees every child of `parent`. The manual _Ready() call above creates the wave Timer and
+    // a wave of real Fly children mid-test-body, after `_flySpawner` was already AutoFree-wrapped -
+    // so they each need their own cleanup registration or gdUnit4 reports transient orphan nodes
+    private static void AutoFreeChildren(Node parent)
+    {
+        foreach (Node child in parent.GetChildren()) { AutoFree(child); }
     }
 }

@@ -25,14 +25,12 @@ public class ProjectionTesting
             _sprites[i] = new Sprite2D();
             _projection.AddChild(_sprites[i]);
         }
-        // Implement any additional pre test logic here
     }
 
     [AfterTest]
     public void Teardown()
     {
         // Node cleanup is handled by AutoFree(...)
-        // Implement any additional post test logic here
     }
 
     // Verify proper child identification and filtering at start up
@@ -42,7 +40,7 @@ public class ProjectionTesting
         // Extra non-sprite child, created mid-test so it needs its own AutoFree registration,
         // to confirm the OfType<Sprite2D>() filter excludes it from step counting
         _projection.AddChild(AutoFree(new Node2D())!);
-        // Manual setup call, no SceneTree to call _Ready()
+        // Manual _Ready() call - no SceneTree to auto-trigger it (applies to every test below)
         _projection._Ready();
 
         _projection.DrawMaxSteps();
@@ -55,11 +53,10 @@ public class ProjectionTesting
 
     // Hand-unrolled (not a re-implemented loop) expected trajectory for the first two steps,
     // cross-checked against the real ProjectSettings gravity Projection._Ready() itself reads
-    // [12/08/2026] Investigate existance of accesible physics API to check against real simulation values
+    // [12/08/2026] TODO: check for an accessible physics API to validate against real simulation
     [TestCase]
     public void ProjectSimulatesGravityDampedTrajectory()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
         // Default entry parameters
         _projection.GravityScale = 2f;
@@ -95,7 +92,6 @@ public class ProjectionTesting
     [TestCase]
     public void ProjectWithoutGravityIgnoresGravityScale()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
         _projection.GravityScale = 100f;
         Vector2 impulse = new Vector2(100f, 0f);
@@ -111,7 +107,6 @@ public class ProjectionTesting
     [TestCase]
     public void ProjectDefaultsToVisibleStepCountWhenStepsNotSpecified()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
         _projection.ModifyProjectionSteps(2);
 
@@ -119,7 +114,7 @@ public class ProjectionTesting
 
         AssertThat(_sprites[0].Position).IsNotEqual(Vector2.Zero);
         AssertThat(_sprites[1].Position).IsNotEqual(Vector2.Zero);
-        // [12/08/2026] As of today sprites are never explicitly reset to Zero between steps, consider if they should
+        // [12/08/2026] TODO: sprites are never reset to Zero between steps - decide whether they should be
         AssertThat(_sprites[2].Position).IsEqual(Vector2.Zero);
     }
 
@@ -128,7 +123,6 @@ public class ProjectionTesting
     [TestCase]
     public void ProjectClampsStepsToAvailableSpriteCount()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
 
         _projection.Project(new Vector2(100f, 0f), 0.1f, 100);
@@ -144,7 +138,6 @@ public class ProjectionTesting
     [TestCase]
     public void ProjectWithNegativeStepsIsANoOp()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
 
         _projection.Project(new Vector2(100f, 0f), 0.1f, -5);
@@ -157,11 +150,9 @@ public class ProjectionTesting
 
     // Verify public render configuration interface properly applies changes
     // Also verifies out of bounds input parameter safeguards
-    // [12/08/2026] Maybe a [TestCase(inputValues)] approach could reduce code duplication¿?, consider later
     [TestCase]
     public void ModifyProjectionStepsClampsAndTogglesVisibility()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
 
         // Normal behaviour assertion
@@ -190,7 +181,6 @@ public class ProjectionTesting
     [TestCase]
     public void DrawMaxStepsHideAllStepsAndDrawOneStepDelegateCorrectly()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
 
         _projection.DrawMaxSteps();
@@ -209,7 +199,6 @@ public class ProjectionTesting
     [TestCase]
     public void HighDampingClampsVelocityInsteadOfReversing()
     {
-        // Manual setup call, no SceneTree to call _Ready()
         _projection._Ready();
         _projection.GravityScale = 0f; // isolate damping from gravity
         _projection.Damp = 1000f;

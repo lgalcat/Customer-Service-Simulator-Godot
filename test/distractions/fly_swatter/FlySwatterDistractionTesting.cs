@@ -18,22 +18,18 @@ public class FlySwatterDistractionTesting : DistractionTesting
         return flySwatter;
     }
 
-    // Setup before each test
     [BeforeTest]
     public override void Setup()
     {
         base.Setup();
     }
 
-    // Teardown after each test
     [AfterTest]
     public override void Teardown()
     {
         base.Teardown();
     }
 
-
-    // Block containing base calls to inheritted TestCases, no class specific logic should be present further down
     [TestCase]
     public override void VictoryInvoked() { base.VictoryInvoked(); }
 

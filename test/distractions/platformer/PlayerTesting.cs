@@ -17,6 +17,11 @@ public class PlayerTesting
     private const float FallLandingStartY = -150f; // high enough to actually fall and land within a modest frame budget
     private const float HighAltitudeStartY = -3000f; // never reaches the floor within this suite's frame budgets - isolates the fall-speed clamp from landing collision
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(PlayerTesting));
+
     // No shared fixture: every test builds its own floor+Player wrapper and ISceneRunner, since
     // physics state (position/velocity) must not leak between tests - mirrors CardTesting's
     // no-shared-fixture shape
@@ -24,11 +29,6 @@ public class PlayerTesting
     public void Setup()
     {
     }
-
-    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
-    // process, from whichever sensitive suite runs first
-    [Before]
-    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(PlayerTesting));
 
     // SimulateActionPress/Release act on the real global Input singleton, not anything scoped to
     // a test's own ISceneRunner - several tests below press keys and don't release them before the
@@ -201,8 +201,6 @@ public class PlayerTesting
         runner.SimulateActionPress("MoveRightKey");
         int actualTicks = await CountTicksUntilVelocityXCrosses(runner, player, target, descending: false, maxTicks: 200);
 
-        // Generous absolute tick tolerance - proving the right rate was used, not pinning an
-        // exact tick
         AssertThat((float)actualTicks).IsGreater(expectedTicks - 6f);
         AssertThat((float)actualTicks).IsLess(expectedTicks + 6f);
     }
@@ -277,8 +275,6 @@ public class PlayerTesting
         runner.SimulateActionPress("MoveLeftKey");
         int actualTicks = await CountTicksUntilVelocityXCrosses(runner, player, target, descending: true, maxTicks: 200);
 
-        // Generous absolute tick tolerance - proving the right rate was used, not pinning an
-        // exact tick
         AssertThat((float)actualTicks).IsGreater(expectedSkidTicks - 4f);
         AssertThat((float)actualTicks).IsLess(expectedSkidTicks + 4f);
         // Distinguishes the skid branch from the (slower) plain-acceleration branch - proves the
@@ -335,8 +331,6 @@ public class PlayerTesting
         runner.SimulateActionPress("MoveRightKey");
         int actualTicks = await CountTicksUntilVelocityXCrosses(runner, player, target, descending: false, maxTicks: 200);
 
-        // Generous absolute tick tolerance - proving the right rate was used, not pinning an
-        // exact tick
         AssertThat((float)actualTicks).IsGreater(expectedAirTicks - 4f);
         AssertThat((float)actualTicks).IsLess(expectedAirTicks + 4f);
         // Distinguishes the air-acceleration branch from the (faster) ground-acceleration one -

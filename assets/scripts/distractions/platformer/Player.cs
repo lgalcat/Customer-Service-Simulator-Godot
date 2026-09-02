@@ -38,6 +38,7 @@ public partial class Player : CharacterBody2D
     public override void _Ready()
     {
         _sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        if (_sprite == null) { throw new NullReferenceException("Player: missing required child 'AnimatedSprite2D'"); }
         // Lets other components (e.g. Goal) identify the player without a direct class reference
         AddToGroup("player");
     }

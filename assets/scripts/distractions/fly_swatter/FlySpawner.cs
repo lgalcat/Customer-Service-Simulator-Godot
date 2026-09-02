@@ -38,12 +38,14 @@ public partial class FlySpawner : Node2D
     // Internal timer that paces waves
     private Timer _waveTimer = null!;
     private int _totalSpawned = 0;
+    // [02/09/2026] Tracked but not yet consumed - kept for a future round-end cleanup of still-alive
+    // flies (that behaviour is undecided as of the first iteration); revisit when that pass happens
     private List<Fly> _activeFlies = new();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        if (_flyScene == null) { throw new NullReferenceException(); }
+        if (_flyScene == null) { throw new NullReferenceException("FlySpawner: _flyScene is not assigned (expected fly.tscn in the Inspector)"); }
 
         // Create and configure the wave timer
         _waveTimer = new Timer

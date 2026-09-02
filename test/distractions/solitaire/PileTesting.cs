@@ -4,7 +4,7 @@ using static GdUnit4.Assertions;
 using System.Collections.Generic;
 
 // Abstract boilerplate testcases for all implementations of the Pile abstract class
-// Limitations on the GdUnit test discovery pipeline prevent inheritted methods to register as testcases
+// Limitations on the GdUnit test discovery pipeline prevent inherited methods to register as testcases
 // All implementations of this class should explicitly declare an override + base for all testcases below
 public abstract class PileTesting
 {

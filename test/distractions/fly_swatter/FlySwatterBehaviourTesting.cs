@@ -43,12 +43,8 @@ public class FlySwatterBehaviourTesting : DistractionTesting
     {
         distraction.Setup(1);
         FlySpawner flySpawner = distraction.GetNode<FlySpawner>("Stage/FlySpawner");
-        // FlySpawner never entered a live SceneTree here, but Victory() (via UpdateScore) calls
-        // FlySpawner.StopSpawning(), which needs the wave Timer _Ready() creates - which in turn
-        // also spawns the first wave of real Fly children. All created mid-test, after distraction
-        // was already wrapped, so they need explicit AutoFree cleanup registration
         flySpawner._Ready();
-        foreach (Node child in flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(flySpawner);
         bool victoryCalled = false;
         distraction.OnVictory = () => { victoryCalled = true; };
 
@@ -76,18 +72,14 @@ public class FlySwatterBehaviourTesting : DistractionTesting
 
     // Tests that Victory's explicit "FlyDied -= UpdateScore" unsubscribe actually takes effect:
     // further deaths after winning must not re-trigger Victory
-    // Also guarantees no undesired repeat emmisions of "OnVictory" action
+    // Also guarantees no undesired repeat emissions of "OnVictory" action
     [TestCase]
     public void FurtherFlyDeathsAfterVictoryDoNotRetrigger()
     {
         distraction.Setup(1);
         FlySpawner flySpawner = distraction.GetNode<FlySpawner>("Stage/FlySpawner");
-        // FlySpawner never entered a live SceneTree here, but Victory() (via UpdateScore) calls
-        // FlySpawner.StopSpawning(), which needs the wave Timer _Ready() creates - which in turn
-        // also spawns the first wave of real Fly children. All created mid-test, after distraction
-        // was already wrapped, so they need explicit AutoFree cleanup registration
         flySpawner._Ready();
-        foreach (Node child in flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(flySpawner);
         int victoryCount = 0;
         distraction.OnVictory = () => { victoryCount++; };
         for (int i = 0; i < flySpawner._maxTotalFlies; i++)
@@ -132,12 +124,8 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         distraction.Setup(1);
         FlySpawner flySpawner = distraction.GetNode<FlySpawner>("Stage/FlySpawner");
         Label scoreTracker = distraction.GetNode<Label>("Stage/ScoreTracker");
-        // FlySpawner never entered a live SceneTree here, but Victory() (via UpdateScore) calls
-        // FlySpawner.StopSpawning(), which needs the wave Timer _Ready() creates - which in turn
-        // also spawns the first wave of real Fly children. All created mid-test, after distraction
-        // was already wrapped, so they need explicit AutoFree cleanup registration
         flySpawner._Ready();
-        foreach (Node child in flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(flySpawner);
         bool victoryCalled = false;
         distraction.OnVictory = () => { victoryCalled = true; };
         int startingCount = int.Parse(scoreTracker.Text);
@@ -171,7 +159,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
 
         flySwatter.Setup(1);
         flySpawner._Ready();
-        foreach (Node child in flySpawner.GetChildren()) { AutoFree(child); }
+        AutoFreeChildren(flySpawner);
         bool victoryCalled = false;
         flySwatter.OnVictory = () => { victoryCalled = true; };
 
@@ -202,5 +190,14 @@ public class FlySwatterBehaviourTesting : DistractionTesting
     {
         var flyShape = fly.GetNode<CollisionShape2D>("CollisionShape2D");
         return ((CircleShape2D)flyShape.Shape).Radius * 2;
+    }
+
+    // AutoFrees every child of `parent`. FlySpawner._Ready() (called manually here, since the
+    // fixture never enters a live SceneTree) creates its wave Timer and a first wave of real Fly
+    // children mid-test-body, after `distraction` was already AutoFree-wrapped - so they each need
+    // their own cleanup registration or gdUnit4 reports transient orphan nodes
+    private static void AutoFreeChildren(Node parent)
+    {
+        foreach (Node child in parent.GetChildren()) { AutoFree(child); }
     }
 }

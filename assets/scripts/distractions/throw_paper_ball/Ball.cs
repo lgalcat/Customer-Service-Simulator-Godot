@@ -42,6 +42,10 @@ public partial class Ball : RigidBody2D
         _state = BallState.idle;
         Freeze = true;
         _spawn = Position;
+
+        // Lets other components (e.g. TrashCan) identify the ball without a direct class reference
+        // (mirrors Platformer's Player/Goal "player" group)
+        AddToGroup("ball");
     }
 
     // Godot's native physics processing method

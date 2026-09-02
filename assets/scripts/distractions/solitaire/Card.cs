@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -78,6 +79,7 @@ public partial class Card : Area2D
         _dragLayer = dragLayer;
 
         _sprite = GetNode<Sprite2D>("CardSprite");
+        if (_sprite == null) { throw new NullReferenceException("Card: missing required child 'CardSprite'"); }
         UpdateSpriteFrame();
 
         // Only pointer-picking is used on this Area2D, not physics overlap detection
