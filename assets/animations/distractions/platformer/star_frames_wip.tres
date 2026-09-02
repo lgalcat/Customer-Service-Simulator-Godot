@@ -1,0 +1,32 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dkc15swfba3er"]
+
+[ext_resource type="Texture2D" uid="uid://c4t61fbkappr4" path="res://assets/textures/distractions/platformer/star_wip.png" id="1_lgfaj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pfoo"]
+atlas = ExtResource("1_lgfaj")
+region = Rect2(0, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0cais"]
+atlas = ExtResource("1_lgfaj")
+region = Rect2(20, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bm33h"]
+atlas = ExtResource("1_lgfaj")
+region = Rect2(40, 0, 20, 20)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pfoo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0cais")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bm33h")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
