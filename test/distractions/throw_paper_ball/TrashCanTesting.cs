@@ -14,6 +14,11 @@ public class TrashCanTesting
     private TrashCan _trashCan = null!;
     private Area2D _winArea = null!;
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(TrashCanTesting));
+
     [BeforeTest]
     public void Setup()
     {

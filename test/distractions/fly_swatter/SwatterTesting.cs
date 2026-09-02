@@ -13,6 +13,11 @@ public class SwatterTesting
 {
     private Swatter _swatter = null!;
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(SwatterTesting));
+
     [BeforeTest]
     public void Setup()
     {

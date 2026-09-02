@@ -9,6 +9,21 @@
                 "build"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test",
+            "detail": "Run the gdUnit4 suite via tools/run-tests.ps1 (prints an input-sensitivity warning first)",
+            "command": "powershell",
+            "type": "process",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/tools/run-tests.ps1"
+            ],
+            "problemMatcher": [],
+            "group": "test"
         }
     ]
 }

@@ -20,6 +20,11 @@ public class SolitaireBehaviourTesting : DistractionTesting
         return GD.Load<PackedScene>(ScenePath).Instantiate<Solitaire>();
     }
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(SolitaireBehaviourTesting));
+
     [BeforeTest]
     public override void Setup()
     {

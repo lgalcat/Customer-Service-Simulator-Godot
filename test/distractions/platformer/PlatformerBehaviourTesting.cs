@@ -22,6 +22,11 @@ public class PlatformerBehaviourTesting : DistractionTesting
         return GD.Load<PackedScene>(ScenePath).Instantiate<Platformer>();
     }
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(PlatformerBehaviourTesting));
+
     [BeforeTest]
     public override void Setup()
     {

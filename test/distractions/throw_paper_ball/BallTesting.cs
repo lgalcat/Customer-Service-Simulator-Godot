@@ -13,6 +13,11 @@ public class BallTesting
 {
     private Ball _ball = null!;
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(BallTesting));
+
     [BeforeTest]
     public void Setup()
     {

@@ -13,6 +13,11 @@ public class FlySpawnerTesting
 {
     private FlySpawner _flySpawner = null!;
 
+    // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
+    // process, from whichever sensitive suite runs first
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(FlySpawnerTesting));
+
     [BeforeTest]
     public void Setup()
     {
