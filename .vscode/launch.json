@@ -1,35 +1,57 @@
 {
     "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "sceneToRun",
+            "type": "promptString",
+            "description": "res:// path to desired scene file",
+            // [5/08/2026] By default choose the distraction sandbox, when a main scene exists this should change
+            "default": "res://assets/scenes/distractions/distraction_sandbox.tscn"
+        }
+    ],
     "configurations": [
         {
-            "name": "Launch",
+            "name": "Launch Main Scene",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "E:/Godot/Godot_v4.6.2-stable_mono_win64/Godot_v4.6.2-stable_mono_win64.exe",
+            "program": "${env:GODOT_BIN}",
             "args": [
                 "--path",
                 "${workspaceRoot}"
             ],
             "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
             "console": "internalConsole"
         },
-        /*
         {
-            "name": "Launch (Select Scene)",
+            "name": "Debug Distraction Sandbox",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "E:/Godot/Godot_v4.6.2-stable_mono_win64/Godot_v4.6.2-stable_mono_win64.exe",
-            // See which arguments are available here:
-            // https://docs.godotengine.org/en/stable/getting_started/editor/command_line_tutorial.html
+            "program": "${env:GODOT_BIN}",
             "args": [
                 "--path",
-                "${workspaceRoot}",
-                "${command:SelectLaunchScene}"
-            ]
+                "${workspaceFolder}",
+                "res://assets/scenes/distractions/distraction_sandbox.tscn",
+                "--remote-debug", "tcp://127.0.0.1:6007"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Debug Select Scene",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${env:GODOT_BIN}",
+            "args": [
+                "--path",
+                "${workspaceFolder}",
+                "${input:SceneToRun}",
+                "--remote-debug", "tcp://127.0.0.1:6007"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole"
         }
-        */
     ]
 }
