@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "inputs": [
         {
-            "id": "sceneToRun",
+            "id": "SceneToRun",
             "type": "promptString",
             "description": "res:// path to desired scene file",
             // [5/08/2026] By default choose the distraction sandbox, when a main scene exists this should change
@@ -18,7 +18,7 @@
             "program": "${env:GODOT_BIN}",
             "args": [
                 "--path",
-                "${workspaceRoot}"
+                "${workspaceFolder}"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole"
