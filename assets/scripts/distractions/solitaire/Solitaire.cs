@@ -8,16 +8,16 @@ using System.Collections.Generic;
 public partial class Solitaire : Distraction
 {
     // Matches the current placeholder_background_410x240 background - keep in sync if that asset changes again
-    private readonly float _viewportX = 410;
+    private readonly int _viewportX = 410;
     /// <summary>
     /// Expected viewport width by the minigame.
     /// </summary>
-    public override float ViewportX { get => _viewportX; }
-    private readonly float _viewportY = 240;
+    public override int ViewportX { get => _viewportX; }
+    private readonly int _viewportY = 240;
     /// <summary>
     /// Expected viewport height by the minigame.
     /// </summary>
-    public override float ViewportY { get => _viewportY; }
+    public override int ViewportY { get => _viewportY; }
 
     // "Switch" to alternate randomized deal generation and serialized deal loading
     // [23/08/2026] As of today only randomized deal generation is implemented, so by default no cards are dealt

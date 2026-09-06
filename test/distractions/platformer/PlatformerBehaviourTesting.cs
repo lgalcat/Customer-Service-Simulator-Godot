@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 public class PlatformerBehaviourTesting : DistractionTesting
 {
     private const string ScenePath = "res://assets/scenes/distractions/platformer/platformer.tscn";
-    private const string PlayerPath = "Window/SubViewport/Stage/Player";
-    private const string GoalPath = "Window/SubViewport/Stage/Goal";
+    private const string PlayerPath = "Stage/Player";
+    private const string GoalPath = "Stage/Goal";
     // How far above the goal the "find the platform below it" probe starts - more than a max
     // jump height, but small enough to stay inside the level's encased boundary
     private const float PlatformSearchHeight = 150f;

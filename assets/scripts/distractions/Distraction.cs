@@ -18,13 +18,21 @@ public abstract partial class Distraction : Node
     /// content size; a minigame whose level is larger than its window (e.g. a scrolling minigame)
     /// instead renders a window of this size onto that larger content.</para>
     /// </summary>
-    public abstract float ViewportX { get; }
+    // Integer, not float: the project's base resolution and assets are whole-pixel
+    // throughout (window/stretch/scale_mode="integer"), and this is what SubViewport.Size expects
+    public abstract int ViewportX { get; }
 
     /// <summary>
     /// Expected height, in pixels, of the display window this minigame occupies when hosted.
     /// <para>See <see cref="ViewportX"/> for the full contract.</para>
     /// </summary>
-    public abstract float ViewportY { get; }
+    public abstract int ViewportY { get; }
+
+    /// <summary>
+    /// <see cref="ViewportX"/>/<see cref="ViewportY"/> combined, in the same type a hosting
+    /// <see cref="SubViewport"/>'s own <c>Size</c> expects.
+    /// </summary>
+    public Vector2I ViewportSize => new(ViewportX, ViewportY);
 
     /// <summary>
     /// Invoked when the minigame is completed, during <see cref="Victory"/>

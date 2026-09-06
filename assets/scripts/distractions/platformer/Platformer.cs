@@ -8,20 +8,13 @@ public partial class Platformer : Distraction
 {
     // Expected display window for the minigame - smaller than the level itself,
     // which is revealed through it via a scrolling Camera2D (see platformer.tscn once built)
-    private readonly float _viewportX = 240;
-    public override float ViewportX { get => _viewportX; }
-    private readonly float _viewportY = 240;
-    public override float ViewportY { get => _viewportY; }
+    private readonly int _viewportX = 240;
+    public override int ViewportX { get => _viewportX; }
+    private readonly int _viewportY = 240;
+    public override int ViewportY { get => _viewportY; }
 
     // Child node reference found during "Setup"
     private Goal _goal = null!;
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        // "Setup" call just for early testing purposes, delete when a factory and testing scene are implemented
-        Setup(1);
-    }
 
     // Find all necessary "child" nodes and set the minigame up before start
     public override void Setup(int difficulty)
@@ -30,10 +23,12 @@ public partial class Platformer : Distraction
 
         // Implement location and instancing of difficulty dependent elements here
 
-        // [29/08/2026] SubViewport/Window sizing from ViewportX/ViewportY still pending - left for a later stage
+        // Hosting (SubViewport sizing/tuning, centering) is DistractionFactory/DistractionManager's
+        // job - Stage renders into whatever SubViewport ends up hosting this minigame, sized to
+        // ViewportX/Y regardless of who built it (see project_distraction_infrastructure memory)
 
-        _goal = GetNode<Goal>("Window/SubViewport/Stage/Goal");
-        if (_goal == null) { throw new NullReferenceException("Platformer: missing required child 'Window/SubViewport/Stage/Goal'"); }
+        _goal = GetNode<Goal>("Stage/Goal");
+        if (_goal == null) { throw new NullReferenceException("Platformer: missing required child 'Stage/Goal'"); }
         _goal.Reached += Victory;
     }
 

@@ -9,16 +9,10 @@ public class PlatformerDistractionTesting : DistractionTesting
 {
     protected override Distraction CreateDistraction()
     {
-        // Barebones stand-in tree matching only the node names Setup() looks up
-        // (Window/SubViewport/Stage/Goal) - GetNode walks by name, intermediate node types
-        // don't need to match the real SubViewportContainer/SubViewport, only the Goal leaf does
+        // Barebones stand-in tree matching only the node names Setup() looks up (Stage/Goal)
         var platformer = new Platformer();
-        var window = new Node2D { Name = "Window" };
-        platformer.AddChild(window);
-        var subViewport = new Node2D { Name = "SubViewport" };
-        window.AddChild(subViewport);
         var stage = new Node2D { Name = "Stage" };
-        subViewport.AddChild(stage);
+        platformer.AddChild(stage);
         stage.AddChild(new Goal { Name = "Goal" });
         return platformer;
     }

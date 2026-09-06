@@ -7,16 +7,16 @@ using System;
 public partial class FlySwatter : Distraction
 {
     // Expected screenspace for the minigame, matches the placeholder background texture
-    private readonly float _viewportX = 220;
+    private readonly int _viewportX = 220;
     /// <summary>
     /// Expected viewport width by the minigame.
     /// </summary>
-    public override float ViewportX { get => _viewportX; }
-    private readonly float _viewportY = 220;
+    public override int ViewportX { get => _viewportX; }
+    private readonly int _viewportY = 220;
     /// <summary>
     /// Expected viewport height by the minigame.
     /// </summary>
-    public override float ViewportY { get => _viewportY; }
+    public override int ViewportY { get => _viewportY; }
 
     // Score to reach (units in number of flies swatted)
     // [19/08/2026] This should be difficulty dependent when implemented (see "difficulty profiles" notes)

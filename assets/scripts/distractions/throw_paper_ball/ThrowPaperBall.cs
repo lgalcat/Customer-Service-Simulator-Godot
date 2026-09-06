@@ -11,10 +11,10 @@ public partial class ThrowPaperBall : Distraction
     private ThrowingState _state = ThrowingState.err;
 
     // Expected screenspace for the minigame
-    private readonly float _viewportX = 340;
-    public override float ViewportX { get => _viewportX; }
-    private readonly float _viewportY = 220;
-    public override float ViewportY { get => _viewportY; }
+    private readonly int _viewportX = 340;
+    public override int ViewportX { get => _viewportX; }
+    private readonly int _viewportY = 220;
+    public override int ViewportY { get => _viewportY; }
 
     // Ranges for the "throwing" angle and strength
     // Keep in mind angles grow CLOCKWISE

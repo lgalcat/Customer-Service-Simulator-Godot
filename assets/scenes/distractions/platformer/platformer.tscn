@@ -6,17 +6,4 @@
 [node name="Platformer" type="Node" unique_id=1165743226]
 script = ExtResource("1_platformer")
 
-[node name="Window" type="SubViewportContainer" parent="." unique_id=1763390030]
-offset_left = 200.0
-offset_top = 60.0
-offset_right = 440.0
-offset_bottom = 300.0
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="Window" unique_id=709608993]
-handle_input_locally = false
-canvas_item_default_texture_filter = 0
-size = Vector2i(240, 240)
-render_target_update_mode = 4
-
-[node name="Stage" parent="Window/SubViewport" unique_id=1795318707 instance=ExtResource("2_abgnl")]
+[node name="Stage" parent="." unique_id=1795318707 instance=ExtResource("2_abgnl")]

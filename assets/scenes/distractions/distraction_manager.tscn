@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/distractions/DistractionManager.cs" id="1_manager"]
+[ext_resource type="Script" path="res://assets/scripts/distractions/IntervalDistractionScheduler.cs" id="2_scheduler"]
+
+[node name="DistractionManager" type="Node"]
+script = ExtResource("1_manager")
+
+[node name="Overlay" type="Control" parent="."]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Scheduler" type="Node" parent="."]
+script = ExtResource("2_scheduler")
