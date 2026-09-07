@@ -95,8 +95,13 @@ public class ThrowPaperBallBehaviourTesting : DistractionTesting
     [TestCase]
     public async Task ChargingAndReleasingThrowsTheBall()
     {
-        using ISceneRunner runner = ISceneRunner.Load(ScenePath, true, true);
-        Ball ball = ((ThrowPaperBall)runner.Scene()!).GetNode<Ball>("Stage/Ball");
+        // Setup() is the hosting factory's job at runtime; call it before tree entry (the runner
+        // enters the tree on Load), since _Ready() no longer does - it only runs ResetState(),
+        // which needs Setup() to have assigned _projection first
+        var throwPaperBall = GD.Load<PackedScene>(ScenePath).Instantiate<ThrowPaperBall>();
+        throwPaperBall.Setup(1);
+        using ISceneRunner runner = ISceneRunner.Load(throwPaperBall, true, true);
+        Ball ball = throwPaperBall.GetNode<Ball>("Stage/Ball");
 
         AssertThat(ball.IsIdle).IsTrue();
 

@@ -15,7 +15,7 @@ size = Vector2(25, 23)
 script = ExtResource("1_2f1be")
 
 [node name="Stage" type="Node2D" parent="." unique_id=1815319675]
-position = Vector2(320, 180)
+position = Vector2(110, 110)
 
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=1351348644]
 texture = ExtResource("2_uy12n")

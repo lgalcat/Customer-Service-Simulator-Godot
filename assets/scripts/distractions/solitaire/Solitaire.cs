@@ -39,12 +39,14 @@ public partial class Solitaire : Distraction
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        // Must run after tree entry (GetViewport() needs it) - can't live in Setup(), which a future factory may call before AddChild()
+        // Viewport-scoped config for Card's per-object click picking. Must run post-tree-entry
+        // (GetViewport() needs it) - can't live in Setup(), which the hosting factory calls before
+        // AddChild(). When hosted, GetViewport() is the factory's dedicated SubViewport, so this now
+        // scopes cleanly per Solitaire instance. PhysicsObjectPicking is set explicitly so picking
+        // works whether hosted (the factory sets it too) or solitaire.tscn is run bare.
+        GetViewport().PhysicsObjectPicking = true;
         GetViewport().PhysicsObjectPickingSort = true;
         GetViewport().PhysicsObjectPickingFirstOnly = true;
-
-        // "Setup" call just for early testing purposes, delete when a factory and testing scene are implemented
-        Setup(1);
     }
 
     /// <summary>

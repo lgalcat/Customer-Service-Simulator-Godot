@@ -18,7 +18,7 @@ _randomizeDeal = true
 _cardScene = ExtResource("2_fsgdk")
 
 [node name="Stage" type="Node2D" parent="." unique_id=165803047]
-position = Vector2(320, 180)
+position = Vector2(205, 120)
 
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=1894314873]
 texture = ExtResource("2_xybw0")

@@ -53,7 +53,6 @@ public partial class DistractionManager : Node
         DistractionFactory.DistractionInstance instance = _factory.Create(type ?? _factory.RandomType(), difficulty ?? _baseDifficulty);
 
         _overlay.AddChild(instance.Host);
-        instance.Host.Size = instance.Distraction.ViewportSize;
         // Provided Controls don't have minimum size values, KeepSize is key to not collapsing window size
         instance.Host.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center, Control.LayoutPresetMode.KeepSize);
 

@@ -28,15 +28,15 @@ public class DistractionFactory
     }
 
     /// <summary>
-    /// Builds the real, <c>res://</c>-backed factory.
+    /// Builds the real, <c>res://</c>-backed factory over every <see cref="Distraction"/> minigame.
     /// </summary>
-    // Only maps minigames whose .tscn is ready to be hosted through this system - grows as each of
-    // ThrowPaperBall/FlySwatter/Solitaire migrates onto it (see CLAUDE.local.md)
-    // [04/09/2026] TODO: add ThrowPaperBall, FlySwatter, Solitaire once each migrates
     public static DistractionFactory CreateDefault()
     {
         var scenes = new Dictionary<DistractionType, PackedScene>
         {
+            { DistractionType.ThrowPaperBall, GD.Load<PackedScene>("res://assets/scenes/distractions/throw_paper_ball/throw_paper_ball.tscn") },
+            { DistractionType.FlySwatter, GD.Load<PackedScene>("res://assets/scenes/distractions/fly_swatter/fly_swatter.tscn") },
+            { DistractionType.Solitaire, GD.Load<PackedScene>("res://assets/scenes/distractions/solitaire/solitaire.tscn") },
             { DistractionType.Platformer, GD.Load<PackedScene>("res://assets/scenes/distractions/platformer/platformer.tscn") },
         };
         return new DistractionFactory(scenes);
@@ -68,9 +68,16 @@ public class DistractionFactory
         return _availableTypes[GD.RandRange(0, _availableTypes.Length - 1)];
     }
 
-    // Wraps a minigame with no host of its own in a SubViewport sized to its declared window, inside
-    // a SubViewportContainer - covers clipping (content past the fixed render target is never
-    // drawn), centering (the container is a Control), and scopes picking config per-minigame
+    // Builds the display host: a SubViewport sized to the minigame's declared window inside a
+    // SubViewportContainer - clips overflow, gives the manager a Control to position, and scopes
+    // picking config per-minigame.
+    //
+    // [07/09/2026] Intended evolution: once frame flair lands (border, title, entry/exit animation)
+    // this host becomes a dedicated frame "distraction_frame.tscn" + "DistractionFrame" thin script.
+    // Ownership to keep: the frame owns its own structure, render config, animations and other components
+    // the factory instances the frame and mounts the minigame into it
+    // the manager only parents/positions it and drives show/hide timing.
+    // Keep DistractionInstance.Host typed as Control so this swap never ripples past factory.
     private static SubViewportContainer BuildHost(Distraction distraction)
     {
         var viewport = new SubViewport

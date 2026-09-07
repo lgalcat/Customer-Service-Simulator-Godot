@@ -1,14 +1,15 @@
 [gd_scene format=3 uid="uid://b7cmmk2d57xpi"]
 
-[ext_resource type="Script" path="res://assets/scripts/distractions/DistractionSandboxController.cs" id="1_controller"]
+[ext_resource type="Script" uid="uid://bii5kn35i18y0" path="res://assets/scripts/distractions/DistractionSandboxController.cs" id="1_controller"]
 [ext_resource type="PackedScene" path="res://assets/scenes/distractions/distraction_manager.tscn" id="2_manager"]
 
 [node name="DistractionSandbox" type="Node2D" unique_id=614843936]
 editor_description = "This scene is meant as a developer sandbox to test and tune the minigame system in isolation."
 script = ExtResource("1_controller")
+_forceType = 2
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=340823595]
 color = Color(0.8410647, 0.6120018, 0.9771429, 1)
 polygon = PackedVector2Array(0, 0, 640, 0, 640, 360, 0, 360)
 
-[node name="DistractionManager" parent="." instance=ExtResource("2_manager")]
+[node name="DistractionManager" parent="." unique_id=1852518840 instance=ExtResource("2_manager")]

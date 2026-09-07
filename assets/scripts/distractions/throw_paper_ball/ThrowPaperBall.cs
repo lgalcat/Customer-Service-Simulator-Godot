@@ -43,9 +43,9 @@ public partial class ThrowPaperBall : Distraction
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        // "Setup" call just for early testing purposes, delete when a factory and testing scene are implemented
-        Setup(1);
-        // Call to set the state machine to default values
+        // Setup() is the hosting factory's job now (before tree entry); _Ready only kicks off the
+        // state machine - ResetState() needs the Setup()-assigned _projection, and _projection's own
+        // sprites, both ready by now (children _Ready() before parents)
         ResetState();
     }
 

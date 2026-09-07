@@ -23,9 +23,9 @@ radius = 7.071068
 script = ExtResource("1_dtqkm")
 
 [node name="Stage" type="Node2D" parent="." unique_id=514983727]
-editor_description = "The root Node2D for all physical nodes of the minigame. 
+editor_description = "The root Node2D for all physical nodes of the minigame.
 Is located at the centre of local minigame space"
-position = Vector2(320, 180)
+position = Vector2(170, 110)
 
 [node name="Background" type="Sprite2D" parent="Stage" unique_id=987714246]
 texture = ExtResource("2_u4k7e")

@@ -95,14 +95,15 @@ public class FlySwatterBehaviourTesting : DistractionTesting
 
     // Tests that Victory()'s _flySpawner.StopSpawning() call actually stops the wave timer, not
     // just that scoring stops (see FurtherFlyDeathsAfterVictoryDoNotRetrigger for that half).
-    // Needs a real SceneTree for Timer.IsStopped() to reflect Stop()'s effect - loads the real
-    // scene directly (mirrors ThrowPaperBallBehaviourTesting.ChargingAndReleasingThrowsTheBall),
-    // whose own _Ready() already calls Setup(1), so Setup() isn't called again here
+    // Needs a real SceneTree for Timer.IsStopped() to reflect Stop()'s effect. Setup() is the
+    // hosting factory's job at runtime; call it before tree entry (the runner enters on Load),
+    // since _Ready() no longer does (mirrors ThrowPaperBallBehaviourTesting.ChargingAndReleasingThrowsTheBall)
     [TestCase]
     public void VictoryStopsTheSpawnerWaveTimer()
     {
-        using ISceneRunner runner = ISceneRunner.Load(ScenePath, true, true);
-        FlySwatter flySwatter = (FlySwatter)runner.Scene()!;
+        var flySwatter = GD.Load<PackedScene>(ScenePath).Instantiate<FlySwatter>();
+        flySwatter.Setup(1);
+        using ISceneRunner runner = ISceneRunner.Load(flySwatter, true, true);
         FlySpawner flySpawner = flySwatter.GetNode<FlySpawner>("Stage/FlySpawner");
         Timer waveTimer = flySpawner.GetChildren().OfType<Timer>().First();
         AssertThat(waveTimer.IsStopped()).IsFalse();

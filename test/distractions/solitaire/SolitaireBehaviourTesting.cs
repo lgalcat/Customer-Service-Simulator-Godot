@@ -37,14 +37,16 @@ public class SolitaireBehaviourTesting : DistractionTesting
         base.Teardown();
     }
 
-    // Every test below needs a live SceneTree: Setup()'s _Ready()-triggered call does real dealing/
-    // wiring work these tests specifically observe, so they load their own runner rather than using
-    // the shared "distraction" field the base Setup() builds (which never enters a live tree)
+    // Every test below needs a live SceneTree: Setup()'s dealing/wiring work is what they observe,
+    // so they load their own runner rather than using the shared "distraction" field the base
+    // Setup() builds (which never enters a live tree). Setup() is the hosting factory's job at
+    // runtime; call it before tree entry (the runner enters the tree on Load), since _Ready() no
+    // longer does.
     private static ISceneRunner LoadRunner(out Solitaire solitaire)
     {
-        ISceneRunner runner = ISceneRunner.Load(ScenePath, true, true);
-        solitaire = (Solitaire)runner.Scene()!;
-        return runner;
+        solitaire = GD.Load<PackedScene>(ScenePath).Instantiate<Solitaire>();
+        solitaire.Setup(1);
+        return ISceneRunner.Load(solitaire, true, true);
     }
 
     private static FoundationPile GetFoundation(Solitaire solitaire, Suit suit)

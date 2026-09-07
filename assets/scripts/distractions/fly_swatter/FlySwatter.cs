@@ -28,12 +28,8 @@ public partial class FlySwatter : Distraction
     // Not core to the game loop - unlike other child lookups, a missing tracker doesn't throw
     private Label? _scoreTracker;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        // "Setup" call just for early testing purposes, delete when a factory and testing scene are implemented
-        Setup(1);
-    }
+    // No _Ready() override: Setup() is the hosting factory's job (before tree entry) and this
+    // minigame has no other post-tree-entry init to do.
 
     /// <summary>
     /// Sets up the minigame instance before it enters the scene tree.

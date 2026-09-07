@@ -9,10 +9,17 @@ using System;
 /// </summary>
 public partial class DistractionSandboxController : Node2D
 {
+    // Path to the "DistractionManager" this harness drives.
     [Export] private NodePath _managerPath = "DistractionManager";
+
+    // Minigame the force-spawn key (F1) requests. Must be one the factory currently maps
+    // (ThrowPaperBall or Platformer today) - an unmapped type throws on spawn.
     [Export] private DistractionType _forceType = DistractionType.Platformer;
+
+    // Difficulty sent with a forced request. Scheduled requests use the manager's own base difficulty instead.
     [Export] private int _forceDifficulty = 1;
-    // Convenience for a quick look without needing to press the force-spawn key at all
+
+    // Force-spawn the chosen minigame once when the sandbox loads, without waiting for the F1 key.
     [Export] private bool _spawnOnReady = false;
 
     private DistractionManager _manager = null!;
