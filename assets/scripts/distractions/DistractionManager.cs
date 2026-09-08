@@ -22,6 +22,14 @@ public partial class DistractionManager : Node
     /// </summary>
     public Action? DistractionCompleted;
 
+    /// <summary>
+    /// Optionally supply a pre-built <see cref="DistractionFactory"/> before this manager enters the
+    /// tree - a filtered/weighted pool, a runtime-assembled set, or a test double. Left <see
+    /// langword="null"/>, <see cref="_Ready"/> builds the default <c>res://</c>-backed factory. Read
+    /// once in <see cref="_Ready"/>; changes afterwards have no effect.
+    /// </summary>
+    public DistractionFactory? InitialFactory { get; set; }
+
     private DistractionFactory _factory = null!;
     private Control _overlay = null!;
     private DistractionFactory.DistractionInstance? _active;
@@ -33,9 +41,11 @@ public partial class DistractionManager : Node
 
     public override void _Ready()
     {
-        // [4/08/2026] TODO Consider/Implement loading mechanism for filtered/weighted minigame lists
-        // Load the factory with the default (internal) pool of minigames
-        _factory = DistractionFactory.CreateDefault();
+        // A caller may hand us a factory before tree entry (see InitialFactory) - a filtered/weighted
+        // pool, a runtime-assembled set, or a test double. Otherwise fall back to the default res:// pool.
+        // [4/09/2026] TODO: designer-facing weighted/filtered pools via a DistractionPool resource,
+        // slotting into this chain as InitialFactory ?? _pool?.BuildFactory() ?? CreateDefault()
+        _factory = InitialFactory ?? DistractionFactory.CreateDefault();
 
         _overlay = GetNode<Control>(_overlayPath);
         if (_overlay == null) { throw new NullReferenceException($"DistractionManager: missing required child '{_overlayPath}'"); }

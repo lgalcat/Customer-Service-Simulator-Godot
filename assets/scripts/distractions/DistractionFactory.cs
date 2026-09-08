@@ -21,6 +21,7 @@ public class DistractionFactory
     /// <summary>
     /// Builds a factory over an explicit type-to-scene map - the injectable seam tests use.
     /// </summary>
+    // [8/09/2026] Later on this should become the main builder method (see 'CreateDefault()' comments)
     public DistractionFactory(IReadOnlyDictionary<DistractionType, PackedScene> scenes)
     {
         _scenes = scenes;
@@ -30,6 +31,8 @@ public class DistractionFactory
     /// <summary>
     /// Builds the real, <c>res://</c>-backed factory over every <see cref="Distraction"/> minigame.
     /// </summary>
+    // [8/09/2026] In the future this should act as a fallback, a primary way of injecting richer
+    // (weighted/filtered) minigame pools should be designed and implemented to enable designer flexibility
     public static DistractionFactory CreateDefault()
     {
         var scenes = new Dictionary<DistractionType, PackedScene>
