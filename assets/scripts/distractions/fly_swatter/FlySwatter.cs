@@ -42,7 +42,7 @@ public partial class FlySwatter : Distraction
 
         // Find fly spawner and bind its actions
         _flySpawner = GetNode<FlySpawner>("Stage/FlySpawner");
-        if (_flySpawner == null) { throw new NullReferenceException(); }
+        if (_flySpawner == null) { throw new NullReferenceException("FlySwatter: missing required child 'Stage/FlySpawner'"); }
         _flySpawner.FlyDied += UpdateScore;
         // Find ingame score tracker and set initial values (if existing)
         _scoreTracker = GetNode<Label>("Stage/ScoreTracker");
