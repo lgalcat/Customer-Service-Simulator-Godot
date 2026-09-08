@@ -57,6 +57,20 @@ public partial class Card : Area2D
         InputEvent += OnInputEvent;
     }
 
+    // [08/09/2026] TODO (deferred to a scheduled Solitaire pass): two drag bugs, neither
+    // game-breaking, made easy to hit once Solitaire started being hosted in a clipped SubViewport.
+    //  1. No playspace clamp - a dragged card follows the cursor unbounded, so it can be pulled
+    //     outside the visible window (then clipped away by the host SubViewport). Every other
+    //     Distraction with free movement clamps (Swatter/Fly `_movementBounds`). Fix: clamp
+    //     GlobalPosition below while dragging, inset by ~half the card size; GetViewportRect() now
+    //     returns exactly the play area so no extra plumbing is needed (an [Export] Rect2 via
+    //     Configure(), mirroring Fly.Configure, is the alternative if per-card bounds are wanted).
+    //  2. Release() only fires from OnInputEvent (the Area2D.InputEvent signal), which needs the
+    //     mouse-up to physics-pick this card. If the cursor is outside the host SubViewportContainer
+    //     at release, the container never forwards the event and the card stays stuck in `dragging`
+    //     (a later on-screen left click resets it - confirmed in-game). Fixing #1 largely prevents
+    //     this; independently, self-release here when !Input.IsMouseButtonPressed(MouseButton.Left)
+    //     (the Input singleton is viewport-independent).
     public override void _Process(double delta)
     {
         if (_state != CardState.dragging) { return; }
