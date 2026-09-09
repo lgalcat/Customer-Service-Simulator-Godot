@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,9 +22,17 @@ public class DistractionFactory
     /// <summary>
     /// Builds a factory over an explicit type-to-scene map - the injectable seam tests use.
     /// </summary>
+    /// <exception cref="ArgumentException"><paramref name="scenes"/> is empty - a factory with no
+    /// configured minigames can never create anything, so this is rejected at construction rather
+    /// than deferred to a later, harder-to-trace <see cref="RandomType"/>/<see cref="Create"/> failure.</exception>
     // [8/09/2026] Later on this should become the main builder method (see 'CreateDefault()' comments)
     public DistractionFactory(IReadOnlyDictionary<DistractionType, PackedScene> scenes)
     {
+        if (scenes.Count == 0)
+        {
+            throw new ArgumentException("DistractionFactory: scenes must not be empty", nameof(scenes));
+        }
+
         _scenes = scenes;
         _availableTypes = scenes.Keys.ToArray();
     }

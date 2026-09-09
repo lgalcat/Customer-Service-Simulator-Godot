@@ -12,8 +12,8 @@ public partial class DistractionSandboxController : Node2D
     // Path to the "DistractionManager" this harness drives.
     [Export] private NodePath _managerPath = "DistractionManager";
 
-    // Minigame the force-spawn key (F1) requests. Must be one the factory currently maps
-    // (ThrowPaperBall or Platformer today) - an unmapped type throws on spawn.
+    // Minigame the force-spawn key (F1) requests. Must be one the factory supported maps
+    // Picking an unmapped type throws on spawn.
     [Export] private DistractionType _forceType = DistractionType.Platformer;
 
     // Difficulty sent with a forced request. Scheduled requests use the manager's own base difficulty instead.

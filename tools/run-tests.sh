@@ -23,7 +23,9 @@ cat <<'EOF'
   Sensitive suites: PlayerTesting, PlatformerBehaviourTesting,
   ThrowPaperBallBehaviourTesting, CardTesting, SwatterTesting,
   SolitaireBehaviourTesting, BallTesting, GoalTesting, FlyTesting,
-  FlySpawnerTesting, TrashCanTesting, FlySwatterBehaviourTesting
+  FlySpawnerTesting, TrashCanTesting, FlySwatterBehaviourTesting,
+  DistractionManagerTesting, IntervalDistractionSchedulerTesting,
+  DistractionSandboxControllerTesting, DistractionSystemIntegrationTesting
 
   A warning dialog shows while the run is active (zenity/osascript, best effort).
   Suppress it with GDUNIT_NO_INPUT_POPUP=1.
