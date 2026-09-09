@@ -3,5 +3,11 @@
     "dotnet.defaultSolution": "CustomerServiceSimulator.sln",
     "dotnet.testSettingsPath": "test.runsettings",
     "dotnet.unitTests.runSettingsPath": "test.runsettings",
-    "FSharp.suggestGitignore": false
+    "FSharp.suggestGitignore": false,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "*": "${capture}.uid",
+        "*.png": "${capture}.png.import"
+    }
 }
