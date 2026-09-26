@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cb13k0yi3bgki"]
+
+[ext_resource type="Texture2D" uid="uid://bik0cjsogurr5" path="res://assets/textures/office/main_screen/office_main_back_v0.png" id="1_back"]
+[ext_resource type="Script" uid="uid://4j3ova7xuppc" path="res://assets/scripts/office/OfficeScreen.cs" id="1_screen"]
+[ext_resource type="Texture2D" uid="uid://bj5v64mcpx32k" path="res://assets/textures/office/main_screen/office_main_front_v0.png" id="2_front"]
+[ext_resource type="Texture2D" uid="uid://besyo4xil4bps" path="res://assets/textures/office/main_screen/office_main_computer_v0.png" id="3_computer"]
+[ext_resource type="Texture2D" uid="uid://bt08l0dmksein" path="res://assets/textures/office/main_screen/office_main_door_v0.png" id="4_door"]
+[ext_resource type="Texture2D" uid="uid://doxcop30u4os6" path="res://assets/textures/office/main_screen/office_main_phone_v0.png" id="5_phone"]
+[ext_resource type="Texture2D" uid="uid://vcjmioobc3u5" path="res://assets/textures/office/main_screen/office_main_printer_v0.png" id="6_printer"]
+[ext_resource type="Script" uid="uid://r17btfnn23cq" path="res://assets/scripts/office/SpriteInteractable.cs" id="7_interactable"]
+
+[node name="MainScreen" type="Node2D" unique_id=1771610450]
+script = ExtResource("1_screen")
+
+[node name="Back" type="Sprite2D" parent="." unique_id=755949311]
+texture = ExtResource("1_back")
+centered = false
+
+[node name="Door" type="Area2D" parent="." unique_id=31779926]
+script = ExtResource("7_interactable")
+
+[node name="Sprite" type="Sprite2D" parent="Door" unique_id=1708017]
+texture = ExtResource("4_door")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Door" unique_id=1556426912]
+polygon = PackedVector2Array(385, 12, 467, 12, 462, 166, 384, 166)
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="Door" unique_id=493636696]
+
+[node name="Front" type="Sprite2D" parent="." unique_id=1494137211]
+texture = ExtResource("2_front")
+centered = false
+
+[node name="Computer" type="Area2D" parent="." unique_id=839542431]
+editor_description = "[25/09/2026] TODO: Amend the bound argument in Clicked -> MainScreen.RequestScreenChange (bind type String) once a second screen exists. Build the C# project first, wire in the Godot editor, then confirm the [connection] survived the save. Also pending implementation and wiring of highlight sprite effects."
+script = ExtResource("7_interactable")
+
+[node name="Sprite" type="Sprite2D" parent="Computer" unique_id=1563347879]
+texture = ExtResource("3_computer")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Computer" unique_id=1360271030]
+polygon = PackedVector2Array(477, 136, 476, 199, 467, 199, 467, 221, 475, 233, 554, 233, 554, 210, 551, 210, 554, 139, 550, 136)
+
+[node name="Phone" type="Area2D" parent="." unique_id=992983119]
+editor_description = "[24/09/2026] TODO: wire Clicked -> AudioStreamPlayer.play (no binds) once a real sound is assigned to its Stream; play() with no stream logs an error on every call. Build the C# project first, wire in the Godot editor, then confirm the [connection] survived the save."
+script = ExtResource("7_interactable")
+
+[node name="Sprite" type="Sprite2D" parent="Phone" unique_id=1664307186]
+texture = ExtResource("5_phone")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Phone" unique_id=1995677539]
+polygon = PackedVector2Array(374, 176, 410, 176, 411, 227, 375, 227)
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="Phone" unique_id=1608102615]
+
+[node name="Printer" type="Area2D" parent="." unique_id=160387692]
+script = ExtResource("7_interactable")
+
+[node name="Sprite" type="Sprite2D" parent="Printer" unique_id=37387038]
+texture = ExtResource("6_printer")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Printer" unique_id=589233815]
+polygon = PackedVector2Array(640, 237, 596, 230, 541, 258, 541, 270, 521, 280, 521, 284, 455, 318, 455, 323, 522, 339, 522, 352, 547, 360, 640, 360)
+
+[connection signal="Clicked" from="Computer" to="." method="RequestScreenChange" binds= ["ComputerScreen"]]
+[connection signal="Clicked" from="Printer" to="." method="RequestScreenChange" binds= ["PrinterScreen"]]

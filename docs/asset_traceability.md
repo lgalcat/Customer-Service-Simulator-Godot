@@ -96,3 +96,13 @@ Entries for any asset internally made for this project should not be expected,
     + Source: [Runner Character asset page](https://opengameart.org/content/runner-character "Runner Character")
     + License: [Creative Commons Zero v1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/ "CC0 1.0")
     + Modifications: None
+
+### Office
+
+- Office environment images:
+    + Project Files: (Currently) everything under [textures/office](../assets/textures/office)
+    + Author: [Agustin Lionel "VNBP" Vadino](https://vnb3d.com/ "VNBP's landing page")
+    + Source: [Low Poly 3D Office Set](https://vnbp.itch.io/low-poly-3d-office-set-vnb "3D Office Set")
+    + License: [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/ "CC BY 4.0")
+    + Modifications: Assets used to compose reference scene, project assets produced from said
+    reference scene (with additional image tweaks applied as necessary).

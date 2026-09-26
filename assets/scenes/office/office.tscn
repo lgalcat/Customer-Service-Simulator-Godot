@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/office/OfficeManager.cs" id="1_manager"]
+[ext_resource type="PackedScene" path="res://assets/scenes/office/main_screen/main_screen.tscn" id="2_main_screen"]
+[ext_resource type="PackedScene" path="res://assets/scenes/office/computer/computer_screen.tscn" id="3_computer_screen"]
+[ext_resource type="PackedScene" path="res://assets/scenes/office/printer/printer_screen.tscn" id="4_printer_screen"]
+
+[node name="OfficeManager" type="Node"]
+script = ExtResource("1_manager")
+_initialScreenPath = NodePath("MainScreen")
+
+[node name="ScreenLayer" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="MainScreen" parent="ScreenLayer" instance=ExtResource("2_main_screen")]
+
+[node name="ComputerScreen" parent="ScreenLayer" instance=ExtResource("3_computer_screen")]
+
+[node name="PrinterScreen" parent="ScreenLayer" instance=ExtResource("4_printer_screen")]
