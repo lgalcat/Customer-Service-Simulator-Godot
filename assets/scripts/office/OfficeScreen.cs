@@ -8,15 +8,9 @@ using System.Collections.Generic;
 /// one is <see cref="Activate"/>d; every other screen sits <see cref="Deactivate"/>d (invisible,
 /// non-interactable) while its own logic (timers, animations, code accessibility) keeps running
 /// underneath, by default - only a designer/programmer's explicit opt-out should change that.
-/// <para>A screen does not deactivate itself: <see cref="OfficeManager"/> establishes the
-/// "everything but the initial screen starts inactive" baseline for the screens it hosts. Run on
-/// its own (F6 on the screen's scene), a screen therefore stays visible and interactive as
-/// authored - nothing calls <see cref="IOfficeInteractable.SetInteractable"/>, so each interactable
-/// keeps its own default.</para>
-/// <para>A screen is also the seam for its own elements' navigation requests: an element inside the
-/// screen's scene can call <see cref="RequestScreenChange"/> (typically wired in the editor from an
-/// interactable's signal), and whoever hosts the screen subscribes to
-/// <see cref="ScreenChangeRequested"/> - the screen never needs to know its host.</para>
+/// <para>This class never deactivates itself - <see cref="OfficeManager"/> owns the starting
+/// baseline. An element inside the screen asks to navigate via <see cref="RequestScreenChange"/>,
+/// which raises <see cref="ScreenChangeRequested"/> for the host to handle.</para>
 /// </summary>
 public partial class OfficeScreen : Node2D
 {

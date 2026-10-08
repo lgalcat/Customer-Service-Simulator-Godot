@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://doxcop30u4os6" path="res://assets/textures/office/main_screen/office_main_phone_v0.png" id="5_phone"]
 [ext_resource type="Texture2D" uid="uid://vcjmioobc3u5" path="res://assets/textures/office/main_screen/office_main_printer_v0.png" id="6_printer"]
 [ext_resource type="Script" uid="uid://r17btfnn23cq" path="res://assets/scripts/office/SpriteInteractable.cs" id="7_interactable"]
+[ext_resource type="Script" uid="uid://dca2oufbym66h" path="res://assets/scripts/office/InteractableFeedback.cs" id="8_feedback"]
+[ext_resource type="Resource" uid="uid://ctfsjt1gc7sas" path="res://assets/resources/office/idle_pulse_style.tres" id="9_idle"]
+[ext_resource type="Resource" uid="uid://bf1qv6s0qquo2" path="res://assets/resources/office/hover_outline_style.tres" id="10_hover"]
 
 [node name="MainScreen" type="Node2D" unique_id=1771610450]
 script = ExtResource("1_screen")
@@ -22,6 +25,8 @@ script = ExtResource("7_interactable")
 [node name="Sprite" type="Sprite2D" parent="Door" unique_id=1708017]
 texture = ExtResource("4_door")
 centered = false
+script = ExtResource("8_feedback")
+_hover = ExtResource("10_hover")
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="Door" unique_id=1556426912]
 polygon = PackedVector2Array(385, 12, 467, 12, 462, 166, 384, 166)
@@ -33,12 +38,14 @@ texture = ExtResource("2_front")
 centered = false
 
 [node name="Computer" type="Area2D" parent="." unique_id=839542431]
-editor_description = "[25/09/2026] TODO: Amend the bound argument in Clicked -> MainScreen.RequestScreenChange (bind type String) once a second screen exists. Build the C# project first, wire in the Godot editor, then confirm the [connection] survived the save. Also pending implementation and wiring of highlight sprite effects."
 script = ExtResource("7_interactable")
 
 [node name="Sprite" type="Sprite2D" parent="Computer" unique_id=1563347879]
 texture = ExtResource("3_computer")
 centered = false
+script = ExtResource("8_feedback")
+_idle = ExtResource("9_idle")
+_hover = ExtResource("10_hover")
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="Computer" unique_id=1360271030]
 polygon = PackedVector2Array(477, 136, 476, 199, 467, 199, 467, 221, 475, 233, 554, 233, 554, 210, 551, 210, 554, 139, 550, 136)
@@ -50,6 +57,8 @@ script = ExtResource("7_interactable")
 [node name="Sprite" type="Sprite2D" parent="Phone" unique_id=1664307186]
 texture = ExtResource("5_phone")
 centered = false
+script = ExtResource("8_feedback")
+_hover = ExtResource("10_hover")
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="Phone" unique_id=1995677539]
 polygon = PackedVector2Array(374, 176, 410, 176, 411, 227, 375, 227)
@@ -62,6 +71,9 @@ script = ExtResource("7_interactable")
 [node name="Sprite" type="Sprite2D" parent="Printer" unique_id=37387038]
 texture = ExtResource("6_printer")
 centered = false
+script = ExtResource("8_feedback")
+_idle = ExtResource("9_idle")
+_hover = ExtResource("10_hover")
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="Printer" unique_id=589233815]
 polygon = PackedVector2Array(640, 237, 596, 230, 541, 258, 541, 270, 521, 280, 521, 284, 455, 318, 455, 323, 522, 339, 522, 352, 547, 360, 640, 360)

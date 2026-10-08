@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HoverOutlineStyle" format=3 uid="uid://bf1qv6s0qquo2"]
+
+[ext_resource type="Script" uid="uid://dte7130666h0d" path="res://assets/scripts/office/HoverOutlineStyle.cs" id="1_style"]
+[ext_resource type="Shader" uid="uid://c5y6pa2326aqw" path="res://assets/shaders/office/interactable_outline.gdshader" id="2_shader"]
+
+[resource]
+script = ExtResource("1_style")
+OutlineShader = ExtResource("2_shader")

@@ -1,11 +1,29 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://ctwjkyr00qe0v"]
 
-[ext_resource type="Script" path="res://assets/scripts/office/OfficeScreen.cs" id="1_screen"]
-[ext_resource type="Texture2D" path="res://assets/textures/office/computer/office_computer_front_v0.png" id="2_front"]
+[ext_resource type="Script" uid="uid://4j3ova7xuppc" path="res://assets/scripts/office/OfficeScreen.cs" id="1_screen"]
+[ext_resource type="Texture2D" uid="uid://4ji2vw56527g" path="res://assets/textures/office/computer/office_computer_front_v0.png" id="2_front"]
+[ext_resource type="Script" uid="uid://r17btfnn23cq" path="res://assets/scripts/office/SpriteInteractable.cs" id="3_interactable"]
+[ext_resource type="Script" uid="uid://dy573wrkedcoq" path="res://assets/scripts/office/CursorHint.cs" id="4_cursorhint"]
+[ext_resource type="Resource" path="res://assets/resources/office/exit_cursor_hint.tres" id="5_cursorstyle"]
 
-[node name="ComputerScreen" type="Node2D"]
+[node name="ComputerScreen" type="Node2D" unique_id=1515934323]
 script = ExtResource("1_screen")
 
-[node name="Front" type="Sprite2D" parent="."]
+[node name="Front" type="Sprite2D" parent="." unique_id=783127868]
 texture = ExtResource("2_front")
 centered = false
+
+[node name="Back" type="Area2D" parent="." unique_id=975512918]
+editor_description = "[01/10/2026] PLACEHOLDER: no art yet (pending the baked-in signifier prototype) - just a functional edge hotspot back to MainScreen. Hitbox is a placeholder band, resize/reshape once real screen content exists."
+script = ExtResource("3_interactable")
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Back" unique_id=1835379442]
+polygon = PackedVector2Array(0, 0, 640, 0, 640, 360, 616, 360, 616, 24, 24, 24, 24, 360, 0, 360)
+
+[node name="CursorHint" type="Node" parent="." unique_id=489979750]
+script = ExtResource("4_cursorhint")
+_style = ExtResource("5_cursorstyle")
+
+[connection signal="Clicked" from="Back" to="." method="RequestScreenChange" binds= ["MainScreen"]]
+[connection signal="HoverEnded" from="Back" to="CursorHint" method="OnHoverEnded"]
+[connection signal="HoverStarted" from="Back" to="CursorHint" method="OnHoverStarted"]

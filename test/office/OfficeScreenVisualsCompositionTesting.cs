@@ -3,14 +3,11 @@ using GdUnit4;
 using static GdUnit4.Assertions;
 using System.Threading.Tasks;
 
-// Standing regression check for every Office screen's layered art composition.
-// One [TestCase] per screen - independent per case (its own ISceneRunner, own images),
-// no shared state, so parameterized over sequential per-screen blocks per project conventions.
+// Regression check for every Office screen's layered art composition. One [TestCase] per screen,
+// independent per case (own ISceneRunner, own images), no shared state.
 //
-// This is a coarse tripwire, not a correctness oracle: a real seam and expected anti-aliasing/
-// tonal noise can land in the same rough pixel-count ballpark (confirmed empirically against
-// main_screen). A failure here means "go run the documented investigation",
-// not "the art is definitely broken".
+// Coarse tripwire, not a correctness oracle: a real defect and ordinary rendering noise can land
+// in the same pixel-count range. A failure means "go investigate", not "the art is broken".
 [TestSuite]
 [RequireGodotRuntime]
 public class OfficeScreenVisualsCompositionTesting
@@ -22,7 +19,7 @@ public class OfficeScreenVisualsCompositionTesting
     // Fraction of total pixels allowed to exceed ChannelTolerance before this fails. 1% is
     // calibrated against main_screen's validated baseline (~1674/230400 once real defects were
     // fixed) while still catching a repeat of the back/front alpha-crossfade seam this suite
-    // originally found (~2559/230400) - see the case log for both numbers.
+    // originally found (~2559/230400).
     private const double MismatchFractionTolerance = 0.01;
 
     [TestCase("main_screen",

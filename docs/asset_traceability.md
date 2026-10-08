@@ -100,9 +100,16 @@ Entries for any asset internally made for this project should not be expected,
 ### Office
 
 - Office environment images:
-    + Project Files: (Currently) everything under [textures/office](../assets/textures/office)
+    + Project Files: (Currently) every `*.png` under [textures/office](../assets/textures/office)
     + Author: [Agustin Lionel "VNBP" Vadino](https://vnb3d.com/ "VNBP's landing page")
     + Source: [Low Poly 3D Office Set](https://vnbp.itch.io/low-poly-3d-office-set-vnb "3D Office Set")
     + License: [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/ "CC BY 4.0")
     + Modifications: Assets used to compose reference scene, project assets produced from said
     reference scene (with additional image tweaks applied as necessary).
+
+- Custom mouse cursor icons:
+    + Project Files: [exitA_cursor_v0.svg](../assets/textures/office/exitA_cursor_v0.svg)
+    + Author: [Kenney *"Kenney"* Vleugels](https://kenney.nl/ "Kenney's landing page")
+    + Source: [Game Icons Pack](https://kenney.nl/assets/game-icons "Game Icons Pack")
+    + License: [Creative Commons Zero v1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/ "CC0 1.0")
+    + Modifications: Extracted used icon from the complete pack.

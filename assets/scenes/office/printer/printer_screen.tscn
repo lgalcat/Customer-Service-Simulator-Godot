@@ -1,16 +1,78 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://ctft0s7uw46t5"]
 
-[ext_resource type="Script" path="res://assets/scripts/office/OfficeScreen.cs" id="1_screen"]
-[ext_resource type="Texture2D" path="res://assets/textures/office/printer/office_printer_base_v0.png" id="2_base"]
-[ext_resource type="Texture2D" path="res://assets/textures/office/printer/office_printer_front_v0.png" id="3_front"]
+[ext_resource type="Script" uid="uid://4j3ova7xuppc" path="res://assets/scripts/office/OfficeScreen.cs" id="1_screen"]
+[ext_resource type="Texture2D" uid="uid://buul3dhrne28c" path="res://assets/textures/office/printer/office_printer_base_v0.png" id="2_base"]
+[ext_resource type="Texture2D" uid="uid://bpoxyx35rwogl" path="res://assets/textures/office/printer/office_printer_front_v0.png" id="3_front"]
+[ext_resource type="Script" uid="uid://r17btfnn23cq" path="res://assets/scripts/office/SpriteInteractable.cs" id="4_c44rp"]
+[ext_resource type="Texture2D" uid="uid://ccsfrqqn0mlgi" path="res://assets/textures/office/printer/office_printer_buttonD_v0.png" id="5_delx4"]
+[ext_resource type="Texture2D" uid="uid://dq8xae58plors" path="res://assets/textures/office/printer/office_printer_buttonC_v0.png" id="6_ssbrx"]
+[ext_resource type="Texture2D" uid="uid://diarw62vfcb80" path="res://assets/textures/office/printer/office_printer_buttonB_v0.png" id="7_2maq6"]
+[ext_resource type="Texture2D" uid="uid://bixy56th72uer" path="res://assets/textures/office/printer/office_printer_buttonA_v0.png" id="8_pbr8n"]
+[ext_resource type="Script" uid="uid://dy573wrkedcoq" path="res://assets/scripts/office/CursorHint.cs" id="9_cursorhint"]
+[ext_resource type="Resource" uid="uid://bdr7xj1wwdvoa" path="res://assets/resources/office/exit_cursor_hint.tres" id="10_cursorstyle"]
 
-[node name="PrinterScreen" type="Node2D"]
+[node name="PrinterScreen" type="Node2D" unique_id=78812244]
 script = ExtResource("1_screen")
 
-[node name="Base" type="Sprite2D" parent="."]
+[node name="Base" type="Sprite2D" parent="." unique_id=116404087]
 texture = ExtResource("2_base")
 centered = false
 
-[node name="Front" type="Sprite2D" parent="."]
+[node name="Front" type="Sprite2D" parent="." unique_id=1480934257]
 texture = ExtResource("3_front")
 centered = false
+
+[node name="ButtonD" type="Area2D" parent="." unique_id=220338312]
+script = ExtResource("4_c44rp")
+
+[node name="Sprite" type="Sprite2D" parent="ButtonD" unique_id=1762637665]
+texture = ExtResource("5_delx4")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonD" unique_id=162813449]
+polygon = PackedVector2Array(478, 150, 479, 157, 490, 157, 491, 156, 489, 150)
+
+[node name="ButtonC" type="Area2D" parent="." unique_id=1840900601]
+script = ExtResource("4_c44rp")
+
+[node name="Sprite" type="Sprite2D" parent="ButtonC" unique_id=302090900]
+texture = ExtResource("6_ssbrx")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonC" unique_id=203635975]
+polygon = PackedVector2Array(480, 159, 481, 167, 493, 167, 494, 166, 492, 159)
+
+[node name="ButtonB" type="Area2D" parent="." unique_id=1424311185]
+script = ExtResource("4_c44rp")
+
+[node name="Sprite" type="Sprite2D" parent="ButtonB" unique_id=1040355385]
+texture = ExtResource("7_2maq6")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonB" unique_id=1738150302]
+polygon = PackedVector2Array(483, 169, 484, 177, 496, 177, 496, 174, 495, 169)
+
+[node name="ButtonA" type="Area2D" parent="." unique_id=155647948]
+script = ExtResource("4_c44rp")
+
+[node name="Sprite" type="Sprite2D" parent="ButtonA" unique_id=1816338952]
+texture = ExtResource("8_pbr8n")
+centered = false
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonA" unique_id=834302855]
+polygon = PackedVector2Array(486, 183, 489, 196, 503, 196, 505, 194, 505, 188, 503, 183)
+
+[node name="Back" type="Area2D" parent="." unique_id=1400493998]
+editor_description = "[01/10/2026] PLACEHOLDER: no art yet (pending the baked-in signifier prototype) - just a functional edge hotspot back to MainScreen. Hitbox is a placeholder band, resize/reshape once real screen content exists."
+script = ExtResource("4_c44rp")
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Back" unique_id=1069785787]
+polygon = PackedVector2Array(0, 0, 640, 0, 640, 360, 616, 360, 616, 24, 24, 24, 24, 360, 0, 360)
+
+[node name="CursorHint" type="Node" parent="." unique_id=2037982377]
+script = ExtResource("9_cursorhint")
+_style = ExtResource("10_cursorstyle")
+
+[connection signal="Clicked" from="Back" to="." method="RequestScreenChange" binds= ["MainScreen"]]
+[connection signal="HoverEnded" from="Back" to="CursorHint" method="OnHoverEnded"]
+[connection signal="HoverStarted" from="Back" to="CursorHint" method="OnHoverStarted"]

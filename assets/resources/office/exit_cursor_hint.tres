@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CursorHintStyle" format=3 uid="uid://bdr7xj1wwdvoa"]
+
+[ext_resource type="Texture2D" uid="uid://b16kytgs5idh" path="res://assets/textures/office/exitA_cursor_v0.svg" id="1_bfxa0"]
+[ext_resource type="Script" uid="uid://da87l410ha07o" path="res://assets/scripts/office/CursorHintStyle.cs" id="1_style"]
+
+[resource]
+script = ExtResource("1_style")
+Texture = ExtResource("1_bfxa0")

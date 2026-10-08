@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="IdlePulseStyle" format=3 uid="uid://ctfsjt1gc7sas"]
+
+[ext_resource type="Script" uid="uid://gwklkita03ew" path="res://assets/scripts/office/IdlePulseStyle.cs" id="1_style"]
+
+[resource]
+script = ExtResource("1_style")
