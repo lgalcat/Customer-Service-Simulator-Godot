@@ -45,6 +45,7 @@ folder_colors={
 
 settings/test/test_discovery=true
 ui/toolbar/run_overall=true
+ui/inspector/tree_sort_mode=2
 
 [input]
 

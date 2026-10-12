@@ -22,6 +22,10 @@ public class OfficeScreenVisualsCompositionTesting
     // originally found (~2559/230400).
     private const double MismatchFractionTolerance = 0.01;
 
+    // Reads back a rendered frame from a live runner: sensitive to heavy background CPU load
+    [Before]
+    public void AnnounceInputSensitivity() => InputSensitiveNotice.AnnounceOnce(nameof(OfficeScreenVisualsCompositionTesting));
+
     [TestCase("main_screen",
         "res://assets/scenes/office/main_screen/main_screen.tscn",
         "res://assets/textures/office/main_screen/office_main_base_v0.png")]

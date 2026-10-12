@@ -54,11 +54,16 @@ public partial class OfficeManager : Node
     /// <summary>
     /// Switches the active screen by node name, resolved against <see cref="_screenLayerPath"/>'s
     /// direct children - Godot's own node-name resolution serves as the screen identifier, no
-    /// separate ID registry needed.
+    /// separate ID registry needed. Throws <see cref="ArgumentException"/> if no screen has that name.
     /// </summary>
     public void GoToScreen(StringName screenName)
     {
-        GoToScreen(_screenLayer.GetNode<OfficeScreen>(screenName.ToString()));
+        // GetNodeOrNull: a plain GetNode would log an engine error and hand back null, which then
+        // fails with an unhelpful NullReferenceException further down
+        OfficeScreen? target = _screenLayer.GetNodeOrNull<OfficeScreen>(screenName.ToString());
+        if (target == null) { throw new ArgumentException($"OfficeManager: no screen named '{screenName}' under '{_screenLayerPath}'", nameof(screenName)); }
+
+        GoToScreen(target);
     }
 
     /// <summary>

@@ -25,7 +25,9 @@ cat <<'EOF'
   SolitaireBehaviourTesting, BallTesting, GoalTesting, FlyTesting,
   FlySpawnerTesting, TrashCanTesting, FlySwatterBehaviourTesting,
   DistractionManagerTesting, IntervalDistractionSchedulerTesting,
-  DistractionSandboxControllerTesting, DistractionSystemIntegrationTesting
+  DistractionSandboxControllerTesting, DistractionSystemIntegrationTesting,
+  InteractableFeedbackTesting, MainScreenSceneTesting, OfficeInputTesting,
+  OfficeScreenVisualsCompositionTesting
 
   A warning dialog shows while the run is active (zenity/osascript, best effort).
   Suppress it with GDUNIT_NO_INPUT_POPUP=1.
