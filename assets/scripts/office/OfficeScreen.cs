@@ -15,6 +15,9 @@ using System.Collections.Generic;
 public partial class OfficeScreen : Node2D
 {
     private readonly List<IOfficeInteractable> _interactables = new();
+    // Whether this screen's interactables participate in pointer interaction while it is active;
+    // lets a host keep a screen visible but inert (see SetInputEnabled)
+    private bool _inputEnabled = true;
 
     /// <summary>
     /// Raised with the target screen's name when something inside this screen asks to navigate
@@ -64,8 +67,23 @@ public partial class OfficeScreen : Node2D
     public void Activate()
     {
         Visible = true;
-        foreach (IOfficeInteractable interactable in _interactables) { interactable.SetInteractable(true); }
+        foreach (IOfficeInteractable interactable in _interactables) { interactable.SetInteractable(_inputEnabled); }
         OnActivated();
+    }
+
+    /// <summary>
+    /// Sets whether this screen's <see cref="IOfficeInteractable"/> descendants participate in
+    /// pointer interaction while it is active - the screen stays visible and its own logic keeps
+    /// running either way. Remembered across <see cref="Activate"/>/<see cref="Deactivate"/>, which
+    /// is what lets a host lock input before navigating to a screen. While the screen is inactive
+    /// this only records the preference; <see cref="Activate"/> applies it.
+    /// </summary>
+    public void SetInputEnabled(bool enabled)
+    {
+        _inputEnabled = enabled;
+        if (!Visible) { return; }
+
+        foreach (IOfficeInteractable interactable in _interactables) { interactable.SetInteractable(enabled); }
     }
 
     /// <summary>

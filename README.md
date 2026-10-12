@@ -5,15 +5,17 @@ A reengineering exercise: rebuilding the student project *Customer Service Simul
 ## Status
 
 Early development. Four minigames are implemented — `throw_paper_ball`, `fly_swatter`,
- `solitaire`, `platformer` — each with extensive gdUnit4 test coverage. There is no main scene, no
- autoloads, and no upstream game-manager yet; each minigame's `.tscn` is launched directly for
- manual testing.
+ `solitaire`, `platformer` — each with extensive gdUnit4 test coverage — plus the Office
+ point-and-click hub. The main scene (`assets/scenes/main/main_level.tscn`) composes Office with the
+ Distraction hosting layer: minigames appear over the office on a randomized interval and lock it
+ while they run. There are no autoloads; each minigame's and each office screen's `.tscn` can still be
+ launched directly for manual testing.
 
 ## Build & run
 
 - **Build**: `dotnet build`
-- **Run**: open the project in Godot 4.6 (mono build) and run a minigame `.tscn` directly — there
-  is no main scene, so launching drops you in the editor. VS Code's "Launch" config builds first.
+- **Run**: open the project in Godot 4.6 (mono build) and run it (F5 runs the main level), or run
+  any minigame/screen `.tscn` directly. VS Code's "Launch" config builds first.
 - **Test**: `dotnet test`, or `tools/run-tests.ps1` (`tools/run-tests.sh` on POSIX), which adds an
   up-front input-sensitivity warning. Some suites simulate keyboard/mouse through the OS-global
   input state — don't touch the keyboard or mouse while a run is in progress, or tests fail

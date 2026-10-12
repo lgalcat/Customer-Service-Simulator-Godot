@@ -3,18 +3,29 @@ using System;
 
 /// <summary>
 /// Hosts, centers, and tears down the single active <see cref="Distraction"/> minigame, and
-/// re-exposes its completion upstream.
+/// re-exposes its start and completion upstream.
+/// <para>A <see cref="CanvasLayer"/> so every hosted minigame draws above whatever sits on lower
+/// layers (Office's screens sit on layer 0; this scene sets its own <c>layer</c>) regardless of tree
+/// order. While a minigame is active the <c>Overlay</c> also swallows all pointer input, so nothing
+/// underneath can be clicked or hovered, inside or outside the minigame's window.</para>
 /// <para>Deliberately not the thing that decides *when* to request a minigame - see
 /// <see cref="RequestDistraction"/> and <see cref="IntervalDistractionScheduler"/> for the seam that
 /// keeps that heuristic decoupled from instancing.</para>
 /// </summary>
-public partial class DistractionManager : Node
+public partial class DistractionManager : CanvasLayer
 {
     // Default difficulty for a request that doesn't specify one
     [Export] private int _baseDifficulty = 1;
     // Full-rect Control every hosted minigame is parented under, so anchor-preset centering resolves
-    // against the screen regardless of where DistractionManager itself sits in the tree
+    // against the screen regardless of where DistractionManager itself sits in the tree. Its
+    // mouse_filter is Ignore while idle and Stop while a minigame is active (modal input blocker)
     [Export] private NodePath _overlayPath = "Overlay";
+
+    /// <summary>
+    /// Fired once whenever a minigame has been created, hosted and become the active one - the
+    /// counterpart of <see cref="DistractionCompleted"/>. Not fired for a denied request.
+    /// </summary>
+    public Action? DistractionStarted;
 
     /// <summary>
     /// Fired once whenever the active minigame is torn down after completion - the single event
@@ -68,6 +79,10 @@ public partial class DistractionManager : Node
 
         instance.Distraction.OnVictory = () => Complete(instance);
         _active = instance;
+        // Modal for as long as the minigame lives: clicks outside its window must not reach
+        // whatever is drawn underneath either
+        _overlay.MouseFilter = Control.MouseFilterEnum.Stop;
+        DistractionStarted?.Invoke();
         return true;
     }
 
@@ -77,6 +92,7 @@ public partial class DistractionManager : Node
         instance.Distraction.OnVictory = null;
         instance.Host.QueueFree();
         _active = null;
+        _overlay.MouseFilter = Control.MouseFilterEnum.Ignore;
         DistractionCompleted?.Invoke();
     }
 }

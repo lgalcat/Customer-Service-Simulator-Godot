@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/main/MainLevel.cs" id="1_level"]
+[ext_resource type="PackedScene" path="res://assets/scenes/office/office.tscn" id="2_office"]
+[ext_resource type="PackedScene" path="res://assets/scenes/distractions/distraction_manager.tscn" id="3_distractions"]
+
+[node name="MainLevel" type="Node"]
+script = ExtResource("1_level")
+
+[node name="OfficeManager" parent="." instance=ExtResource("2_office")]
+
+[node name="DistractionManager" parent="." instance=ExtResource("3_distractions")]
+
+; Placeholder cadence: the scheduler shipped inside distraction_manager.tscn is started here, as the
+; sandbox leaves it off. If that node is replaced at the source by one without "_autoStart", update
+; or remove this override.
+[node name="Scheduler" parent="DistractionManager" index="1"]
+_autoStart = true

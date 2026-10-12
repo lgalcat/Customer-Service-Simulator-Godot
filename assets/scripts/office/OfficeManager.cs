@@ -21,12 +21,31 @@ public partial class OfficeManager : Node
     [Export] private NodePath _initialScreenPath = "";
 
     private CanvasLayer _screenLayer = null!;
+    private bool _inputLocked;
 
     /// <summary>
     /// The currently active screen, or <see langword="null"/> if none has been activated yet.
     /// </summary>
     public OfficeScreen? CurrentScreen { get; private set; }
 
+    /// <summary>
+    /// While <see langword="true"/> the player cannot interact with Office: the current screen stays
+    /// visible but every interactable is switched off (hover ends, idle feedback stops), and any
+    /// screen navigated to meanwhile comes up the same way. Player-originated screen-change requests
+    /// are ignored; a programmatic <see cref="GoToScreen(OfficeScreen)"/> still works. Whatever owns
+    /// the reason (e.g. an active Distraction) sets it - Office knows nothing about why.
+    /// </summary>
+    public bool InputLocked
+    {
+        get => _inputLocked;
+        set
+        {
+            if (_inputLocked == value) { return; }
+
+            _inputLocked = value;
+            CurrentScreen?.SetInputEnabled(!value);
+        }
+    }
     public override void _Ready()
     {
         _screenLayer = GetNode<CanvasLayer>(_screenLayerPath);
@@ -44,11 +63,19 @@ public partial class OfficeManager : Node
             if (child is not OfficeScreen screen) { throw new InvalidOperationException($"OfficeManager: '{child.Name}' under '{_screenLayerPath}' is not an OfficeScreen"); }
 
             // Screens (currently) never leave the tree, so this plain C# subscription needs no unsubscribing
-            screen.ScreenChangeRequested += GoToScreen;
+            screen.ScreenChangeRequested += OnScreenChangeRequested;
             if (screen != initial) { screen.Deactivate(); }
         }
 
         if (initial != null) { GoToScreen(initial); }
+    }
+
+    // Player-originated navigation: dropped while input is locked (the interactables that raise it are
+    // already switched off, this covers anything that slips through)
+    private void OnScreenChangeRequested(StringName screenName)
+    {
+        if (_inputLocked) { return; }
+        GoToScreen(screenName);
     }
 
     /// <summary>
@@ -77,6 +104,8 @@ public partial class OfficeManager : Node
         if (target == CurrentScreen) { return; }
 
         CurrentScreen?.Deactivate();
+        // Set before Activate() so a screen reached while locked never briefly becomes interactable
+        target.SetInputEnabled(!_inputLocked);
         target.Activate();
         CurrentScreen = target;
     }

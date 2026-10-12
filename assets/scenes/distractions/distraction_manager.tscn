@@ -3,7 +3,8 @@
 [ext_resource type="Script" path="res://assets/scripts/distractions/DistractionManager.cs" id="1_manager"]
 [ext_resource type="Script" path="res://assets/scripts/distractions/IntervalDistractionScheduler.cs" id="2_scheduler"]
 
-[node name="DistractionManager" type="Node"]
+[node name="DistractionManager" type="CanvasLayer"]
+layer = 10
 script = ExtResource("1_manager")
 
 [node name="Overlay" type="Control" parent="."]
