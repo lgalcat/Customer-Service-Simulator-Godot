@@ -211,4 +211,102 @@ public class OfficeManagerTesting
 
         AssertThrown(() => Screen(manager, "A").RequestScreenChange("Nope")).IsInstanceOf<ArgumentException>();
     }
+
+    // ---- InputLocked ----
+
+    // Screens A and B, each holding one stub interactable ("SA"/"SB"); not yet ready
+    private (OfficeManager manager, StubInteractable stubA, StubInteractable stubB) BuildLockableManager()
+    {
+        OfficeManager manager = AutoFree(BuildManager(_log, "A", "A", "B"))!;
+        StubInteractable stubA = new() { Label = "SA", Journal = _log };
+        StubInteractable stubB = new() { Label = "SB", Journal = _log };
+        Screen(manager, "A").AddChild(stubA);
+        Screen(manager, "B").AddChild(stubB);
+        return (manager, stubA, stubB);
+    }
+
+    [TestCase]
+    public void InputLockedDisablesTheCurrentScreenAndUnlockRestoresIt()
+    {
+        (OfficeManager manager, StubInteractable stubA, StubInteractable stubB) = BuildLockableManager();
+        ReadyBottomUp(manager);
+        AssertThat(manager.InputLocked).IsFalse();
+        int hiddenScreenCalls = stubB.CallCount;
+
+        manager.InputLocked = true;
+
+        AssertThat(Screen(manager, "A").Visible).IsTrue();
+        AssertThat(stubA.LastValue).IsEqual(false);
+
+        // Setting the same value again must not re-sweep
+        int callsWhileLocked = stubA.CallCount;
+        manager.InputLocked = true;
+        AssertThat(stubA.CallCount).IsEqual(callsWhileLocked);
+
+        manager.InputLocked = false;
+
+        AssertThat(stubA.LastValue).IsEqual(true);
+        // B is hidden, so it is never swept
+        AssertThat(stubB.CallCount).IsEqual(hiddenScreenCalls);
+    }
+
+    // The screen reached while locked must never be interactable, not even for an instant: the journal
+    // shows only SetInteractable(false) for it
+    [TestCase]
+    public void GoToScreenWhileLockedBringsTheNewScreenUpLockedWithoutFlicker()
+    {
+        (OfficeManager manager, StubInteractable stubA, StubInteractable stubB) = BuildLockableManager();
+        ReadyBottomUp(manager);
+        manager.InputLocked = true;
+        _log.Clear();
+
+        manager.GoToScreen(Screen(manager, "B"));
+
+        AssertThat(_log.Entries).ContainsExactly("SA:SetInteractable(false)", "A.OnDeactivated", "SB:SetInteractable(false)", "B.OnActivated");
+        AssertThat(Screen(manager, "B").Visible).IsTrue();
+
+        manager.InputLocked = false;
+
+        AssertThat(stubB.LastValue).IsEqual(true);
+        AssertThat(stubA.LastValue).IsEqual(false);
+        AssertThat(Screen(manager, "A").Visible).IsFalse();
+
+        // A's own earlier "disabled" preference must not leak into a later, unlocked visit
+        manager.GoToScreen(Screen(manager, "A"));
+        AssertThat(stubA.LastValue).IsEqual(true);
+    }
+
+    // Player-originated requests are dropped; the programmatic entry point stays available
+    [TestCase]
+    public void PlayerNavigationRequestsAreDroppedWhileLockedAndWorkAgainAfter()
+    {
+        (OfficeManager manager, _, _) = BuildLockableManager();
+        ReadyBottomUp(manager);
+        manager.InputLocked = true;
+
+        Screen(manager, "A").RequestScreenChange("B");
+
+        AssertThat(manager.CurrentScreen).IsSame(Screen(manager, "A"));
+
+        manager.GoToScreen(Screen(manager, "B"));
+        AssertThat(manager.CurrentScreen).IsSame(Screen(manager, "B"));
+
+        manager.InputLocked = false;
+        Screen(manager, "B").RequestScreenChange("A");
+
+        AssertThat(manager.CurrentScreen).IsSame(Screen(manager, "A"));
+    }
+
+    // Nothing is active yet, so CurrentScreen is null; the lock must still apply to the initial screen
+    [TestCase]
+    public void LockedBeforeReadyStartsTheInitialScreenLocked()
+    {
+        (OfficeManager manager, StubInteractable stubA, _) = BuildLockableManager();
+
+        manager.InputLocked = true;
+        ReadyBottomUp(manager);
+
+        AssertThat(Screen(manager, "A").Visible).IsTrue();
+        AssertThat(stubA.LastValue).IsEqual(false);
+    }
 }

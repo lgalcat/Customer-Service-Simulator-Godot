@@ -134,6 +134,52 @@ public class OfficeScreenTesting
         AssertThat(screen.Visible).IsTrue();
     }
 
+    // ---- SetInputEnabled ----
+
+    // A host keeps the screen visible but inert (e.g. while a Distraction is on top of it)
+    [TestCase]
+    public void SetInputEnabledOnAnActiveScreenSweepsBothWaysAndKeepsItVisible()
+    {
+        StubInteractable a = Stub("A"), b = Stub("B");
+        OfficeScreen screen = AutoFree(BuildScreen(a, b))!;
+        screen._Ready();
+
+        screen.SetInputEnabled(false);
+
+        AssertThat(screen.Visible).IsTrue();
+        AssertThat(a.LastValue).IsEqual(false);
+        AssertThat(b.LastValue).IsEqual(false);
+
+        screen.SetInputEnabled(true);
+
+        AssertThat(a.LastValue).IsEqual(true);
+        AssertThat(b.LastValue).IsEqual(true);
+    }
+
+    // On a hidden screen the preference is only recorded (a sweep would re-enable interactables under
+    // a hidden screen); Activate() is what applies it
+    [TestCase]
+    public void SetInputEnabledOnAnInactiveScreenOnlyRecordsItAndActivateAppliesIt()
+    {
+        StubInteractable a = Stub("A");
+        OfficeScreen screen = AutoFree(BuildScreen(a))!;
+        screen._Ready();
+        screen.Deactivate();
+        _log.Clear();
+
+        screen.SetInputEnabled(false);
+        AssertThat(_log.Entries).IsEmpty();
+
+        screen.Activate();
+        AssertThat(_log.Entries).ContainsExactly("A:SetInteractable(false)");
+        AssertThat(screen.Visible).IsTrue();
+
+        screen.Deactivate();
+        screen.SetInputEnabled(true);
+        screen.Activate();
+        AssertThat(a.LastValue).IsEqual(true);
+    }
+
     // ---- Hooks ----
 
     // Template-method guarantee: the sweep is done before a subclass hook sees the screen

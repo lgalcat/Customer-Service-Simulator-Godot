@@ -26,7 +26,7 @@ $sensitive = @(
     'TrashCanTesting', 'FlySwatterBehaviourTesting', 'DistractionManagerTesting',
     'IntervalDistractionSchedulerTesting', 'DistractionSandboxControllerTesting',
     'DistractionSystemIntegrationTesting', 'InteractableFeedbackTesting', 'MainScreenSceneTesting',
-    'OfficeInputTesting', 'OfficeScreenVisualsCompositionTesting'
+    'OfficeInputTesting', 'OfficeScreenVisualsCompositionTesting', 'MainLevelIntegrationTesting'
 )
 
 Write-Host ''

@@ -170,6 +170,62 @@ public class DistractionManagerTesting
         AssertThat(secondRequest).IsTrue();
     }
 
+    // The overlay is authored as Ignore (see distraction_manager.tscn); a hand-built Control defaults to Stop
+    [TestCase]
+    public void OverlayIsModalWhileActiveAndPassesThroughAfterCompletion()
+    {
+        (DistractionManager manager, Control overlay) = BuildManager();
+        overlay.MouseFilter = Control.MouseFilterEnum.Ignore;
+
+        manager.RequestDistraction();
+        AutoFreeChildren(overlay);
+        AssertThat(overlay.MouseFilter).IsEqual(Control.MouseFilterEnum.Stop);
+
+        FindHostedDistraction(overlay).Victory();
+        AssertThat(overlay.MouseFilter).IsEqual(Control.MouseFilterEnum.Ignore);
+    }
+
+    // MainLevel relies on this ordering: by the time a subscriber hears about the start, the minigame
+    // is hosted and the manager already reports it active
+    [TestCase]
+    public void DistractionStartedFiresOnceOnlyAfterTheMinigameIsActive()
+    {
+        (DistractionManager manager, Control overlay) = BuildManager();
+        int startedCount = 0;
+        bool activeAtStart = false;
+        int hostedAtStart = -1;
+        manager.DistractionStarted += () =>
+        {
+            startedCount++;
+            activeAtStart = manager.IsDistractionActive;
+            hostedAtStart = overlay.GetChildCount();
+        };
+
+        manager.RequestDistraction();
+        AutoFreeChildren(overlay);
+
+        AssertThat(startedCount).IsEqual(1);
+        AssertThat(activeAtStart).IsTrue();
+        AssertThat(hostedAtStart).IsEqual(1);
+    }
+
+    [TestCase]
+    public void DeniedRequestFiresNoStartedAndLeavesTheOverlayModal()
+    {
+        (DistractionManager manager, Control overlay) = BuildManager();
+        overlay.MouseFilter = Control.MouseFilterEnum.Ignore;
+        manager.RequestDistraction();
+        AutoFreeChildren(overlay);
+        int startedCount = 0;
+        manager.DistractionStarted += () => { startedCount++; };
+
+        bool secondRequest = manager.RequestDistraction();
+
+        AssertThat(secondRequest).IsFalse();
+        AssertThat(startedCount).IsEqual(0);
+        AssertThat(overlay.MouseFilter).IsEqual(Control.MouseFilterEnum.Stop);
+    }
+
     // Hand-built DistractionManager + Overlay child, wired with a stub-backed factory via the
     // InitialFactory seam - manual _Ready() call, no SceneTree needed unless a test needs real
     // QueueFree() processing (see the live-tree tests above, built independently of this helper)

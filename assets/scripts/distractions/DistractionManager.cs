@@ -6,8 +6,10 @@ using System;
 /// re-exposes its start and completion upstream.
 /// <para>A <see cref="CanvasLayer"/> so every hosted minigame draws above whatever sits on lower
 /// layers (Office's screens sit on layer 0; this scene sets its own <c>layer</c>) regardless of tree
-/// order. While a minigame is active the <c>Overlay</c> also swallows all pointer input, so nothing
-/// underneath can be clicked or hovered, inside or outside the minigame's window.</para>
+/// order. While a minigame is active the <c>Overlay</c> also blocks mouse presses, so nothing
+/// underneath can be clicked, inside or outside the minigame's window. It does not stop hover
+/// (<c>mouse_entered</c> still reaches physics-picking objects below) - the owner of whatever is
+/// underneath must disable that itself, as <c>MainLevel</c> does for Office.</para>
 /// <para>Deliberately not the thing that decides *when* to request a minigame - see
 /// <see cref="RequestDistraction"/> and <see cref="IntervalDistractionScheduler"/> for the seam that
 /// keeps that heuristic decoupled from instancing.</para>
