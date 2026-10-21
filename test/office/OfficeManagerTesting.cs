@@ -212,6 +212,52 @@ public class OfficeManagerTesting
         AssertThrown(() => Screen(manager, "A").RequestScreenChange("Nope")).IsInstanceOf<ArgumentException>();
     }
 
+    // ---- TryGetScreen ----
+    // The lookup other systems are handed (JobManager.ScreenResolver): GoToScreen's resolution, minus
+    // the navigation and the throw
+
+    [TestCase]
+    public void TryGetScreenResolvesByNameWithoutNavigating()
+    {
+        OfficeManager manager = AutoFree(BuildManager(_log, "A", "A", "B"))!;
+        ReadyBottomUp(manager);
+        _log.Clear();
+
+        OfficeScreen? found = manager.TryGetScreen("B");
+
+        AssertThat(found).IsSame(Screen(manager, "B"));
+        AssertThat(manager.CurrentScreen).IsSame(Screen(manager, "A"));
+        AssertThat(_log.Entries).IsEmpty();
+    }
+
+    [TestCase]
+    public void TryGetScreenReturnsNullForAnUnknownName()
+    {
+        OfficeManager manager = AutoFree(BuildManager(_log, "A", "A"))!;
+        ReadyBottomUp(manager);
+
+        AssertThat(manager.TryGetScreen("Nope")).IsNull();
+    }
+
+    [TestCase]
+    public void TryGetScreenReturnsNullForANameThatIsNotAnOfficeScreen()
+    {
+        OfficeManager manager = AutoFree(BuildManager(_log, "A", "A"))!;
+        ReadyBottomUp(manager);
+        manager.GetNode("ScreenLayer").AddChild(new Node2D { Name = "Decor" });
+
+        AssertThat(manager.TryGetScreen("Decor")).IsNull();
+    }
+
+    // The ScreenLayer is resolved in _Ready(); a resolver called earlier must not throw
+    [TestCase]
+    public void TryGetScreenReturnsNullBeforeReady()
+    {
+        OfficeManager manager = AutoFree(BuildManager(_log, "A", "A"))!;
+
+        AssertThat(manager.TryGetScreen("A")).IsNull();
+    }
+
     // ---- InputLocked ----
 
     // Screens A and B, each holding one stub interactable ("SA"/"SB"); not yet ready
