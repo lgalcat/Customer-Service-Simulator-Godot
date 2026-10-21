@@ -85,12 +85,22 @@ public partial class OfficeManager : Node
     /// </summary>
     public void GoToScreen(StringName screenName)
     {
-        // GetNodeOrNull: a plain GetNode would log an engine error and hand back null, which then
-        // fails with an unhelpful NullReferenceException further down
-        OfficeScreen? target = _screenLayer.GetNodeOrNull<OfficeScreen>(screenName.ToString());
+        OfficeScreen? target = TryGetScreen(screenName);
         if (target == null) { throw new ArgumentException($"OfficeManager: no screen named '{screenName}' under '{_screenLayerPath}'", nameof(screenName)); }
 
         GoToScreen(target);
+    }
+
+    /// <summary>
+    /// Resolves a screen by node name against <see cref="_screenLayerPath"/>'s children, or
+    /// <see langword="null"/> if there is none (or this manager is not ready yet). The lookup other
+    /// systems are handed so they can reach a screen without knowing about navigation.
+    /// </summary>
+    public OfficeScreen? TryGetScreen(StringName screenName)
+    {
+        // GetNodeOrNull: a plain GetNode would log an engine error and hand back null, which then
+        // fails with an unhelpful NullReferenceException further down
+        return _screenLayer?.GetNodeOrNull<OfficeScreen>(screenName.ToString());
     }
 
     /// <summary>
