@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/jobs/print_report/OutputTray.cs" id="1_tray"]
+[ext_resource type="Script" path="res://assets/scripts/office/SpriteInteractable.cs" id="2_interactable"]
+[ext_resource type="Script" path="res://assets/scripts/office/InteractableFeedback.cs" id="3_feedback"]
+[ext_resource type="Resource" path="res://assets/resources/office/idle_pulse_style.tres" id="4_idle"]
+[ext_resource type="Resource" path="res://assets/resources/office/hover_outline_style.tres" id="5_hover"]
+[ext_resource type="Texture2D" path="res://assets/textures/jobs/print_report/printed_paper_wip1.png" id="6_paper"]
+
+[node name="OutputTray" type="Node2D"]
+editor_description = "[22/10/2026] WIP page art (printed_paper_wip1.png, 257x165). Full-canvas coordinates (OutputAnchor stays at identity): the page slides from fully hidden under the printer body (lower edge y 267) to its bottom edge at the screen's bottom, so about 93 px of it shows over the output tray painted in Base. Page start/end positions are the script's _feedStart/_feedEnd; keep Pickup/Sprite at _feedEnd."
+script = ExtResource("1_tray")
+
+[node name="Stack" type="Node2D" parent="."]
+
+[node name="Page" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(192, 100)
+texture = ExtResource("6_paper")
+centered = false
+
+[node name="Pickup" type="Area2D" parent="."]
+visible = false
+script = ExtResource("2_interactable")
+
+[node name="Sprite" type="Sprite2D" parent="Pickup"]
+position = Vector2(192, 196)
+texture = ExtResource("6_paper")
+centered = false
+script = ExtResource("3_feedback")
+_idle = ExtResource("4_idle")
+_hover = ExtResource("5_hover")
+
+[node name="CollisionArea" type="CollisionPolygon2D" parent="Pickup"]
+polygon = PackedVector2Array(194, 268, 447, 268, 447, 358, 194, 358)

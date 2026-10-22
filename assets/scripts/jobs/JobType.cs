@@ -5,4 +5,5 @@
 public enum JobType
 {
     FillDocument,
+    PrintReport,
 }

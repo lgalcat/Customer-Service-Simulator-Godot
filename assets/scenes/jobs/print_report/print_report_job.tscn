@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/jobs/print_report/PrintReportJob.cs" id="1_job"]
+[ext_resource type="PackedScene" path="res://assets/scenes/jobs/print_report/output_tray.tscn" id="2_tray"]
+[ext_resource type="PackedScene" path="res://assets/scenes/jobs/print_report/print_ticket.tscn" id="3_ticket"]
+
+[node name="PrintReportJob" type="Node"]
+script = ExtResource("1_job")
+
+[node name="Tray" parent="." instance=ExtResource("2_tray")]
+
+[node name="Ticket" parent="." instance=ExtResource("3_ticket")]
+
+[node name="PrintTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CompletionDelay" type="Timer" parent="."]
+one_shot = true

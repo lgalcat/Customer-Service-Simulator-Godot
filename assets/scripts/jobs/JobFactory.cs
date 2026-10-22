@@ -46,6 +46,7 @@ public class JobFactory
         var scenes = new Dictionary<JobType, PackedScene>
         {
             { JobType.FillDocument, GD.Load<PackedScene>("res://assets/scenes/jobs/fill_document/fill_document_job.tscn") },
+            { JobType.PrintReport, GD.Load<PackedScene>("res://assets/scenes/jobs/print_report/print_report_job.tscn") },
         };
         return new JobFactory(scenes);
     }

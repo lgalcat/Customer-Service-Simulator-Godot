@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/jobs/print_report/PrintTicket.cs" id="1_ticket"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_note"]
+bg_color = Color(0.98, 0.92, 0.55, 1)
+
+[sub_resource type="Theme" id="Theme_note"]
+default_font_size = 10
+Label/colors/font_color = Color(0.2, 0.17, 0.1, 1)
+Panel/styles/panel = SubResource("StyleBoxFlat_note")
+
+[node name="PrintTicket" type="Node2D"]
+position = Vector2(28, 32)
+script = ExtResource("1_ticket")
+
+[node name="Note" type="Control" parent="."]
+editor_description = "[22/10/2026] PLACEHOLDER: a flat sticky note in Godot's built-in font until art exists, pinned on the wall left of the printer. Decorative: every Control ignores the mouse."
+layout_mode = 3
+anchors_preset = 0
+offset_right = 116.0
+offset_bottom = 92.0
+mouse_filter = 2
+theme = SubResource("Theme_note")
+
+[node name="Background" type="Panel" parent="Note"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Note"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 4.0
+offset_right = 110.0
+offset_bottom = 18.0
+text = "PRINT: REPORT"
+
+[node name="Progress" type="Label" parent="Note"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 20.0
+offset_right = 110.0
+offset_bottom = 34.0
+text = "Pages 0 / 0"
+
+[node name="Status" type="Label" parent="Note"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 40.0
+offset_right = 110.0
+offset_bottom = 88.0
+autowrap_mode = 3

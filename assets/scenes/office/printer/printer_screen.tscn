@@ -10,17 +10,28 @@
 [ext_resource type="Texture2D" uid="uid://bixy56th72uer" path="res://assets/textures/office/printer/office_printer_buttonA_v0.png" id="8_pbr8n"]
 [ext_resource type="Script" uid="uid://dy573wrkedcoq" path="res://assets/scripts/office/CursorHint.cs" id="9_cursorhint"]
 [ext_resource type="Resource" uid="uid://bdr7xj1wwdvoa" path="res://assets/resources/office/exit_cursor_hint.tres" id="10_cursorstyle"]
+[ext_resource type="Script" path="res://assets/scripts/office/InteractableFeedback.cs" id="11_feedback"]
+[ext_resource type="Resource" path="res://assets/resources/office/hover_outline_style.tres" id="12_hover"]
+[ext_resource type="Script" path="res://assets/scripts/office/IndicatorLight.cs" id="13_light"]
+[ext_resource type="Script" path="res://assets/scripts/office/PrinterPanel.cs" id="14_panel"]
 
-[node name="PrinterScreen" type="Node2D" unique_id=78812244]
+[node name="PrinterScreen" type="Node2D" unique_id=78812244 node_paths=PackedStringArray("Fixtures")]
 script = ExtResource("1_screen")
+Fixtures = [NodePath("PrinterPanel"), NodePath("OutputAnchor"), NodePath("TicketAnchor")]
 
 [node name="Base" type="Sprite2D" parent="." unique_id=116404087]
 texture = ExtResource("2_base")
 centered = false
 
+[node name="OutputAnchor" type="Node2D" parent="."]
+editor_description = "Anchor: what comes out of the printer (e.g. a job's printed pages). Drawn behind Front, so a page is hidden by the printer body until it passes the body's lower edge (about y 270) over the output tray painted in Base. Keep at identity transform."
+
 [node name="Front" type="Sprite2D" parent="." unique_id=1480934257]
 texture = ExtResource("3_front")
 centered = false
+
+[node name="TicketAnchor" type="Node2D" parent="."]
+editor_description = "Anchor: notes and readouts lying on or around the printer (e.g. a job's print order), drawn over Front. Keep at identity transform."
 
 [node name="ButtonD" type="Area2D" parent="." unique_id=220338312]
 script = ExtResource("4_c44rp")
@@ -28,6 +39,15 @@ script = ExtResource("4_c44rp")
 [node name="Sprite" type="Sprite2D" parent="ButtonD" unique_id=1762637665]
 texture = ExtResource("5_delx4")
 centered = false
+script = ExtResource("11_feedback")
+_hover = ExtResource("12_hover")
+
+[node name="Light" type="Sprite2D" parent="ButtonD"]
+editor_description = "[22/10/2026] PLACEHOLDER colour (magenta), tuned for the grey button art: LightColor multiplies it, hence channels above 1."
+texture = ExtResource("5_delx4")
+centered = false
+script = ExtResource("13_light")
+LightColor = Color(1.73, 0.45, 1.64, 1)
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonD" unique_id=162813449]
 polygon = PackedVector2Array(478, 150, 479, 157, 490, 157, 491, 156, 489, 150)
@@ -38,6 +58,15 @@ script = ExtResource("4_c44rp")
 [node name="Sprite" type="Sprite2D" parent="ButtonC" unique_id=302090900]
 texture = ExtResource("6_ssbrx")
 centered = false
+script = ExtResource("11_feedback")
+_hover = ExtResource("12_hover")
+
+[node name="Light" type="Sprite2D" parent="ButtonC"]
+editor_description = "[22/10/2026] PLACEHOLDER colour (amber), tuned for the grey button art: LightColor multiplies it, hence channels above 1."
+texture = ExtResource("6_ssbrx")
+centered = false
+script = ExtResource("13_light")
+LightColor = Color(1.82, 1.31, 0.18, 1)
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonC" unique_id=203635975]
 polygon = PackedVector2Array(480, 159, 481, 167, 493, 167, 494, 166, 492, 159)
@@ -48,6 +77,15 @@ script = ExtResource("4_c44rp")
 [node name="Sprite" type="Sprite2D" parent="ButtonB" unique_id=1040355385]
 texture = ExtResource("7_2maq6")
 centered = false
+script = ExtResource("11_feedback")
+_hover = ExtResource("12_hover")
+
+[node name="Light" type="Sprite2D" parent="ButtonB"]
+editor_description = "[22/10/2026] PLACEHOLDER colour (cyan), tuned for the grey button art: LightColor multiplies it, hence channels above 1."
+texture = ExtResource("7_2maq6")
+centered = false
+script = ExtResource("13_light")
+LightColor = Color(0.27, 1.45, 1.82, 1)
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonB" unique_id=1738150302]
 polygon = PackedVector2Array(483, 169, 484, 177, 496, 177, 496, 174, 495, 169)
@@ -58,6 +96,15 @@ script = ExtResource("4_c44rp")
 [node name="Sprite" type="Sprite2D" parent="ButtonA" unique_id=1816338952]
 texture = ExtResource("8_pbr8n")
 centered = false
+script = ExtResource("11_feedback")
+_hover = ExtResource("12_hover")
+
+[node name="Light" type="Sprite2D" parent="ButtonA"]
+editor_description = "[22/10/2026] PLACEHOLDER colour (green), tuned for the near-white button art: LightColor multiplies it."
+texture = ExtResource("8_pbr8n")
+centered = false
+script = ExtResource("13_light")
+LightColor = Color(0.34, 1.09, 0.4, 1)
 
 [node name="CollisionArea" type="CollisionPolygon2D" parent="ButtonA" unique_id=834302855]
 polygon = PackedVector2Array(486, 183, 489, 196, 503, 196, 505, 194, 505, 188, 503, 183)
@@ -72,6 +119,11 @@ polygon = PackedVector2Array(0, 0, 640, 0, 640, 360, 616, 360, 616, 24, 24, 24, 
 [node name="CursorHint" type="Node" parent="." unique_id=2037982377]
 script = ExtResource("9_cursorhint")
 _style = ExtResource("10_cursorstyle")
+
+[node name="PrinterPanel" type="Node" parent="." node_paths=PackedStringArray("_buttons")]
+editor_description = "Device: the printer's buttons as one indexed event plus their lights (index order: A = print, then B, C, D)."
+script = ExtResource("14_panel")
+_buttons = [NodePath("../ButtonA"), NodePath("../ButtonB"), NodePath("../ButtonC"), NodePath("../ButtonD")]
 
 [connection signal="Clicked" from="Back" to="." method="RequestScreenChange" binds= ["MainScreen"]]
 [connection signal="HoverEnded" from="Back" to="CursorHint" method="OnHoverEnded"]
