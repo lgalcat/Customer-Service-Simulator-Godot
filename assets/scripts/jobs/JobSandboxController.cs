@@ -31,7 +31,7 @@ public partial class JobSandboxController : Node
         _manager = GetNodeOrNull<JobManager>(_managerPath) ?? throw new NullReferenceException($"JobSandboxController: missing required node '{_managerPath}'");
         _office = GetNodeOrNull<OfficeManager>(_officePath) ?? throw new NullReferenceException($"JobSandboxController: missing required node '{_officePath}'");
 
-        // What the level will do once it composes Jobs
+        // Same resolver wiring as MainLevel
         _manager.ScreenResolver = _office.TryGetScreen;
         _manager.JobAnnouncing += () => GD.Print("JobSandbox: JobAnnouncing");
         _manager.JobStarted += () => GD.Print("JobSandbox: JobStarted");

@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://assets/scripts/main/MainLevel.cs" id="1_level"]
 [ext_resource type="PackedScene" path="res://assets/scenes/office/office.tscn" id="2_office"]
 [ext_resource type="PackedScene" path="res://assets/scenes/distractions/distraction_manager.tscn" id="3_distractions"]
+[ext_resource type="PackedScene" path="res://assets/scenes/jobs/job_manager.tscn" id="4_jobs"]
 
 [node name="MainLevel" type="Node"]
 script = ExtResource("1_level")
@@ -15,4 +16,12 @@ script = ExtResource("1_level")
 ; sandbox leaves it off. If that node is replaced at the source by one without "_autoStart", update
 ; or remove this override.
 [node name="Scheduler" parent="DistractionManager" index="1"]
+_autoStart = true
+
+[node name="JobManager" parent="." instance=ExtResource("4_jobs")]
+
+; Placeholder cadence, same arrangement: the scheduler shipped inside job_manager.tscn is started here, as
+; the job sandbox leaves it off. If that node is replaced at the source by one without "_autoStart", update
+; or remove this override.
+[node name="Scheduler" parent="JobManager" index="0"]
 _autoStart = true

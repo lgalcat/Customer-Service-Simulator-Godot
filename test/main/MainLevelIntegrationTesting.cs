@@ -28,12 +28,14 @@ public class MainLevelIntegrationTesting
         _runner.Dispose();
     }
 
-    // The Scheduler is freed before tree entry unless the test is about it: no stray timed spawns, and
-    // every other test thereby shows the level doesn't depend on one. 'schedulerWait' shrinks its wait to
-    // that many seconds (private [Export]s, set through Set() before _Ready())
+    // The distraction Scheduler is freed before tree entry unless the test is about it: no stray timed
+    // spawns, and every other test thereby shows the level doesn't depend on one. 'schedulerWait' shrinks
+    // its wait to that many seconds (private [Export]s, set through Set() before _Ready()). The job
+    // Scheduler is always freed, for the same reason: no stray visitors or jobs
     private void LoadLevel(float? schedulerWait = null)
     {
         Node level = GD.Load<PackedScene>(LevelPath).Instantiate();
+        level.GetNode("JobManager/Scheduler").Free();
         Node scheduler = level.GetNode("DistractionManager/Scheduler");
         if (schedulerWait is float wait)
         {

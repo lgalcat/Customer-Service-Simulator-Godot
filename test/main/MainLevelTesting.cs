@@ -83,6 +83,13 @@ public class MainLevelTesting
             distractions._Ready();
         }
 
+        if (omit != "JobManager")
+        {
+            var jobs = new JobManager { Name = "JobManager", InitialFactory = JobTestKit.Factory(StubJob.Pack()) };
+            level.AddChild(jobs);
+            jobs._Ready();
+        }
+
         return level;
     }
 
