@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://g4affqjpqdfp"]
+
+[ext_resource type="PackedScene" uid="uid://dvo3idpv81lnu" path="res://assets/scenes/jobs/announcements/visitor_announcement.tscn" id="1_base"]
+
+[node name="VisitorAnnouncement" unique_id=1057835639 instance=ExtResource("1_base")]
+editor_description = "[22/10/2026] TEMPORARY: the Fill Document visitor with Print Report's request, until Print Report gets its own announcement. Inherits everything but the text."
+_request = "Necesito que imprimas unos informes, ya los he mandado a la impresora"

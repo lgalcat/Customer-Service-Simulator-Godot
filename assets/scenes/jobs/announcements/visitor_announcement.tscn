@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dvo3idpv81lnu"]
+
+[ext_resource type="Script" uid="uid://bydl12ygtl8xs" path="res://assets/scripts/jobs/announcements/VisitorAnnouncement.cs" id="1_announcement"]
+[ext_resource type="PackedScene" path="res://assets/scenes/jobs/announcements/visitor.tscn" id="2_visitor"]
+
+[node name="VisitorAnnouncement" type="Node" unique_id=33573717]
+script = ExtResource("1_announcement")
+_request = "Completa este formulario, los datos deberian estar en tu ordenador"
+
+[node name="Visitor" parent="." unique_id=1095921439 instance=ExtResource("2_visitor")]

@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/jobs/announcements/Visitor.cs" id="1_visitor"]
+[ext_resource type="SpriteFrames" path="res://assets/animations/jobs/announcements/walking_man_wip.tres" id="2_frames"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_request"]
+font_size = 10
+font_color = Color(0.2, 0.17, 0.1, 1)
+
+[node name="Visitor" type="Node2D"]
+script = ExtResource("1_visitor")
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+editor_description = "[22/10/2026] PLACEHOLDER: the WIP sprites are too small for the game's pixel scale, so they are drawn at an integer 3x until a replacement exists. Offset puts the node's origin at the feet (the bottom of the 80x64 cell)."
+scale = Vector2(3, 3)
+sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+offset = Vector2(0, -32)
+
+[node name="Request" type="Label" parent="."]
+editor_description = "[22/10/2026] PLACEHOLDER: plain text beside the head, on the wall left of the door, until the speech bubble exists. Hidden until the visitor speaks; Labels ignore the mouse."
+visible = false
+offset_left = 32.0
+offset_top = -140.0
+offset_right = 212.0
+offset_bottom = -80.0
+label_settings = SubResource("LabelSettings_request")
+autowrap_mode = 3

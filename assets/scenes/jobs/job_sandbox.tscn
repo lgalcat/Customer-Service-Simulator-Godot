@@ -7,7 +7,6 @@
 [node name="JobSandbox" type="Node" unique_id=1476722331]
 editor_description = "Developer sandbox for the Jobs system: the real office plus a JobManager (its scheduler left off). F1 starts the job set in _forceType, F2 toggles the office input lock (a stand-in for a Distraction)."
 script = ExtResource("1_controller")
-_forceType = 1
 
 [node name="OfficeManager" parent="." unique_id=1787183109 instance=ExtResource("2_office")]
 

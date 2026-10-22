@@ -12,8 +12,9 @@
 [ext_resource type="Resource" uid="uid://ctfsjt1gc7sas" path="res://assets/resources/office/idle_pulse_style.tres" id="9_idle"]
 [ext_resource type="Resource" uid="uid://bf1qv6s0qquo2" path="res://assets/resources/office/hover_outline_style.tres" id="10_hover"]
 
-[node name="MainScreen" type="Node2D" unique_id=1771610450]
+[node name="MainScreen" type="Node2D" unique_id=1771610450 node_paths=PackedStringArray("Fixtures")]
 script = ExtResource("1_screen")
+Fixtures = [NodePath("VisitorAnchor")]
 
 [node name="Back" type="Sprite2D" parent="." unique_id=755949311]
 texture = ExtResource("1_back")
@@ -32,6 +33,9 @@ _hover = ExtResource("10_hover")
 polygon = PackedVector2Array(385, 12, 467, 12, 462, 166, 384, 166)
 
 [node name="AudioPlayer" type="AudioStreamPlayer" parent="Door" unique_id=493636696]
+
+[node name="VisitorAnchor" type="Node2D" parent="."]
+editor_description = "Anchor: people walking up to the desk (e.g. a job announcement's visitor). Drawn over Door and behind Front, so the cubicle partition hides everything below about y 165. Keep at identity transform."
 
 [node name="Front" type="Sprite2D" parent="." unique_id=1494137211]
 texture = ExtResource("2_front")

@@ -3,9 +3,11 @@
 [ext_resource type="Script" path="res://assets/scripts/jobs/fill_document/FillDocumentJob.cs" id="1_job"]
 [ext_resource type="PackedScene" path="res://assets/scenes/jobs/fill_document/document_view.tscn" id="2_document"]
 [ext_resource type="PackedScene" path="res://assets/scenes/jobs/fill_document/record_view.tscn" id="3_record"]
+[ext_resource type="PackedScene" path="res://assets/scenes/jobs/announcements/visitor_announcement.tscn" id="4_announcement"]
 
 [node name="FillDocumentJob" type="Node"]
 script = ExtResource("1_job")
+AnnouncementScene = ExtResource("4_announcement")
 
 [node name="Document" parent="." instance=ExtResource("2_document")]
 

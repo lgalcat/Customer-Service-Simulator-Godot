@@ -33,6 +33,7 @@ public partial class JobSandboxController : Node
 
         // What the level will do once it composes Jobs
         _manager.ScreenResolver = _office.TryGetScreen;
+        _manager.JobAnnouncing += () => GD.Print("JobSandbox: JobAnnouncing");
         _manager.JobStarted += () => GD.Print("JobSandbox: JobStarted");
         _manager.JobCompleted += () => GD.Print("JobSandbox: JobCompleted");
 
