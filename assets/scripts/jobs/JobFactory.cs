@@ -40,12 +40,13 @@ public class JobFactory
     /// <summary>
     /// Builds the real, <c>res://</c>-backed factory over every <see cref="Job"/>.
     /// </summary>
-    // [21/10/2026] Empty until the first concrete job lands, so this throws (empty map) - which is
-    // why the level does not instance a JobManager yet. Each job adds its entry here, like
-    // DistractionFactory.CreateDefault().
+    // Each job adds its entry here, like DistractionFactory.CreateDefault()
     public static JobFactory CreateDefault()
     {
-        var scenes = new Dictionary<JobType, PackedScene>();
+        var scenes = new Dictionary<JobType, PackedScene>
+        {
+            { JobType.FillDocument, GD.Load<PackedScene>("res://assets/scenes/jobs/fill_document/fill_document_job.tscn") },
+        };
         return new JobFactory(scenes);
     }
 

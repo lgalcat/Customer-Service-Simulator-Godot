@@ -39,6 +39,21 @@
             "console": "internalConsole"
         },
         {
+            "name": "Debug Job Sandbox",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${env:GODOT_BIN}",
+            "args": [
+                "--path",
+                "${workspaceFolder}",
+                "res://assets/scenes/jobs/job_sandbox.tscn",
+                "--remote-debug", "tcp://127.0.0.1:6007"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole"
+        },
+        {
             "name": "Debug Select Scene",
             "type": "coreclr",
             "request": "launch",

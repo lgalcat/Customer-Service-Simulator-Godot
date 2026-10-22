@@ -6,12 +6,19 @@
 [ext_resource type="Script" uid="uid://dy573wrkedcoq" path="res://assets/scripts/office/CursorHint.cs" id="4_cursorhint"]
 [ext_resource type="Resource" path="res://assets/resources/office/exit_cursor_hint.tres" id="5_cursorstyle"]
 
-[node name="ComputerScreen" type="Node2D" unique_id=1515934323]
+[node name="ComputerScreen" type="Node2D" unique_id=1515934323 node_paths=PackedStringArray("Fixtures")]
 script = ExtResource("1_screen")
+Fixtures = [NodePath("MonitorAnchor"), NodePath("DocumentAnchor")]
+
+[node name="MonitorAnchor" type="Node2D" parent="."]
+editor_description = "Anchor: content shown on the monitor. Drawn behind Front, whose display area is transparent, so the bezel frames and crops it. Keep at identity transform."
 
 [node name="Front" type="Sprite2D" parent="." unique_id=783127868]
 texture = ExtResource("2_front")
 centered = false
+
+[node name="DocumentAnchor" type="Node2D" parent="."]
+editor_description = "Anchor: content lying on the desk (e.g. a job's paper form), drawn over Front. Keep at identity transform."
 
 [node name="Back" type="Area2D" parent="." unique_id=975512918]
 editor_description = "[01/10/2026] PLACEHOLDER: no art yet (pending the baked-in signifier prototype) - just a functional edge hotspot back to MainScreen. Hitbox is a placeholder band, resize/reshape once real screen content exists."

@@ -1,10 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://drogdp61pu3qy"]
 
-[ext_resource type="Script" path="res://assets/scripts/jobs/JobManager.cs" id="1_manager"]
-[ext_resource type="Script" path="res://assets/scripts/jobs/IntervalJobScheduler.cs" id="2_scheduler"]
+[ext_resource type="Script" uid="uid://ddwo2whohhtd" path="res://assets/scripts/jobs/JobManager.cs" id="1_manager"]
+[ext_resource type="Script" uid="uid://bb2gaq2ma3adi" path="res://assets/scripts/jobs/IntervalJobScheduler.cs" id="2_scheduler"]
 
-[node name="JobManager" type="Node"]
+[node name="JobManager" type="Node" unique_id=2040832540]
 script = ExtResource("1_manager")
 
-[node name="Scheduler" type="Node" parent="."]
+[node name="Scheduler" type="Node" parent="." unique_id=1927914636]
 script = ExtResource("2_scheduler")

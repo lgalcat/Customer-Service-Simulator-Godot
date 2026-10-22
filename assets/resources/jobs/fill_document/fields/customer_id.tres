@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FieldSpec" format=3 uid="uid://c86yaxvobb1ew"]
+
+[ext_resource type="Script" uid="uid://rtxqg4tva1f8" path="res://assets/scripts/jobs/fill_document/FieldSpec.cs" id="1_spec"]
+
+[resource]
+script = ExtResource("1_spec")
+Key = &"customer_id"
+Label = "ID Cliente"
+MaxLength = 8
+Kind = 1
+Pattern = "LL-#####"

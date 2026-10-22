@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://b2jnq0xpa21du"]
+
+[ext_resource type="Script" uid="uid://c3j8ri620tjo2" path="res://assets/scripts/jobs/fill_document/DocumentView.cs" id="1_view"]
+[ext_resource type="Theme" uid="uid://nwcpikdyvsjs" path="res://assets/resources/jobs/fill_document/document_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://dtkw8aup8wiev" path="res://assets/scenes/jobs/fill_document/document_line.tscn" id="3_line"]
+[ext_resource type="Script" uid="uid://r2ilch40m3ly" path="res://assets/scripts/jobs/fill_document/SubmitButton.cs" id="4_submit"]
+[ext_resource type="Resource" uid="uid://b4gboiux5fkvu" path="res://assets/resources/jobs/fill_document/fields/date.tres" id="5_date"]
+[ext_resource type="Resource" uid="uid://04ivu000uc4q" path="res://assets/resources/jobs/fill_document/fields/full_name.tres" id="6_name"]
+[ext_resource type="Resource" uid="uid://c86yaxvobb1ew" path="res://assets/resources/jobs/fill_document/fields/customer_id.tres" id="7_id"]
+[ext_resource type="Resource" uid="uid://bcoc5bs1h07wa" path="res://assets/resources/jobs/fill_document/fields/address.tres" id="8_address"]
+[ext_resource type="Resource" uid="uid://c8x58f7akcpmk" path="res://assets/resources/jobs/fill_document/fields/city.tres" id="9_city"]
+[ext_resource type="Resource" uid="uid://dy32fkeaexsm" path="res://assets/resources/jobs/fill_document/fields/postcode.tres" id="10_postcode"]
+[ext_resource type="Resource" uid="uid://wl80xuf5l6gk" path="res://assets/resources/jobs/fill_document/fields/phone.tres" id="11_phone"]
+[ext_resource type="Resource" uid="uid://b2a47usdtc73j" path="res://assets/resources/jobs/fill_document/fields/amount.tres" id="12_amount"]
+
+[node name="DocumentView" type="Node2D" unique_id=760019100]
+position = Vector2(44, 30)
+script = ExtResource("1_view")
+
+[node name="Sheet" type="Control" parent="." unique_id=1607847346]
+editor_description = "[21/10/2026] PLACEHOLDER: flat-colour paper and Godot's built-in font (document_theme.tres) until the form's art and a pixel font exist. Every Control that does not take input stays mouse_filter Ignore: a Stop control would block clicks to Office hotspots beneath it."
+layout_mode = 3
+anchors_preset = 0
+offset_right = 236.0
+offset_bottom = 306.0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="Paper" type="Panel" parent="Sheet" unique_id=2146982215]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 4.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Sheet" unique_id=804799098]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 228.0
+offset_bottom = 22.0
+text = "FORMULARIO DE PAGO"
+horizontal_alignment = 1
+
+[node name="Lines" type="VBoxContainer" parent="Sheet" unique_id=1862971562]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 30.0
+offset_right = 228.0
+offset_bottom = 250.0
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Date" parent="Sheet/Lines" unique_id=1782962893 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("5_date")
+
+[node name="FullName" parent="Sheet/Lines" unique_id=421099024 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("6_name")
+
+[node name="CustomerId" parent="Sheet/Lines" unique_id=1431679111 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("7_id")
+
+[node name="Address" parent="Sheet/Lines" unique_id=1990092697 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("8_address")
+
+[node name="City" parent="Sheet/Lines" unique_id=1314921902 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("9_city")
+
+[node name="Postcode" parent="Sheet/Lines" unique_id=1034702768 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("10_postcode")
+
+[node name="Phone" parent="Sheet/Lines" unique_id=1688609543 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("11_phone")
+
+[node name="Amount" parent="Sheet/Lines" unique_id=97668570 instance=ExtResource("3_line")]
+layout_mode = 2
+Spec = ExtResource("12_amount")
+
+[node name="Submit" type="Button" parent="Sheet" unique_id=1401986825]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 282.0
+offset_right = 228.0
+offset_bottom = 304.0
+text = "FIRMAR"
+script = ExtResource("4_submit")
+
+[node name="Stamp" type="Label" parent="Sheet" unique_id=23218614]
+visible = false
+layout_mode = 0
+offset_left = 12.0
+offset_top = 275.0
+offset_right = 132.0
+offset_bottom = 305.0
+rotation = -0.15
+theme_override_colors/font_color = Color(0.75, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 18
+text = "APPROVED"

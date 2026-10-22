@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FieldSpec" format=3 uid="uid://b4gboiux5fkvu"]
+
+[ext_resource type="Script" uid="uid://rtxqg4tva1f8" path="res://assets/scripts/jobs/fill_document/FieldSpec.cs" id="1_spec"]
+
+[resource]
+script = ExtResource("1_spec")
+Key = &"date"
+Label = "Fecha"
+MaxLength = 10
+Kind = 2

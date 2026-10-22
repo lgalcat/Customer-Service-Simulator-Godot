@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FieldSpec" format=3 uid="uid://wl80xuf5l6gk"]
+
+[ext_resource type="Script" uid="uid://rtxqg4tva1f8" path="res://assets/scripts/jobs/fill_document/FieldSpec.cs" id="1_spec"]
+
+[resource]
+script = ExtResource("1_spec")
+Key = &"phone"
+Label = "Tfno"
+MaxLength = 11
+Kind = 1
+Pattern = "### ### ###"

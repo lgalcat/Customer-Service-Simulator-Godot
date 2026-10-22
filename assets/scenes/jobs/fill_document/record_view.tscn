@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://c4lls3hluq0hd"]
+
+[ext_resource type="Script" uid="uid://gf6lajg0y38i" path="res://assets/scripts/jobs/fill_document/RecordView.cs" id="1_view"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_display"]
+bg_color = Color(0.07, 0.13, 0.18, 1)
+
+[sub_resource type="Theme" id="Theme_display"]
+default_font_size = 10
+Label/colors/font_color = Color(0.55, 0.95, 0.6, 1)
+Panel/styles/panel = SubResource("StyleBoxFlat_display")
+
+[node name="RecordView" type="Node2D" unique_id=1710797711]
+position = Vector2(321, 31)
+script = ExtResource("1_view")
+
+[node name="Display" type="Control" parent="." unique_id=2045963437]
+editor_description = "[21/10/2026] PLACEHOLDER: flat 'terminal' background and Godot's built-in font until the monitor's art exists. Sized to the monitor's transparent display area in office_computer_front_v0.png (290x290 at 321,31); the part is drawn behind Front, so the bezel crops any overflow."
+layout_mode = 3
+anchors_preset = 0
+offset_right = 290.0
+offset_bottom = 290.0
+mouse_filter = 2
+theme = SubResource("Theme_display")
+
+[node name="Background" type="Panel" parent="Display" unique_id=589233006]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Display" unique_id=1792325052]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 278.0
+offset_bottom = 26.0
+text = "CUSTOMER RECORD"
+
+[node name="Rows" type="VBoxContainer" parent="Display" unique_id=1869691670]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 36.0
+offset_right = 278.0
+offset_bottom = 278.0
+mouse_filter = 2
+theme_override_constants/separation = 8

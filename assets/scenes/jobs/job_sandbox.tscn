@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://l53sonxquwjf"]
+
+[ext_resource type="Script" uid="uid://cx521nuwve2n8" path="res://assets/scripts/jobs/JobSandboxController.cs" id="1_controller"]
+[ext_resource type="PackedScene" uid="uid://bi4a4jaqt4y1h" path="res://assets/scenes/office/office.tscn" id="2_office"]
+[ext_resource type="PackedScene" path="res://assets/scenes/jobs/job_manager.tscn" id="3_manager"]
+
+[node name="JobSandbox" type="Node" unique_id=1476722331]
+editor_description = "Developer sandbox for the Jobs system: the real office plus a JobManager (its scheduler left off). F1 starts the job set in _forceType, F2 toggles the office input lock (a stand-in for a Distraction)."
+script = ExtResource("1_controller")
+
+[node name="OfficeManager" parent="." unique_id=1787183109 instance=ExtResource("2_office")]
+
+[node name="JobManager" parent="." unique_id=137779407 instance=ExtResource("3_manager")]

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="FieldSpec" format=3 uid="uid://bcoc5bs1h07wa"]
+
+[ext_resource type="Script" uid="uid://rtxqg4tva1f8" path="res://assets/scripts/jobs/fill_document/FieldSpec.cs" id="1_spec"]
+
+[resource]
+script = ExtResource("1_spec")
+Key = &"address"
+Label = "Dirección"
+Values = Array[String](["12 Elm Street", "4 Harbour Road", "77 Mill Lane", "103 Station Ave", "9 Orchard Way", "56 Bridge Street", "21 Kings Road", "8 Willow Court", "140 Market Square", "33 Chapel Hill", "62 River Walk", "5 Garden Row", "18 North Parade", "91 Castle View", "47 Park Terrace", "2 Quarry Close", "70 Abbey Gate", "15 Copper Lane", "29 Meadow Drive", "84 Union Street"])

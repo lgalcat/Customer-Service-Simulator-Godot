@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FieldSpec" format=3 uid="uid://b2a47usdtc73j"]
+
+[ext_resource type="Script" uid="uid://rtxqg4tva1f8" path="res://assets/scripts/jobs/fill_document/FieldSpec.cs" id="1_spec"]
+
+[resource]
+script = ExtResource("1_spec")
+Key = &"amount"
+Label = "Importe"
+MaxLength = 8
+Kind = 3
