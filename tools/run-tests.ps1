@@ -27,7 +27,7 @@ $sensitive = @(
     'IntervalDistractionSchedulerTesting', 'DistractionSandboxControllerTesting',
     'DistractionSystemIntegrationTesting', 'InteractableFeedbackTesting', 'MainScreenSceneTesting',
     'OfficeInputTesting', 'OfficeScreenVisualsCompositionTesting', 'MainLevelIntegrationTesting',
-    'JobSystemIntegrationTesting'
+    'JobSystemIntegrationTesting', 'FillDocumentInputTesting'
 )
 
 Write-Host ''

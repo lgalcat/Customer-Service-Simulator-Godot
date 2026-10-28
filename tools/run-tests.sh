@@ -28,7 +28,7 @@ cat <<'EOF'
   DistractionSandboxControllerTesting, DistractionSystemIntegrationTesting,
   InteractableFeedbackTesting, MainScreenSceneTesting, OfficeInputTesting,
   OfficeScreenVisualsCompositionTesting, MainLevelIntegrationTesting,
-  JobSystemIntegrationTesting
+  JobSystemIntegrationTesting, FillDocumentInputTesting
 
   A warning dialog shows while the run is active (zenity/osascript, best effort).
   Suppress it with GDUNIT_NO_INPUT_POPUP=1.

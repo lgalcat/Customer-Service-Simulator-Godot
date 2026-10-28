@@ -7,10 +7,11 @@ using GdUnit4;
 using static GdUnit4.Assertions;
 using static JobTestKit;
 
-// The real job_manager.tscn composed with the real office.tscn, as the level will compose them: stub
-// jobs injected through InitialFactory, screens resolved through OfficeManager.TryGetScreen. The real
-// screens author no anchors yet, so each gets a TestAnchor before tree entry. What is checked here is
-// only what composing adds - the mechanisms themselves are the component suites' business
+// The real job_manager.tscn composed with the real office.tscn, as the level composes them: stub jobs
+// injected through InitialFactory, screens resolved through OfficeManager.TryGetScreen. Every screen gets
+// a TestAnchor before tree entry, so the stubs never depend on which anchors the real screens author. What
+// is checked here is only what composing adds - the mechanisms themselves are the component suites'
+// business, and real jobs through the manager are their own behaviour suites'
 [TestSuite]
 [RequireGodotRuntime]
 public class JobSystemIntegrationTesting

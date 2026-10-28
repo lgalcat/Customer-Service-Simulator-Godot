@@ -52,6 +52,9 @@ public class StubJobContractTesting : JobTesting
     public override void PlacedInteractablesFollowTheScreensInputState() => base.PlacedInteractablesFollowTheScreensInputState();
 
     [TestCase]
+    public override void ControlsThatTakeNoInputLetClicksThrough() => base.ControlsThatTakeNoInputLetClicksThrough();
+
+    [TestCase]
     public override async Task DetachGivesBackEverythingItPlaced() => await base.DetachGivesBackEverythingItPlaced();
 
     [TestCase]

@@ -1,3 +1,5 @@
+using System.Linq;
+using Godot;
 using GdUnit4;
 using static GdUnit4.Assertions;
 using static OfficeTestKit;
@@ -70,5 +72,40 @@ public class ComputerScreenSceneTesting
         CursorHint cursorHint = _screen.GetNode<CursorHint>("CursorHint");
 
         AssertThat(cursorHint.Get("_style").AsGodotObject()).IsInstanceOf<CursorHintStyle>();
+    }
+
+    // ---- Fixtures (what jobs reach; the names are string literals in job code) ----
+
+    [TestCase]
+    public void ExposesTheJobAnchors()
+    {
+        AssertThat(_screen.Fixtures.Select(fixture => fixture.Name.ToString())).ContainsExactlyInAnyOrder("MonitorAnchor", "DocumentAnchor");
+        AssertThat(_screen.Fixtures.Count).IsEqual(2);
+        AssertThat(_screen.TryGetFixture<Node2D>("MonitorAnchor", out _)).IsTrue();
+        AssertThat(_screen.TryGetFixture<Node2D>("DocumentAnchor", out _)).IsTrue();
+    }
+
+    // Authoring rule nothing enforces: placed content keeps full-canvas coordinates only if its anchor
+    // adds no transform of its own
+    [TestCase]
+    public void AnchorsSitAtIdentityTransform()
+    {
+        foreach (string name in new[] { "MonitorAnchor", "DocumentAnchor" })
+        {
+            Node2D anchor = _screen.GetFixture<Node2D>(name);
+            AssertThat(_screen.GlobalTransform.AffineInverse() * anchor.GlobalTransform)
+                .OverrideFailureMessage($"{name} is not at identity relative to the screen").IsEqual(Transform2D.Identity);
+        }
+    }
+
+    // The monitor's display is a transparent hole in Front, so the record shows through the bezel; the
+    // document lies on the desk, over Front
+    [TestCase]
+    public void MonitorAnchorDrawsBehindFrontAndDocumentAnchorInFront()
+    {
+        int front = _screen.GetNode("Front").GetIndex();
+
+        AssertThat(_screen.GetFixture<Node2D>("MonitorAnchor").GetIndex()).IsLess(front);
+        AssertThat(_screen.GetFixture<Node2D>("DocumentAnchor").GetIndex()).IsGreater(front);
     }
 }

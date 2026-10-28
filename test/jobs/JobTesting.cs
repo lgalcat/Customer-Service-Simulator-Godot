@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -122,24 +123,64 @@ public abstract class JobTesting
     }
 
     /// <summary>
-    /// Tests that every clickable part the job adds is reached by the screen's input state (the input
+    /// What attaching <paramref name="job"/> adds under <paramref name="screen"/>: every node that was
+    /// not there before.
+    /// </summary>
+    protected static Node[] AttachAndCollectAdded(Job job, OfficeScreen screen)
+    {
+        HashSet<Node> resident = DescendantsOf(screen).ToHashSet();
+        job.Attach(screen);
+        return DescendantsOf(screen).Where(node => !resident.Contains(node)).ToArray();
+    }
+
+    private static string Names(IEnumerable<Node> nodes) => string.Join(", ", nodes.Select(node => node.Name.ToString()));
+
+    /// <summary>
+    /// Tests that every interactive part the job adds is reached by the screen's input state (the input
     /// lock a Distraction imposes, navigation): content added through Place is, content added behind the
-    /// screen's back is not. Trivially passes for a job that adds no SpriteInteractable
+    /// screen's back is not. A SpriteInteractable must stop being pickable; a GUI Control interactable must
+    /// stop taking the mouse and focus (the Distraction overlay blocks the mouse, not keystrokes to a
+    /// focused field; FocusMode None also makes the engine release focus held). Trivially passes for a
+    /// job that adds neither
     /// </summary>
     public virtual void PlacedInteractablesFollowTheScreensInputState()
     {
         Job job = NewJob();
         OfficeScreen screen = TargetScreenOf(job);
         office.GoToScreen(screen);
-        SpriteInteractable[] resident = OfficeTestKit.InteractablesUnder(screen).ToArray();
 
-        job.Attach(screen);
-        SpriteInteractable[] added = OfficeTestKit.InteractablesUnder(screen).Except(resident).ToArray();
+        Node[] added = AttachAndCollectAdded(job, screen);
+        SpriteInteractable[] sprites = added.OfType<SpriteInteractable>().ToArray();
+        Control[] controls = added.OfType<Control>().Where(control => control is IOfficeInteractable).ToArray();
 
         screen.SetInputEnabled(false);
-        AssertThat(added.All(interactable => !interactable.InputPickable)).IsTrue();
+        AssertThat(Names(sprites.Where(sprite => sprite.InputPickable))).OverrideFailureMessage("still pickable while input is off").IsEmpty();
+        AssertThat(Names(controls.Where(control => control.MouseFilter != Control.MouseFilterEnum.Ignore || control.FocusMode != Control.FocusModeEnum.None)))
+            .OverrideFailureMessage("still taking the mouse or focus while input is off").IsEmpty();
+
         screen.SetInputEnabled(true);
-        AssertThat(added.All(interactable => interactable.InputPickable)).IsTrue();
+        AssertThat(Names(sprites.Where(sprite => !sprite.InputPickable))).OverrideFailureMessage("not pickable again once input is on").IsEmpty();
+        AssertThat(Names(controls.Where(control => control.MouseFilter == Control.MouseFilterEnum.Ignore)))
+            .OverrideFailureMessage("not taking the mouse again once input is on").IsEmpty();
+        job.Detach();
+    }
+
+    /// <summary>
+    /// Tests that the GUI Controls the job adds which take no input of their own don't block the mouse: a
+    /// Stop Control marks every click on it handled, so a hotspot beneath it could never be clicked (Pass
+    /// and Ignore don't block). Interactive Controls are the previous case's. Trivially passes for a job
+    /// that adds no Control
+    /// </summary>
+    public virtual void ControlsThatTakeNoInputLetClicksThrough()
+    {
+        Job job = NewJob();
+        OfficeScreen screen = TargetScreenOf(job);
+
+        Node[] added = AttachAndCollectAdded(job, screen);
+        IEnumerable<Control> blocking = added.OfType<Control>()
+            .Where(control => control is not IOfficeInteractable && control.MouseFilter == Control.MouseFilterEnum.Stop);
+
+        AssertThat(Names(blocking)).OverrideFailureMessage("decorative Controls with mouse_filter Stop").IsEmpty();
         job.Detach();
     }
 

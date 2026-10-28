@@ -142,10 +142,9 @@ public class JobFactoryTesting
         AssertThat(drawn.Count).IsEqual(2);
     }
 
-    // Self-transitioning: while JobType is empty the default pool is empty, which the constructor
-    // rejects (the reason the level doesn't instance a JobManager yet). Once real members exist every
-    // one of them must be creatable, so a forgotten CreateDefault() entry fails here without this test
-    // being touched
+    // Every JobType member must be creatable, so a forgotten CreateDefault() entry fails here without
+    // this test being touched. The empty-enum branch (an empty default pool, which the constructor
+    // rejects) only applied before the first job existed
     [TestCase]
     public void CreateDefaultMapsEveryJobType()
     {

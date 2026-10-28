@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -7,8 +8,8 @@ using Godot;
 // (Jobs depends on Office, so its tests may too - never the other way round)
 public static class JobTestKit
 {
-    // JobType is empty until the first concrete job lands; an enum accepts any cast value, so stub
-    // scenes are keyed by these. Kept high so they never collide with a real member added later
+    // Stub scenes are keyed by these cast values (an enum accepts any), so stub suites never depend on
+    // the real JobType members. Kept high so they never collide with one
     public const JobType StubTypeA = (JobType)1000;
     public const JobType StubTypeB = (JobType)1001;
 
@@ -54,8 +55,8 @@ public static class JobTestKit
     }
 
     // The real office.tscn, not yet in a tree, with an empty TestAnchor Node2D added to every screen and
-    // appended to its Fixtures - the real screens author no anchors yet, so stubs need somewhere to go.
-    // Must happen before tree entry: Fixtures is read once, in _Ready()
+    // appended to its Fixtures - somewhere for stubs to go on any screen, whatever anchors the real
+    // screens author. Must happen before tree entry: Fixtures is read once, in _Ready()
     public static OfficeManager InstantiateOfficeWithTestAnchors()
     {
         OfficeManager office = GD.Load<PackedScene>(OfficePath).Instantiate<OfficeManager>();
@@ -72,6 +73,10 @@ public static class JobTestKit
     // baseline count" once the deferred frees have run
     public static int CountDescendants(Node node) =>
         node.GetChildCount() + node.GetChildren().Sum(CountDescendants);
+
+    // Every node at any depth under 'node'
+    public static IEnumerable<Node> DescendantsOf(Node node) =>
+        node.GetChildren().SelectMany(child => DescendantsOf(child).Prepend(child));
 
     // Records each manager event together with the phase it fired in: "Announcing@Announcing",
     // "Started@Active", "Completed@Idle"
