@@ -3,8 +3,8 @@ using GdUnit4;
 using static GdUnit4.Assertions;
 
 // DocumentInput as an IOfficeInteractable: what SetInteractable and Locked switch, and that going inert
-// gives up keyboard focus (the Distraction overlay blocks the mouse, not keystrokes to a focused field).
-// Live tree: focus only exists there. SubmitButtonTesting is the same shape for the button
+// gives up keyboard focus. Live tree: focus only exists there. SubmitButtonTesting is the same shape
+// for the button
 [TestSuite]
 [RequireGodotRuntime]
 public class DocumentInputTesting

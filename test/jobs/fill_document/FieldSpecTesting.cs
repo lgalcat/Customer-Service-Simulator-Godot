@@ -18,8 +18,7 @@ public class FieldSpecTesting
     private static IEnumerable<string> Generate(FieldSpec spec, int draws = Draws) =>
         Enumerable.Range(0, draws).Select(_ => spec.Generate()).ToArray();
 
-    // The values are copied by the player character by character, so they must not follow the machine's
-    // locale; restores the previous culture whatever happens
+    // Runs 'action' under 'culture', restoring the previous one whatever happens
     private static T UnderCulture<T>(string culture, Func<T> action)
     {
         CultureInfo previous = CultureInfo.CurrentCulture;
@@ -142,7 +141,7 @@ public class FieldSpecTesting
         }
     }
 
-    // Equal bounds are valid (see the date case); also pins the two-decimal format on a known value
+    // Equal bounds are valid; also pins the two-decimal format on a known value
     [TestCase]
     public void AmountWithEqualBoundsIsExactlyThatAmount()
     {

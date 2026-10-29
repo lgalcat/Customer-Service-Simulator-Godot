@@ -9,10 +9,10 @@ using static FillDocumentTestKit;
 // Fill Document played from the keyboard: real key events go through the viewport's GUI input path
 // (Viewport.PushInput, with the typed character as Unicode) to whatever has focus, as typing does.
 // Covers what FillDocumentBehaviourTesting can only check as state: keystrokes land in the focused
-// blank, and a locked office or an approved form lets no keystroke through. Keyboard-only navigation of
-// the form (Enter/Tab between fields) is default Control behaviour, not a design requirement, so it is
-// deliberately not pinned. Real keyboard input during a run reaches the same focused field, hence the
-// banner.
+// blank, and a locked office or an approved form lets no keystroke through. Filling the whole form from
+// the keyboard is not a design requirement, so it is not pinned (Tab between fields is default Control
+// behaviour; DocumentView's own Enter handling is DocumentViewTesting's). Real keyboard input during a
+// run reaches the same focused field, hence the banner.
 // Extends JobTesting for its office/runner setup only; redeclares none of its cases
 [TestSuite]
 [RequireGodotRuntime]
@@ -47,7 +47,8 @@ public class FillDocumentInputTesting : JobTesting
         await runner.AwaitIdleFrame();
     }
 
-    // Unlike a typed character, never refused by a field that is already at its MaxLength
+    // With the caret at the end (as after typing), Backspace always changes a non-empty field, unlike a
+    // character (refused at MaxLength), so a "nothing changed" check using it can't pass by accident
     private async Task PressBackspace()
     {
         PushKey(Key.Backspace, '\0');

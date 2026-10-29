@@ -145,7 +145,7 @@ public static class FillDocumentTestKit
     // More blank lines than any form has: WithBlanks caps it at the line count
     public const int EveryLine = int.MaxValue;
 
-    // Balance knobs, set before Setup: exactly 'blanks' blank lines (capped at the form's lines),
+    // Balance knobs, set before Setup: exactly 'blanks' blank lines (clamped to 1..the form's line count),
     // whatever the placeholder balance is
     public static System.Action<Job> WithBlanks(int blanks) => job =>
     {

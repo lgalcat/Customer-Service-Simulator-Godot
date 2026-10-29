@@ -74,7 +74,6 @@ public static class JobTestKit
     public static int CountDescendants(Node node) =>
         node.GetChildCount() + node.GetChildren().Sum(CountDescendants);
 
-    // Every node at any depth under 'node'
     public static IEnumerable<Node> DescendantsOf(Node node) =>
         node.GetChildren().SelectMany(child => DescendantsOf(child).Prepend(child));
 

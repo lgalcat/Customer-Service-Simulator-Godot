@@ -143,8 +143,7 @@ public class JobFactoryTesting
     }
 
     // Every JobType member must be creatable, so a forgotten CreateDefault() entry fails here without
-    // this test being touched. The empty-enum branch (an empty default pool, which the constructor
-    // rejects) only applied before the first job existed
+    // this test being touched. The empty-enum branch is unreachable while JobType has members
     [TestCase]
     public void CreateDefaultMapsEveryJobType()
     {

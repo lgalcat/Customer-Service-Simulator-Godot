@@ -12,11 +12,8 @@ using static JobTestKit;
 // the monitor, submit, get each blank marked; the form is approved (and the job completes after a short
 // delay) only once every blank is right, and nothing but approval closes it. Expected values are read
 // off the monitor, as the player does, so the record shown and the record checked are proven to be the
-// same. Nothing here pins the data, the number of blanks or the look: blank counts are checked as bounds
-// and monotonicity, balance knobs are set through their [Export]s where a case needs a known count, and
-// time is driven by emitting the completion timer's Timeout.
-// The job touches no resident device, so there is no device state to check restored; the contract's
-// descendant count covers what it places.
+// same. Nothing here pins the data, the number of blanks or the look.
+// The job touches no resident device, so there is no device state to check restored.
 // Extends JobTesting for its office/runner setup only; redeclares none of its cases
 [TestSuite]
 [RequireGodotRuntime]
@@ -124,7 +121,7 @@ public class FillDocumentBehaviourTesting : JobTesting
     }
 
     // Which lines are blanked is a uniform random pick: over many forms with one blank each, every line
-    // is chosen at some point (a line missed in 200 draws of 1-in-8 is a ~1e-11 event)
+    // is chosen at some point (with today's 8 lines, missing one in 200 draws is a ~1e-11 event)
     [TestCase]
     public void EveryLineOfTheFormCanBeTheBlank()
     {
@@ -246,8 +243,8 @@ public class FillDocumentBehaviourTesting : JobTesting
         AssertThat(StampShown(play.Document)).IsTrue();
     }
 
-    // A submit locks nothing (user decision: being distracted into breaking a correct value fits the
-    // game), so only a submit where everything is right at that moment approves
+    // A submit locks nothing (by design), so only a submit where everything is right at that moment
+    // approves
     [TestCase]
     public void ACorrectBlankStaysEditableAndBreakingItBlocksApproval()
     {
@@ -306,8 +303,8 @@ public class FillDocumentBehaviourTesting : JobTesting
 
     // ---- The office locked mid-typing (a Distraction starting) ----
 
-    // The lock blocks the mouse; keystrokes would still reach a focused field, so the field must give
-    // focus up. Unlocking makes the form usable again but leaves focus to the player
+    // Locking takes focus from the field being typed in; unlocking makes the form usable again but
+    // leaves focus to the player
     [TestCase]
     public void LockingTheOfficeMidTypingTakesFocusAwayAndUnlockingDoesNotGiveItBack()
     {

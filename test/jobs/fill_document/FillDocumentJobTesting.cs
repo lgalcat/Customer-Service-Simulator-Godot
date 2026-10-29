@@ -8,8 +8,8 @@ using static FillDocumentTestKit;
 // Runs the JobTesting contract against the real Fill Document job, on the real office: its parts must
 // fit ComputerScreen's anchors, follow the screen's input state (its blanks and Submit are GUI Control
 // interactables) and leave nothing behind. Its announcement (the Visitor) is checked for attaching on
-// MainScreen only; the announcement's own contract is its own suite's. Also holds the job's own
-// authoring guards (below the contract block)
+// MainScreen only; its full contract is left to a Visitor suite (not written yet). Also holds the job's
+// own authoring guards (below the contract block)
 [TestSuite]
 [RequireGodotRuntime]
 [GodotExceptionMonitor]

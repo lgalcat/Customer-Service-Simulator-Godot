@@ -3,8 +3,7 @@ using static GdUnit4.Assertions;
 using static FillDocumentTestKit;
 
 // DocumentLine over a hand-built line: filled vs blank display, result marks and when they clear, and
-// Enter. Marks are compared with the line's own configured marks (MarkOf), colours only as "the two
-// results differ", so the placeholder look can change freely
+// Enter. Marks and colours are never compared to literals, so the placeholder look can change freely
 [TestSuite]
 [RequireGodotRuntime]
 public class DocumentLineTesting
@@ -119,7 +118,8 @@ public class DocumentLineTesting
     [TestCase]
     public void EditingTheFieldClearsItsMark()
     {
-        // Manual _Ready() call - no SceneTree to auto-trigger it (applies to every test below)
+        // Manual _Ready() call - no SceneTree to auto-trigger it (applies to every test below that relies on
+        // the line's signal wiring)
         _line._Ready();
         _line.ShowBlank();
         _line.ShowResult(true);
