@@ -19,11 +19,6 @@
                     <Verbosity>normal</Verbosity>
                 </Configuration>
             </Logger>
-            <Logger friendlyName="html" enabled="True">
-                <Configuration>
-                    <LogFileName>test-result.html</LogFileName>
-                </Configuration>
-            </Logger>
             <Logger friendlyName="trx" enabled="True">
                 <Configuration>
                     <LogFileName>test-result.trx</LogFileName>
