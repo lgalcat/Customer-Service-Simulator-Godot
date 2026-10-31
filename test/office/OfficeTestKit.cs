@@ -23,6 +23,28 @@ public static class OfficeTestKit
         return condition();
     }
 
+    // Advances every Tween in the tree by 'seconds' of game time, synchronously, in 'step' slices (the list
+    // is re-read each slice, so a tween started by another's callback runs too). Nothing else advances
+    // them while the test awaits no frame, so what the tweens show is fully determined. 'afterEachStep'
+    // observes in between
+    public static void StepTweens(Node inTree, double seconds, Action? afterEachStep = null, double step = 0.02)
+    {
+        int steps = (int)Math.Ceiling(seconds / step - 1e-9);
+        for (int i = 0; i < steps; i++)
+        {
+            foreach (Tween tween in inTree.GetTree().GetProcessedTweens())
+            {
+                if (tween.IsValid()) { tween.CustomStep(step); }
+            }
+            afterEachStep?.Invoke();
+        }
+    }
+
+    // An IndicatorLight's state, read against its own levels so the tuning can change freely
+    public static bool IsLit(IndicatorLight light) => light.SelfModulate.A > light.Get("_restLevel").AsSingle() + 1e-3f;
+
+    public static bool AtRest(IndicatorLight light) => Mathf.IsEqualApprox(light.SelfModulate.A, light.Get("_restLevel").AsSingle());
+
     // Wrapper root so ISceneRunner.Load never has to dispose the node under test itself. The node must
     // be loaded into a live tree (ISceneRunner.Load(root, true, true)) before hover/click handlers
     // act: they check IsVisibleInTree()

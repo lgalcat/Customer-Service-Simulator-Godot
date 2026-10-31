@@ -119,20 +119,11 @@ public static class FillDocumentTestKit
     // The real job, not set up and not in the tree
     public static FillDocumentJob InstantiateJob() => GD.Load<PackedScene>(JobPath).Instantiate<FillDocumentJob>();
 
-    // A real job set up ('configure' runs first, for balance knobs) and started on its screen in 'office'
-    // the way the manager starts it - attached, then added to the tree - with that screen made current
-    // first, so its fields take input. Freed with the test
+    // The real job started on its screen in 'office' (JobTestKit.StartJob), its fields taking input
     public static Play Start(OfficeManager office, int difficulty = 1, System.Action<Job>? configure = null)
     {
-        FillDocumentJob job = GdUnit4.Assertions.AutoFree(InstantiateJob())!;
-        configure?.Invoke(job);
-        job.Setup(difficulty);
-        OfficeScreen? screen = office.TryGetScreen(job.TargetScreen);
-        GdUnit4.Assertions.AssertThat(screen).OverrideFailureMessage($"the office has no screen '{job.TargetScreen}'").IsNotNull();
-        office.GoToScreen(screen!);
-        job.Attach(screen!);
-        office.AddChild(job);
-        return PlayOn(job, screen!);
+        FillDocumentJob job = JobTestKit.StartJob<FillDocumentJob>(office, JobPath, difficulty, configure);
+        return PlayOn(job, job.Screen!);
     }
 
     // The parts of a job already started on 'screen', found where the player sees them

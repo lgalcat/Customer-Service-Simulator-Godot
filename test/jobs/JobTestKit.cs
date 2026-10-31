@@ -69,6 +69,22 @@ public static class JobTestKit
         return office;
     }
 
+    // A real job (the scene at 'scenePath') set up ('configure' runs first, for balance knobs) and started on
+    // its screen in 'office' the way the manager starts it - attached, then added to the tree - with that
+    // screen made current first, so its parts take input. Freed with the test
+    public static T StartJob<T>(OfficeManager office, string scenePath, int difficulty = 1, Action<Job>? configure = null) where T : Job
+    {
+        T job = GdUnit4.Assertions.AutoFree(GD.Load<PackedScene>(scenePath).Instantiate<T>())!;
+        configure?.Invoke(job);
+        job.Setup(difficulty);
+        OfficeScreen? screen = office.TryGetScreen(job.TargetScreen);
+        GdUnit4.Assertions.AssertThat(screen).OverrideFailureMessage($"the office has no screen '{job.TargetScreen}'").IsNotNull();
+        office.GoToScreen(screen!);
+        job.Attach(screen!);
+        office.AddChild(job);
+        return job;
+    }
+
     // How much is in a screen: "everything placed was taken back out" is checked as "back to the
     // baseline count" once the deferred frees have run
     public static int CountDescendants(Node node) =>

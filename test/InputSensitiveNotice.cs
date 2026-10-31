@@ -59,7 +59,7 @@ public static class InputSensitiveNotice
     private static void WriteBanner(string phase)
     {
         // stderr, not stdout: gdUnit4's <CaptureStdOut> only intercepts stdout, so this reaches
-        // the real console (and the html/trx report) whatever the runner.
+        // the real console (and the trx report) whatever the runner.
         string rule = new('=', 78);
         Console.Error.WriteLine(rule);
         Console.Error.WriteLine($"  INPUT/TIMING-SENSITIVE TESTS ARE RUNNING  ({phase})");
