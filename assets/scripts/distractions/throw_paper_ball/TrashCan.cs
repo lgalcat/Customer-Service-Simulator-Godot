@@ -3,11 +3,24 @@ using System;
 
 /// <summary>
 /// Handler script purpose built for the paper bin in "ThrowPaperBall"
-/// <para>Handles possible movement patterns and win condition detection</para>
+/// <para>Handles win condition detection and the bin's optional movement: a constant-speed loop along an
+/// editor-drawn <see cref="Path2D"/> (a sibling, never a child, since its curve is followed in absolute
+/// coordinates). An open path is closed with a straight segment; no path or zero speed keeps the bin static.</para>
 /// </summary>
 public partial class TrashCan : Node2D
 {
-    // [18/07/2026] Implementation of movement attributes and logic pending
+    // Path the bin loops along, starting from its first point; null keeps the bin static
+    [ExportGroup("Movement")]
+    [Export]
+    private Path2D? _movementPath;
+    // Pixels per second along the path; a negative value runs the loop backwards, zero keeps the bin static
+    [Export]
+    private float _movementSpeed = 40;
+
+    // Closed copy of _movementPath's curve (or the curve itself if already closed) and the bin's progress along it
+    private Curve2D? _loop;
+    private float _loopLength;
+    private float _loopOffset;
 
     // Area the ball needs to reach to win
     private Area2D _winSpace = null!;
@@ -50,6 +63,52 @@ public partial class TrashCan : Node2D
         AddChild(_winCounter);
         // Propagate timer completion events to outside components
         _winCounter.Timeout += () => MinigameCompleted?.Invoke();
+
+        ArmMovement();
+    }
+
+    // Moves the bin along its loop at constant speed; only called while ArmMovement() left physics processing on
+    public override void _PhysicsProcess(double delta)
+    {
+        _loopOffset = Mathf.PosMod(_loopOffset + _movementSpeed * (float)delta, _loopLength);
+        GlobalPosition = _movementPath!.ToGlobal(_loop!.SampleBaked(_loopOffset));
+    }
+
+    // Validates the movement exports, closes the path and places the bin at its first point
+    // Physics processing (auto-enabled by the engine for the _PhysicsProcess override) stays off unless the
+    // movement is usable, so a static bin costs nothing per frame
+    private void ArmMovement()
+    {
+        SetPhysicsProcess(false);
+        if (_movementPath == null || _movementSpeed == 0) { return; }
+
+        Curve2D? curve = _movementPath.Curve;
+        // Also keeps GetPointPosition(0) below in range (a single point would fail the length check anyway)
+        if (curve == null || curve.PointCount < 2)
+        {
+            GD.PushWarning("TrashCan: movement path needs at least 2 points, the bin stays static");
+            return;
+        }
+
+        // Curve2D has no "closed" flag (only Curve3D does): close it on a copy so the shared resource stays untouched
+        _loop = curve;
+        Vector2 first = curve.GetPointPosition(0);
+        if (!first.IsEqualApprox(curve.GetPointPosition(curve.PointCount - 1)))
+        {
+            _loop = (Curve2D)curve.Duplicate();
+            _loop.AddPoint(first);
+        }
+
+        _loopLength = _loop.GetBakedLength();
+        if (_loopLength <= 0)
+        {
+            GD.PushWarning("TrashCan: movement path has zero length, the bin stays static");
+            return;
+        }
+
+        _loopOffset = 0;
+        GlobalPosition = _movementPath.ToGlobal(_loop.SampleBaked(0));
+        SetPhysicsProcess(true);
     }
 
     // Gets called when an object enters the bin (via _winArea)

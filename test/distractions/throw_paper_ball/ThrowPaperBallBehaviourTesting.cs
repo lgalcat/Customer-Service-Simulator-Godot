@@ -183,6 +183,33 @@ public class ThrowPaperBallBehaviourTesting : DistractionTesting
         AssertThat(openingWidth).IsGreaterEqual(BallDiameter() * MinimumFitRatio);
     }
 
+    // Tests that the trash can's collision body follows the TrashCan node in the physics server when the
+    // composite is moved (TrashCan movement moves the parent, never the body itself)
+    // Guards TrashCanBody's non-default sync_to_physics = false: with it on, the AnimatableBody2D only
+    // forwards changes to its own local transform, so a moving parent leaves the solid walls behind while
+    // the sprite and win area move. Reads the physics server's transform, not the node's: with sync on, the
+    // node is snapped back to the physics state, so the two would agree on the wrong position
+    // TrashCan's own path movement is switched off and the move done by hand, so the case doesn't depend
+    // on whether the scene's path is wired
+    [TestCase]
+    public async Task TrashCanBodyFollowsMovedTrashCanInPhysics()
+    {
+        var throwPaperBall = GD.Load<PackedScene>(ScenePath).Instantiate<ThrowPaperBall>();
+        throwPaperBall.Setup(1);
+        using ISceneRunner runner = ISceneRunner.Load(throwPaperBall, true, true);
+        TrashCan trashCan = throwPaperBall.GetNode<TrashCan>("Stage/TrashCan");
+        AnimatableBody2D body = trashCan.GetNode<AnimatableBody2D>("TrashCanBody");
+        trashCan.SetPhysicsProcess(false);
+        Vector2 bodyLocalPosition = body.Position;
+
+        trashCan.Position += new Vector2(-40, 0);
+        await runner.SimulateFrames(10, 20);
+
+        var physicsTransform = (Transform2D)PhysicsServer2D.BodyGetState(body.GetRid(), PhysicsServer2D.BodyState.Transform);
+        Vector2 expected = trashCan.GlobalTransform * bodyLocalPosition;
+        AssertThat(physicsTransform.Origin.DistanceTo(expected)).IsLess(0.5f);
+    }
+
     // Helper to find a Ball's max width (assumes shape is a CircleShape2D)
     private float BallDiameter()
     {

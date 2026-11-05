@@ -43,4 +43,5 @@ Any licensed asset is still subject to their original licensing terms regardless
 ## AI Disclosure
 
 LLM or "generative AI" assistance is used for coding and debugging.  
-LLMs or "AI" are never used in sourcing, producing or modifying graphics or audio assets.
+LLMs or "generative AI" are never used in producing or modifying graphics or audio assets.  
+Care is put into trying to source human-made assets but no guarantees are made on upstream authors' tool usage policies.

@@ -33,8 +33,11 @@ Entries for any asset internally made for this project should not be expected,
 #### Throw Paper Ball
 
  - Paper Ball Sprite Sheet:
-    + Project file: [paper_ball_wip2.png](../assets/textures/distractions/throw_paper_ball/paper_ball_wip2.png)
-    + *This asset couldn't be traced back, it only serves as a temporary placeholder*
+    + Project file: [paper_ball_wip3.png](../assets/textures/distractions/throw_paper_ball/paper_ball_wip3.png)
+    + Author: ["NYK_NCK"](https://nyknck.itch.io/ "NYK_NCK's itchIO page")
+    + Sources: ["Stone Set" sprite sheets](https://nyknck.itch.io/stone "Stone Set")
+    + License: Author specified free use for non-commercial and commercial work with proper attribution, no formal licensing agreement provided
+    + Modifications: Extracted selected file, resized and tweaked pixel measurements, recoloured to required tones
 
  - Trash Can Sprite:
     + Project file: [trash_can_wip2.png](../assets/textures/distractions/throw_paper_ball/trash_can_wip2.png)

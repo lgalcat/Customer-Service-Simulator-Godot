@@ -31,3 +31,4 @@ mono_crash.*.json
 
 CLAUDE.local.md
 test/CLAUDE.local.md
+test/office/visual-composition-validation.md
