@@ -10,9 +10,9 @@ public class ThrowPaperBallDistractionTesting : DistractionTesting
     protected override Distraction CreateDistraction()
     {
         // Barebones stand-in tree matching only the node names/types Setup() looks up
-        // (Stage/TrashCan, Stage/Ball, Stage/Projection) - not the full production scene
+        // (Stage as a ThrowPaperBallLayout, Stage/TrashCan, Stage/Ball, Stage/Projection) - not the full production scene
         var throwPaperBall = new ThrowPaperBall();
-        var stage = new Node2D { Name = "Stage" };
+        var stage = new ThrowPaperBallLayout { Name = "Stage" };
         throwPaperBall.AddChild(stage);
         stage.AddChild(new TrashCan { Name = "TrashCan" });
         stage.AddChild(new Ball { Name = "Ball" });

@@ -16,16 +16,16 @@ public partial class ThrowPaperBall : Distraction
     private readonly int _viewportY = 220;
     public override int ViewportY { get => _viewportY; }
 
-    // Ranges for the "throwing" angle and strength
+    // Ranges for the "throwing" angle and strength, copied from the layout during "Setup"
     // Keep in mind angles grow CLOCKWISE
-    [Export] private float _minThrowAngle = -60;
-    [Export] private float _maxThrowAngle = 0;
+    private float _minThrowAngle;
+    private float _maxThrowAngle;
     private float _throwAngle = 0;
-    [Export] private float _minThrowStrength = 100;
-    [Export] private float _maxThrowStrength = 500;
+    private float _minThrowStrength;
+    private float _maxThrowStrength;
     private float _throwStrength = 0;
-    // Time (in seconds) "throwing" takes to cycle between min and max values
-    [Export] private float _throwCycle = 1;
+    // Time (in seconds) "throwing" takes to cycle between min and max values, copied from the layout during "Setup"
+    private float _throwCycle;
     private int _cycleScalar = 1;
 
     // Fixed speed used to draw the aim-preview arc before a throw is charged
@@ -33,6 +33,15 @@ public partial class ThrowPaperBall : Distraction
     // Per-step time deltas fed to the trajectory projection (aiming shows a short stub, charging the full arc)
     [Export] private float _aimProjectionTimeStep = 0.1f;
     [Export] private float _chargeProjectionTimeStep = 0.12f;
+
+    // Layouts rolled from during "Setup" by difficulty; null or empty keeps the authored Stage
+    [Export] private ThrowPaperBallLayoutCatalog? _layoutCatalog;
+
+    /// <summary>
+    /// Forces this layout instead of rolling one from the catalog; must be set before <see cref="Setup"/>
+    /// <para>Meant for tests and playtesting: leave it empty in the saved scene, or the real game always plays it</para>
+    /// </summary>
+    [Export] public PackedScene? LayoutOverride { get; set; }
 
     // Child node references found during "Setup"
     private Ball _paperBall = null!;
@@ -94,7 +103,20 @@ public partial class ThrowPaperBall : Distraction
     {
         Difficulty = difficulty;
 
-        // Implement location and instancing of difficulty dependent elements here
+        // Pick the layout: the override, else a roll from the catalog, else the authored Stage
+        if (LayoutOverride != null) { GD.Print($"ThrowPaperBall: LayoutOverride forces '{LayoutOverride.ResourcePath}'"); }
+        PackedScene? chosenLayout = LayoutOverride ?? _layoutCatalog?.Pick(difficulty);
+        if (chosenLayout != null) { UseLayout(chosenLayout); }
+
+        // Find the layout and take its throw tuning
+        ThrowPaperBallLayout? layout = GetNodeOrNull<ThrowPaperBallLayout>("Stage");
+        if (layout == null) { throw new NullReferenceException("ThrowPaperBall: missing required child 'Stage' (a ThrowPaperBallLayout)"); }
+        layout.Validate();
+        _minThrowAngle = layout.MinThrowAngle;
+        _maxThrowAngle = layout.MaxThrowAngle;
+        _minThrowStrength = layout.MinThrowStrength;
+        _maxThrowStrength = layout.MaxThrowStrength;
+        _throwCycle = layout.ThrowCycle;
 
         // Find TrashCan and bind its Action(s)
         _paperBin = GetNode<TrashCan>("Stage/TrashCan");
@@ -111,6 +133,8 @@ public partial class ThrowPaperBall : Distraction
         // Find Projection and set its parameters
         _projection = GetNode<Projection>("Stage/Projection");
         if (_projection == null) { throw new NullReferenceException("ThrowPaperBall: missing required child 'Stage/Projection'"); }
+        // The arc starts at the ball's spawn whatever the layout authored for Projection (both are Stage children)
+        _projection.Position = _paperBall.Position;
         _projection.Damp = _paperBall.LinearDamp;
         _projection.GravityScale = _paperBall.GravityScale;
     }
@@ -122,6 +146,29 @@ public partial class ThrowPaperBall : Distraction
 
         GD.Print("ThrowPaperBall Completed!!!");
         OnVictory?.Invoke();
+    }
+
+    // Replaces the authored Stage with an instance of "layout", unless the authored one already is that layout
+    // Runs during "Setup", before tree entry, so the replaced Stage can be freed outright
+    private void UseLayout(PackedScene layout)
+    {
+        Node? authored = GetNodeOrNull("Stage");
+        if (authored != null && authored.SceneFilePath == layout.ResourcePath) { return; }
+
+        Node instance = layout.Instantiate();
+        if (instance is not ThrowPaperBallLayout stage)
+        {
+            instance.Free();
+            throw new InvalidOperationException($"ThrowPaperBall: layout '{layout.ResourcePath}' has no ThrowPaperBallLayout root");
+        }
+
+        if (authored != null)
+        {
+            RemoveChild(authored);
+            authored.Free();
+        }
+        stage.Name = "Stage";
+        AddChild(stage);
     }
 
     // Moves "value" toward max/min and back, flipping "scalar" at either bound; drives both the aiming and charging animated steps
@@ -139,7 +186,7 @@ public partial class ThrowPaperBall : Distraction
     {
         _state = ThrowingState.aiming;
         _throwAngle = _maxThrowAngle;
-        _throwStrength = (_maxThrowStrength - _minThrowStrength) / 2;
+        _throwStrength = _minThrowStrength + (_maxThrowStrength - _minThrowStrength) / 2;
         _cycleScalar = 1;
         _projection.DrawOneStep();
     }

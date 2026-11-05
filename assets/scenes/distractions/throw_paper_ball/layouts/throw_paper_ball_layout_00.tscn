@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://b5db5p0w1oaxw"]
+
+[ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_base.tscn" id="1_base"]
+
+[sub_resource type="Curve2D" id="Curve2D_tcpth"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -200, 0)
+}
+point_count = 2
+
+[node name="Stage" unique_id=1095688706 instance=ExtResource("1_base")]
+
+[node name="TrashCan" parent="." index="1" node_paths=PackedStringArray("_movementPath")]
+_movementPath = NodePath("../TrashCanPath")
+_movementSpeed = 80.0
+
+[node name="TrashCanPath" type="Path2D" parent="." index="7" unique_id=2094860785]
+editor_description = "TrashCan's movement path in this layout.
+Stage-local coordinates; an open path is closed by TrashCan with a straight segment."
+position = Vector2(80, 69)
+scale = Vector2(0.43333334, 1)
+curve = SubResource("Curve2D_tcpth")

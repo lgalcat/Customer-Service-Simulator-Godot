@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="ThrowPaperBallLayoutCatalog" format=3 uid="uid://cr7lawylgchct"]
+
+[ext_resource type="Script" uid="uid://5rh0nt0grswb" path="res://assets/scripts/distractions/throw_paper_ball/ThrowPaperBallLayoutCatalog.cs" id="1_catalog"]
+[ext_resource type="Script" uid="uid://de3atckcwfwpt" path="res://assets/scripts/distractions/throw_paper_ball/ThrowPaperBallLayoutEntry.cs" id="2_entry"]
+[ext_resource type="PackedScene" uid="uid://b5db5p0w1oaxw" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_00.tscn" id="3_layout_00"]
+[ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_01.tscn" id="4_layout_01"]
+[ext_resource type="PackedScene" uid="uid://6d4ewp1q8v4p" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_02.tscn" id="4_tw87a"]
+[ext_resource type="PackedScene" uid="uid://nxq5ah7a05fb" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_03.tscn" id="5_x6plf"]
+
+[sub_resource type="Resource" id="Resource_layout_00"]
+script = ExtResource("2_entry")
+Layout = ExtResource("3_layout_00")
+MaxDifficulty = 2
+
+[sub_resource type="Resource" id="Resource_layout_01"]
+script = ExtResource("2_entry")
+Layout = ExtResource("4_layout_01")
+
+[sub_resource type="Resource" id="Resource_x6plf"]
+script = ExtResource("2_entry")
+Layout = ExtResource("4_tw87a")
+metadata/_custom_type_script = "uid://de3atckcwfwpt"
+
+[sub_resource type="Resource" id="Resource_a11ov"]
+script = ExtResource("2_entry")
+Layout = ExtResource("5_x6plf")
+MaxDifficulty = 3
+metadata/_custom_type_script = "uid://de3atckcwfwpt"
+
+[resource]
+script = ExtResource("1_catalog")
+Entries = Array[ExtResource("2_entry")]([SubResource("Resource_layout_00"), SubResource("Resource_layout_01"), SubResource("Resource_x6plf"), SubResource("Resource_a11ov")])

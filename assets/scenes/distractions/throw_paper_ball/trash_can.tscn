@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/distractions/throw_paper_ball/TrashCan.cs" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/textures/distractions/throw_paper_ball/trash_can_wip2.png" id="2_texture"]
+
+[node name="TrashCan" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="TrashCanSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_texture")
+
+[node name="TrashCanBody" type="AnimatableBody2D" parent="."]
+sync_to_physics = false
+
+[node name="TrashCanShape" type="CollisionPolygon2D" parent="TrashCanBody"]
+polygon = PackedVector2Array(-26, -29, -19, 35, 19, 35, 26, -29, 23, -29, 16, 30, -16, 30, -23, -29)
+
+[node name="EdgeA" type="Marker2D" parent="TrashCanBody"]
+position = Vector2(-23, -29)
+
+[node name="EdgeB" type="Marker2D" parent="TrashCanBody"]
+position = Vector2(23, -29)
+
+[node name="TrashCanInside" type="Area2D" parent="."]
+gravity_space_override = 1
+gravity = 180.0
+
+[node name="TrashInsideArea" type="CollisionPolygon2D" parent="TrashCanInside"]
+polygon = PackedVector2Array(-22, -24, -16, 30, 16, 30, 22, -24)
