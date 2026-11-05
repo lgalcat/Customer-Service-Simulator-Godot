@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://b07lvvwjgrkyq"]
+
+[ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_base.tscn" id="1_6vqjg"]
+
+[node name="Stage" unique_id=691559220 instance=ExtResource("1_6vqjg")]
+
+[node name="TrashCan" parent="." index="1"]
+rotation = 0.43633232
