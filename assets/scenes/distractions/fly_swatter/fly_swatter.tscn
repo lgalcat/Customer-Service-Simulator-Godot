@@ -7,12 +7,14 @@
 [ext_resource type="Script" uid="uid://dfmkiuawcfhgi" path="res://assets/scripts/distractions/fly_swatter/Swatter.cs" id="5_0o7l6"]
 [ext_resource type="SpriteFrames" uid="uid://baymo7wwdk1tb" path="res://assets/animations/distractions/fly_swatter/smack_frames_wip.tres" id="6_jegjh"]
 [ext_resource type="Texture2D" uid="uid://beub0naxnglkp" path="res://assets/textures/distractions/fly_swatter/swatter_PLACEHOLDER.png" id="6_l4oyu"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/fly_swatter/fly_swatter_levels.tres" id="7_levels"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mvg5u"]
 size = Vector2(25, 23)
 
 [node name="FlySwatter" type="Node" unique_id=592884100]
 script = ExtResource("1_2f1be")
+_levelCatalog = ExtResource("7_levels")
 
 [node name="Stage" type="Node2D" parent="." unique_id=1815319675]
 position = Vector2(110, 110)

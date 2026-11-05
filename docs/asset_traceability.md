@@ -54,7 +54,8 @@ Entries for any asset internally made for this project should not be expected,
 
  - Fly Swatter Sprite:
     + Project file: [swatter_PLACEHOLDER.png](../assets/textures/distractions/fly_swatter/swatter_PLACEHOLDER.png)
-    + *This asset couldn't be traced back, it only serves as a temporary placeholder*
+    + *This asset couldn't be reliably traced back, it serves as a temporary placeholder*
+    + Author: To the best of my knowledge this asset was developed by one of the team members of the original school project.
 
  - Hit FX Sprite Sheet:
     + Project File: [smack_FX_wip.png](../assets/textures/distractions/fly_swatter/smack_FX_wip.png)

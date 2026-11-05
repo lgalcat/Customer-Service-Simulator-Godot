@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="FlySwatterLevelCatalog" format=3 uid="uid://okk0w8f18nb4"]
+
+[ext_resource type="Script" uid="uid://btt6yhbnbuc8f" path="res://assets/scripts/distractions/fly_swatter/FlySwatterLevelCatalog.cs" id="1_catalog"]
+[ext_resource type="Script" uid="uid://duvqef4in53pn" path="res://assets/scripts/distractions/fly_swatter/FlySwatterLevelEntry.cs" id="2_entry"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/fly_swatter/fly_swatter_level_basic.tres" id="3_basic"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/fly_swatter/fly_swatter_level_swarm.tres" id="4_swarm"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/fly_swatter/fly_swatter_level_trickle.tres" id="5_trickle"]
+
+[sub_resource type="Resource" id="Resource_basic"]
+script = ExtResource("2_entry")
+Level = ExtResource("3_basic")
+
+[sub_resource type="Resource" id="Resource_swarm"]
+script = ExtResource("2_entry")
+Level = ExtResource("4_swarm")
+MaxDifficulty = 3
+
+[sub_resource type="Resource" id="Resource_trickle"]
+script = ExtResource("2_entry")
+Level = ExtResource("5_trickle")
+MaxDifficulty = 3
+
+[resource]
+script = ExtResource("1_catalog")
+Entries = Array[ExtResource("2_entry")]([SubResource("Resource_basic"), SubResource("Resource_swarm"), SubResource("Resource_trickle")])

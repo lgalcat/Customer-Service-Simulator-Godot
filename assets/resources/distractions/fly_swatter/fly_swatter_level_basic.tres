@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FlySwatterLevel" format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/distractions/fly_swatter/FlySwatterLevel.cs" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+MinWinScore = 13
+MaxWinScore = 16
+MinSpareFlies = 4
+MaxSpareFlies = 6
+MinFirstWaveSize = 5
+MaxFirstWaveSize = 6
+MinFliesPerWave = 2
+MaxFliesPerWave = 3
+MinWaveInterval = 3.5
+MaxWaveInterval = 4.5
+RefillThreshold = 2

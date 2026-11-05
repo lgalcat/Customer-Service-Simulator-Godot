@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
 /// <summary>
 /// The layouts <see cref="ThrowPaperBall"/> rolls from during its Setup, each rated with a difficulty band
@@ -16,32 +15,18 @@ public partial class ThrowPaperBallLayoutCatalog : Resource
 
     /// <summary>
     /// Rolls a layout for <paramref name="difficulty"/>: a random entry among those whose band contains it or,
-    /// when none does, among those whose band lies nearest. Null for an empty catalog
+    /// when none does, among those whose band lies nearest (see <see cref="DifficultyBands.PickNearest"/>).
+    /// Null for an empty catalog
     /// </summary>
     /// <exception cref="InvalidOperationException">An entry is mis-authored (empty slot, no layout, or an
     /// inverted band).</exception>
     public PackedScene? Pick(int difficulty)
     {
-        var nearest = new List<PackedScene>();
-        int nearestDistance = int.MaxValue;
+        // Payload check first; empty slots are left for PickNearest to report
         for (int i = 0; i < Entries.Count; i++)
         {
-            ThrowPaperBallLayoutEntry? entry = Entries[i];
-            if (entry == null) { throw new InvalidOperationException($"ThrowPaperBallLayoutCatalog '{ResourcePath}': entry {i} is empty"); }
-            if (entry.Layout == null) { throw new InvalidOperationException($"ThrowPaperBallLayoutCatalog '{ResourcePath}': entry {i} has no Layout"); }
-            if (entry.MinDifficulty > entry.MaxDifficulty) { throw new InvalidOperationException($"ThrowPaperBallLayoutCatalog '{ResourcePath}': entry {i} has MinDifficulty {entry.MinDifficulty} above MaxDifficulty {entry.MaxDifficulty}"); }
-
-            int distance = entry.DistanceTo(difficulty);
-            if (distance > nearestDistance) { continue; }
-            if (distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearest.Clear();
-            }
-            nearest.Add(entry.Layout);
+            if (Entries[i] != null && Entries[i].Layout == null) { throw new InvalidOperationException($"ThrowPaperBallLayoutCatalog '{ResourcePath}': entry {i} has no Layout"); }
         }
-
-        if (nearest.Count == 0) { return null; }
-        return nearest[GD.RandRange(0, nearest.Count - 1)];
+        return DifficultyBands.PickNearest(Entries, difficulty, $"ThrowPaperBallLayoutCatalog '{ResourcePath}'")?.Layout;
     }
 }

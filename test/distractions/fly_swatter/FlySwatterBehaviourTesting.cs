@@ -36,7 +36,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
     }
 
     // Tests the FlySpawner.FlyDied -> UpdateScore -> Victory sequence bound in Setup
-    // Bounded by the spawner's own public _maxTotalFlies cap
+    // Bounded by the spawner's own public MaxTotalFlies cap
     // this verifies the win score is actually reachable within the spawner's total-fly cap
     [TestCase]
     public void FlyDeathsWithinSpawnCapEventuallyTriggerVictory()
@@ -48,7 +48,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         bool victoryCalled = false;
         distraction.OnVictory = () => { victoryCalled = true; };
 
-        for (int i = 0; i < flySpawner._maxTotalFlies; i++)
+        for (int i = 0; i < flySpawner.MaxTotalFlies; i++)
         {
             flySpawner.FlyDied?.Invoke();
         }
@@ -82,7 +82,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         AutoFreeChildren(flySpawner);
         int victoryCount = 0;
         distraction.OnVictory = () => { victoryCount++; };
-        for (int i = 0; i < flySpawner._maxTotalFlies; i++)
+        for (int i = 0; i < flySpawner.MaxTotalFlies; i++)
         {
             flySpawner.FlyDied?.Invoke();
         }
@@ -108,7 +108,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         Timer waveTimer = flySpawner.GetChildren().OfType<Timer>().First();
         AssertThat(waveTimer.IsStopped()).IsFalse();
 
-        for (int i = 0; i < flySpawner._maxTotalFlies; i++)
+        for (int i = 0; i < flySpawner.MaxTotalFlies; i++)
         {
             flySpawner.FlyDied?.Invoke();
         }
@@ -164,7 +164,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         bool victoryCalled = false;
         flySwatter.OnVictory = () => { victoryCalled = true; };
 
-        for (int i = 0; i < flySpawner._maxTotalFlies; i++)
+        for (int i = 0; i < flySpawner.MaxTotalFlies; i++)
         {
             flySpawner.FlyDied?.Invoke();
         }

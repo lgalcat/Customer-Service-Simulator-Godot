@@ -18,10 +18,18 @@ public partial class FlySwatter : Distraction
     /// </summary>
     public override int ViewportY { get => _viewportY; }
 
-    // Score to reach (units in number of flies swatted)
-    // [19/08/2026] This should be difficulty dependent when implemented (see "difficulty profiles" notes)
+    // Score to reach (units in number of flies swatted); this is the fallback, a chosen level rolls its own
     private int _winScore = 15;
     private int _currentScore = 0;
+
+    // Level presets rolled from during "Setup" by difficulty; null or empty keeps the authored fallback values
+    [Export] private FlySwatterLevelCatalog? _levelCatalog;
+
+    /// <summary>
+    /// Forces this level instead of rolling one from the catalog; must be set before <see cref="Setup"/>
+    /// <para>Meant for tests and playtesting: leave it empty in the saved scene, or the real game always plays it</para>
+    /// </summary>
+    [Export] public FlySwatterLevel? LevelOverride { get; set; }
 
     // Child node references found during "Setup"
     private FlySpawner _flySpawner = null!;
@@ -38,15 +46,27 @@ public partial class FlySwatter : Distraction
     {
         Difficulty = difficulty;
 
-        // Implement location, instancing and distribution of difficulty dependent values here
-
         // Find fly spawner and bind its actions
         _flySpawner = GetNode<FlySpawner>("Stage/FlySpawner");
         if (_flySpawner == null) { throw new NullReferenceException("FlySwatter: missing required child 'Stage/FlySpawner'"); }
         _flySpawner.FlyDied += UpdateScore;
+
+        // Pick the level: the override, else a roll from the catalog, else the authored fallback values
+        if (LevelOverride != null) { GD.Print($"FlySwatter: LevelOverride forces '{LevelOverride.ResourcePath}'"); }
+        FlySwatterLevel? level = LevelOverride ?? _levelCatalog?.Pick(difficulty);
+        if (level != null)
+        {
+            level.Validate();
+            FlySwatterLevelPlan plan = level.Roll();
+            _winScore = plan.WinScore;
+            _flySpawner.ConfigureWaves(plan.Waves);
+        }
+        // A rolled level is winnable by construction; this guards the authored fallback values
+        if (_winScore > _flySpawner.MaxTotalFlies) { throw new InvalidOperationException($"FlySwatter: win score {_winScore} is above the spawner's {_flySpawner.MaxTotalFlies} total flies"); }
+
         // Find ingame score tracker and set initial values (if existing)
         _scoreTracker = GetNode<Label>("Stage/ScoreTracker");
-        if (_scoreTracker != null) { _scoreTracker.Text = _winScore.ToString(); }
+        RefreshScoreTracker();
     }
 
     /// <summary>
@@ -70,9 +90,14 @@ public partial class FlySwatter : Distraction
     private void UpdateScore()
     {
         _currentScore++;
-        // Update the ingame progress tracker
-        if (_scoreTracker != null) { _scoreTracker.Text = (_winScore - _currentScore).ToString(); }
+        RefreshScoreTracker();
 
         if (_currentScore >= _winScore) { Victory(); }
+    }
+
+    // Shows the flies still to smack on the ingame progress tracker (if existing)
+    private void RefreshScoreTracker()
+    {
+        if (_scoreTracker != null) { _scoreTracker.Text = (_winScore - _currentScore).ToString(); }
     }
 }

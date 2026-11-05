@@ -81,7 +81,8 @@ public class FlySpawnerTesting
     public void WaveTimerTimeoutSpawnsAdditionalWave()
     {
         _flySpawner.Set("_firstWaveSize", 2);
-        _flySpawner.Set("_fliesPerWave", 3);
+        _flySpawner.Set("_minFliesPerWave", 3);
+        _flySpawner.Set("_maxFliesPerWave", 3);
         _flySpawner.Set("_maxTotalFlies", 100);
         _flySpawner._Ready();
         Timer waveTimer = _flySpawner.GetChildren().OfType<Timer>().First();
@@ -167,7 +168,8 @@ public class FlySpawnerTesting
         flySpawner.Set("_flyScene", BuildFlyScene());
         flySpawner.Set("_maxTotalFlies", 5);
         flySpawner.Set("_firstWaveSize", 3);
-        flySpawner.Set("_fliesPerWave", 3);
+        flySpawner.Set("_minFliesPerWave", 3);
+        flySpawner.Set("_maxFliesPerWave", 3);
         parent.AddChild(flySpawner);
         using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
         Timer waveTimer = flySpawner.GetChildren().OfType<Timer>().First();
