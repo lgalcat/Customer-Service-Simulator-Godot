@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bbdsugwax2mi0"]
+
+[ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_base.tscn" id="1_vktpn"]
+
+[node name="Stage" unique_id=2002310855 instance=ExtResource("1_vktpn")]
+MinThrowAngle = -180.0
+MaxThrowAngle = -120.0
+
+[node name="Ball" parent="." index="2"]
+position = Vector2(-95, 20)
+
+[node name="Projection" parent="." index="3"]
+position = Vector2(-95, 20)

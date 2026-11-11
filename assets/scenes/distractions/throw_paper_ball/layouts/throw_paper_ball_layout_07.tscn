@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b1t02oicvdc82"]
+
+[ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_base.tscn" id="1_fhtxu"]
+
+[node name="Stage" unique_id=254248542 instance=ExtResource("1_fhtxu")]
+MaxThrowStrength = 700.0
+
+[node name="TrashCan" parent="." index="1"]
+position = Vector2(5, 83)
+rotation = 1.4486233
+_winTime = 1.4

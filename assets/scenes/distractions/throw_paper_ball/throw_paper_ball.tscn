@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cgikecmcwxjr4"]
 
 [ext_resource type="Script" uid="uid://hadrogx85gx4" path="res://assets/scripts/distractions/throw_paper_ball/ThrowPaperBall.cs" id="1_dtqkm"]
-[ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_00.tscn" id="2_layout"]
-[ext_resource type="Resource" path="res://assets/resources/distractions/throw_paper_ball/throw_paper_ball_layouts.tres" id="3_catalog"]
+[ext_resource type="PackedScene" uid="uid://b5db5p0w1oaxw" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_00.tscn" id="2_layout"]
+[ext_resource type="Resource" uid="uid://cr7lawylgchct" path="res://assets/resources/distractions/throw_paper_ball/throw_paper_ball_layouts.tres" id="3_catalog"]
 
 [node name="ThrowPaperBall" type="Node" unique_id=619422973]
 script = ExtResource("1_dtqkm")

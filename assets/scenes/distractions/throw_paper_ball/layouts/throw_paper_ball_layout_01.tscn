@@ -1,14 +1,17 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dlf5ur4wqpc0a"]
 
 [ext_resource type="PackedScene" path="res://assets/scenes/distractions/throw_paper_ball/layouts/throw_paper_ball_layout_base.tscn" id="1_base"]
 
-[node name="Stage" instance=ExtResource("1_base")]
+[node name="Stage" unique_id=47027896 instance=ExtResource("1_base")]
 editor_description = "[05/11/2026] WIP placeholder: a mirrored layout proving the layout swap (ball on the right, static can on the left, throws up and to the left). Rework or replace freely."
 MinThrowAngle = -180.0
 MaxThrowAngle = -120.0
 
-[node name="TrashCan" parent="."]
+[node name="TrashCan" parent="." index="1"]
 position = Vector2(-80, 69)
 
-[node name="Ball" parent="."]
+[node name="Ball" parent="." index="2"]
+position = Vector2(120, 20)
+
+[node name="Projection" parent="." index="3"]
 position = Vector2(120, 20)
