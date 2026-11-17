@@ -110,6 +110,24 @@ public class ThrowPaperBallLayoutContentTesting
         AssertThat(failures).IsEmpty();
     }
 
+    // The roll checks every entry whatever the difficulty, so one pick checks the whole saved catalog: an empty slot,
+    // an entry with no layout or an inverted band. PlayableLayouts() skips such entries and the behaviour suite clears
+    // the catalog, so nothing else would notice. The catalog itself is optional (none means the authored Stage)
+    [TestCase]
+    public void SavedCatalogIsWellFormed()
+    {
+        ThrowPaperBall throwPaperBall = GD.Load<PackedScene>(ScenePath).Instantiate<ThrowPaperBall>();
+        var catalog = throwPaperBall.Get("_layoutCatalog").As<ThrowPaperBallLayoutCatalog>();
+        throwPaperBall.Free();
+        if (catalog == null) { return; }
+
+        string? failure = null;
+        try { catalog.Pick(1); }
+        catch (Exception exception) { failure = exception.Message; }
+
+        AssertThat(failure).IsNull();
+    }
+
     // LayoutOverride is for tests and playtesting only: saved in the shell, the real game would always play that layout
     [TestCase]
     public void SavedShellHasNoLayoutOverride()

@@ -33,7 +33,7 @@ public partial class FlySwatter : Distraction
 
     // Child node references found during "Setup"
     private FlySpawner _flySpawner = null!;
-    // Not core to the game loop - unlike other child lookups, a missing tracker doesn't throw
+    // Not core to the game loop - unlike other child lookups, a missing or wrong-typed tracker doesn't throw
     private Label? _scoreTracker;
 
     // No _Ready() override: Setup() is the hosting factory's job (before tree entry) and this
@@ -64,8 +64,9 @@ public partial class FlySwatter : Distraction
         // A rolled level is winnable by construction; this guards the authored fallback values
         if (_winScore > _flySpawner.MaxTotalFlies) { throw new InvalidOperationException($"FlySwatter: win score {_winScore} is above the spawner's {_flySpawner.MaxTotalFlies} total flies"); }
 
-        // Find ingame score tracker and set initial values (if existing)
-        _scoreTracker = GetNode<Label>("Stage/ScoreTracker");
+        // Find ingame score tracker and set initial values (if existing); GetNodeOrNull<T> gives null without an engine
+        // error for a missing node, and for a wrong-typed one too
+        _scoreTracker = GetNodeOrNull<Label>("Stage/ScoreTracker");
         RefreshScoreTracker();
     }
 

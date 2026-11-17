@@ -1,6 +1,7 @@
 using Godot;
 using GdUnit4;
 using static GdUnit4.Assertions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -189,6 +190,151 @@ public class FlyTesting
         _fly._Process(0.1f);
 
         AssertThat(_fly.Position.DistanceTo(start + deadVelocity * 0.1f)).IsLess(0.001f);
+    }
+
+    // Defensive test to check improper object instancing or scene layout isn't tolerated
+    [TestCase]
+    public void ReadyThrowsWhenFlySpriteMissing()
+    {
+        Fly orphanFly = AutoFree(new Fly())!;
+
+        AssertThrown(() => orphanFly._Ready())
+            .IsInstanceOf<NullReferenceException>()
+            .HasMessage("Fly: missing required child 'FlySprite'");
+    }
+
+    // GetNode<T>() throws its own cast exception for a present-but-wrong-type child, before the guard
+    [TestCase]
+    public void ReadyThrowsWhenFlySpriteHasTheWrongType()
+    {
+        Fly fly = AutoFree(new Fly())!;
+        fly.AddChild(new Sprite2D { Name = "FlySprite" });
+
+        AssertThrown(() => fly._Ready()).IsInstanceOf<InvalidCastException>();
+    }
+
+    // Every frame starts a new straight step (steps shorter than one frame), so the turn between two consecutive
+    // displacements is exactly that step's heading redirect, which must stay within the configured magnitude
+    [TestCase]
+    public void HeadingDeviationStaysWithinConfiguredRange()
+    {
+        const float minDeviation = 30f;
+        const float maxDeviation = 60f;
+        var profile = BuildProfile(minSpeed: 10f, maxSpeed: 10f);
+        profile.MinStepDuration = 0.001f;
+        profile.MaxStepDuration = 0.001f;
+        profile.MinHeadingDeviation = minDeviation;
+        profile.MaxHeadingDeviation = maxDeviation;
+        _fly.Configure(profile, DefaultBounds());
+        _fly._Ready();
+        AutoFree(_fly.GetChildren().OfType<Timer>().First());
+        Vector2 previous = Step(_fly);
+
+        for (int i = 0; i < 40; i++)
+        {
+            Vector2 next = Step(_fly);
+            float turn = Mathf.Abs(Mathf.RadToDeg(previous.AngleTo(next)));
+            AssertThat(turn).IsBetween(minDeviation - 0.01f, maxDeviation + 0.01f);
+            previous = next;
+        }
+    }
+
+    // Arc chance 0: a turn rate is configured but never applied, and with no redirect the heading never changes,
+    // even though every frame starts a new step
+    [TestCase]
+    public void StraightStepsHoldTheirHeading()
+    {
+        var profile = BuildProfile(minSpeed: 10f, maxSpeed: 10f);
+        profile.MinStepDuration = 0.001f;
+        profile.MaxStepDuration = 0.001f;
+        profile.MinTurnRate = 60f;
+        profile.MaxTurnRate = 120f;
+        _fly.Configure(profile, DefaultBounds());
+        _fly._Ready();
+        AutoFree(_fly.GetChildren().OfType<Timer>().First());
+        Vector2 first = Step(_fly);
+
+        for (int i = 0; i < 20; i++)
+        {
+            AssertThat(Mathf.Abs(first.AngleTo(Step(_fly)))).IsLess(0.0001f);
+        }
+    }
+
+    // Arc chance 1, no redirect, a new step every frame: each frame turns by that step's rate times the frame time,
+    // so the implied rate must stay within the configured range
+    [TestCase]
+    public void ArcStepsTurnWithinTheConfiguredRate()
+    {
+        const float minTurnRate = 60f;
+        const float maxTurnRate = 120f;
+        const float delta = 0.05f;
+        var profile = BuildProfile(minSpeed: 10f, maxSpeed: 10f);
+        profile.MinStepDuration = 0.001f;
+        profile.MaxStepDuration = 0.001f;
+        profile.ArcChance = 1f;
+        profile.MinTurnRate = minTurnRate;
+        profile.MaxTurnRate = maxTurnRate;
+        _fly.Configure(profile, DefaultBounds());
+        _fly._Ready();
+        AutoFree(_fly.GetChildren().OfType<Timer>().First());
+        Vector2 previous = Step(_fly, delta);
+
+        for (int i = 0; i < 40; i++)
+        {
+            Vector2 next = Step(_fly, delta);
+            float impliedRate = Mathf.Abs(Mathf.RadToDeg(previous.AngleTo(next))) / delta;
+            AssertThat(impliedRate).IsBetween(minTurnRate - 0.5f, maxTurnRate + 0.5f);
+            previous = next;
+        }
+    }
+
+    // A fixed 45 degree redirect gives a diagonal heading whatever its sign. Bounds narrow in X only: the first frame
+    // overshoots and is clamped, then the fly must head back the other way in X instead of sliding along the wall
+    [TestCase]
+    public void HeadingReflectsOffAVerticalWall()
+    {
+        ConfigureDiagonalFly(new Rect2(-5, -1000, 10, 2000));
+
+        Vector2 intoWall = Step(_fly, 0.1f);
+        Vector2 afterWall = Step(_fly, 0.1f);
+
+        AssertThat(intoWall.X).IsNotEqual(0f);
+        AssertThat(Mathf.Sign(afterWall.X)).IsEqual(-Mathf.Sign(intoWall.X));
+    }
+
+    // Same as above with bounds narrow in Y only
+    [TestCase]
+    public void HeadingReflectsOffAHorizontalWall()
+    {
+        ConfigureDiagonalFly(new Rect2(-1000, -5, 2000, 10));
+
+        Vector2 intoWall = Step(_fly, 0.1f);
+        Vector2 afterWall = Step(_fly, 0.1f);
+
+        AssertThat(intoWall.Y).IsNotEqual(0f);
+        AssertThat(Mathf.Sign(afterWall.Y)).IsEqual(-Mathf.Sign(intoWall.Y));
+    }
+
+    // Shared fixture of the wall cases: fast (one frame crosses half the bounds), straight, one long step with a
+    // fixed 45 degree redirect (rolled once in _Ready())
+    private void ConfigureDiagonalFly(Rect2 bounds)
+    {
+        var profile = BuildProfile(minSpeed: 100f, maxSpeed: 100f);
+        profile.MinStepDuration = 10f;
+        profile.MaxStepDuration = 10f;
+        profile.MinHeadingDeviation = 45f;
+        profile.MaxHeadingDeviation = 45f;
+        _fly.Configure(profile, bounds);
+        _fly._Ready();
+        AutoFree(_fly.GetChildren().OfType<Timer>().First());
+    }
+
+    // Runs one frame and returns the fly's displacement over it
+    private static Vector2 Step(Fly fly, float delta = 0.05f)
+    {
+        Vector2 before = fly.Position;
+        fly._Process(delta);
+        return fly.Position - before;
     }
 
     // Helper building a minimal Fly (testing independent from any scene): only the child nodes

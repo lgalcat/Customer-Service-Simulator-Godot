@@ -2,11 +2,15 @@ using Godot;
 using GdUnit4;
 using static GdUnit4.Assertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // Dedicated component suite for FlySpawner, independent of the Distraction hierarchy.
-// Covers FlySpawner's own wave pacing, spawn placement, and death-forwarding wiring
+// Covers FlySpawner's own wave pacing, spawn placement, early refill, and death-forwarding wiring
 // For per-instance wiring (FlySwatter integration) see FlySwatterBehaviourTesting
+// Not observable, so not tested: the refill's "_refillThreshold > 0" check (an alive count is never below 0, so a
+// zero threshold never refills either way). At the cap, the refill's outer "!_spawningStopped" is backed up by the
+// inner one: NoRefillAfterStopSpawning is the case that catches the outer check
 [TestSuite]
 [RequireGodotRuntime]
 public class FlySpawnerTesting
@@ -38,7 +42,9 @@ public class FlySpawnerTesting
     {
         FlySpawner orphanSpawner = AutoFree(new FlySpawner())!;
 
-        AssertThrown(() => orphanSpawner._Ready()).IsInstanceOf<NullReferenceException>();
+        AssertThrown(() => orphanSpawner._Ready())
+            .IsInstanceOf<NullReferenceException>()
+            .HasMessage("FlySpawner: _flyScene is not assigned (expected fly.tscn in the Inspector)");
     }
 
     // This test only checks Timer instancing and non default WaitTime values
@@ -180,6 +186,153 @@ public class FlySpawnerTesting
         AssertThat(waveTimer.IsStopped()).IsTrue();
     }
 
+    // ConfigureWaves() before _Ready(), as its contract requires: the round's first wave, interval and total
+    [TestCase]
+    public void ConfigureWavesSetsTheRoundsPacing()
+    {
+        _flySpawner.ConfigureWaves(Plan(total: 9, firstWave: 4, minWave: 2, maxWave: 2, refill: 0, interval: 3f));
+
+        _flySpawner._Ready();
+        AutoFreeChildren(_flySpawner);
+        Timer waveTimer = _flySpawner.GetChildren().OfType<Timer>().First();
+
+        AssertThat(_flySpawner.GetChildren().OfType<Fly>().Count()).IsEqual(4);
+        AssertThat(waveTimer.WaitTime).IsEqual(3d);
+        AssertThat(_flySpawner.MaxTotalFlies).IsEqual(9);
+    }
+
+    // Each periodic wave rolls its own size within the range: every end turns up across the waves, which a size
+    // rolled once per round wouldn't do (missing one of 3 values over 60 waves: ~1e-10)
+    [TestCase]
+    public void PeriodicWaveSizesStayWithinTheRangeAndVary()
+    {
+        _flySpawner.ConfigureWaves(Plan(total: 1000, firstWave: 1, minWave: 1, maxWave: 3, refill: 0));
+        _flySpawner._Ready();
+        Timer waveTimer = _flySpawner.GetChildren().OfType<Timer>().First();
+        var sizes = new HashSet<int>();
+
+        for (int i = 0; i < 60; i++)
+        {
+            int before = _flySpawner.GetChildren().OfType<Fly>().Count();
+            waveTimer.EmitSignal(Timer.SignalName.Timeout);
+            int size = _flySpawner.GetChildren().OfType<Fly>().Count() - before;
+            AssertThat(size).IsBetween(1, 3);
+            sizes.Add(size);
+        }
+        AutoFreeChildren(_flySpawner);
+
+        AssertThat(sizes).ContainsExactlyInAnyOrder(1, 2, 3);
+    }
+
+    // A first wave that already uses up the total leaves no wave to wait for
+    // This test case requires a working SceneTree (and so does every refill case below)
+    [TestCase]
+    public void FirstWaveReachingTheCapLeavesTheTimerStopped()
+    {
+        Node2D parent = BuildSpawnerInParent(Plan(total: 3, firstWave: 5, minWave: 1, maxWave: 1, refill: 0), out FlySpawner flySpawner);
+        using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
+
+        AssertThat(WaveTimer(flySpawner).IsStopped()).IsTrue();
+    }
+
+    // Threshold 2: the first kill leaves 2 alive (not below it), the second leaves 1 and brings a wave at once
+    [TestCase]
+    public void RefillComesOnlyOnceAliveFliesDropBelowTheThreshold()
+    {
+        Node2D parent = BuildSpawnerInParent(Plan(total: 100, firstWave: 3, minWave: 2, maxWave: 2, refill: 2), out FlySpawner flySpawner);
+        using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
+        List<Fly> firstWave = Flies(flySpawner);
+
+        firstWave[0].Swat();
+        AssertThat(Flies(flySpawner).Count).IsEqual(3);
+
+        firstWave[1].Swat();
+        AssertThat(Flies(flySpawner).Count).IsEqual(5);
+    }
+
+    // The timer is stopped by hand first (not through StopSpawning), so only the refill's restart can start it again
+    // This test pins current behaviour as of 17-11-2026, changes in design should expect this to fail.
+    [TestCase]
+    public void RefillRestartsTheWaveTimer()
+    {
+        Node2D parent = BuildSpawnerInParent(Plan(total: 100, firstWave: 2, minWave: 1, maxWave: 1, refill: 2), out FlySpawner flySpawner);
+        using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
+        Timer waveTimer = WaveTimer(flySpawner);
+        waveTimer.Stop();
+
+        Flies(flySpawner)[0].Swat();
+
+        AssertThat(Flies(flySpawner).Count).IsEqual(3);
+        AssertThat(waveTimer.IsStopped()).IsFalse();
+    }
+
+    [TestCase]
+    public void NoRefillAfterStopSpawning()
+    {
+        Node2D parent = BuildSpawnerInParent(Plan(total: 100, firstWave: 2, minWave: 1, maxWave: 1, refill: 2), out FlySpawner flySpawner);
+        using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
+        flySpawner.StopSpawning();
+
+        Flies(flySpawner)[0].Swat();
+
+        AssertThat(Flies(flySpawner).Count).IsEqual(2);
+        AssertThat(WaveTimer(flySpawner).IsStopped()).IsTrue();
+    }
+
+    [TestCase]
+    public void NoRefillOnceTheCapIsReached()
+    {
+        Node2D parent = BuildSpawnerInParent(Plan(total: 2, firstWave: 2, minWave: 1, maxWave: 1, refill: 2), out FlySpawner flySpawner);
+        using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
+
+        Flies(flySpawner)[0].Swat();
+
+        AssertThat(Flies(flySpawner).Count).IsEqual(2);
+        AssertThat(WaveTimer(flySpawner).IsStopped()).IsTrue();
+    }
+
+    // The refill wave itself uses up the total, so the interval must not restart after it
+    [TestCase]
+    public void RefillThatReachesTheCapLeavesTheTimerStopped()
+    {
+        Node2D parent = BuildSpawnerInParent(Plan(total: 3, firstWave: 2, minWave: 1, maxWave: 1, refill: 2), out FlySpawner flySpawner);
+        using ISceneRunner runner = ISceneRunner.Load(parent, true, true);
+        AssertThat(WaveTimer(flySpawner).IsStopped()).IsFalse();
+
+        Flies(flySpawner)[0].Swat();
+
+        AssertThat(Flies(flySpawner).Count).IsEqual(3);
+        AssertThat(WaveTimer(flySpawner).IsStopped()).IsTrue();
+    }
+
+    private static FlyWavePlan Plan(int total, int firstWave, int minWave, int maxWave, int refill, float interval = 4f)
+        => new()
+        {
+            TotalFlies = total,
+            FirstWaveSize = firstWave,
+            MinFliesPerWave = minWave,
+            MaxFliesPerWave = maxWave,
+            WaveInterval = interval,
+            RefillThreshold = refill
+        };
+
+    // Spawner configured with "plan" under a parent root, for tests that need a live SceneTree: its _Ready() runs
+    // when the runner loads the parent. Real Swat()s then go through the spawner's own Died binding
+    private static Node2D BuildSpawnerInParent(FlyWavePlan plan, out FlySpawner flySpawner)
+    {
+        var parent = new Node2D();
+        flySpawner = new FlySpawner();
+        flySpawner.Set("_flyScene", BuildFlyScene());
+        flySpawner.ConfigureWaves(plan);
+        parent.AddChild(flySpawner);
+        return parent;
+    }
+
+    // Every fly spawned so far; a swatted fly stays a child until its death timer runs out, and no frames run here
+    private static List<Fly> Flies(FlySpawner flySpawner) => flySpawner.GetChildren().OfType<Fly>().ToList();
+
+    private static Timer WaveTimer(FlySpawner flySpawner) => flySpawner.GetChildren().OfType<Timer>().First();
+
     // Helper building a minimal Fly (testing independent from any scene): only the child nodes
     // Fly.cs's own script logic actually touches. Mirrors FlyTesting/SwatterTesting's BuildFly()
     private static Fly BuildFly()
@@ -198,9 +351,12 @@ public class FlySpawnerTesting
 
     // Helper packing a minimal hand-built Fly into a fresh, in-memory PackedScene, so FlySpawner's
     // required _flyScene dependency can be satisfied without loading the real fly.tscn
+    // Pack() only keeps the nodes the root owns, so the children are given an Owner first; without it the
+    // instances would lack FlySprite and fail their _Ready() once they enter a live tree
     private static PackedScene BuildFlyScene()
     {
         Fly sourceFly = BuildFly();
+        foreach (Node child in sourceFly.GetChildren()) { child.Owner = sourceFly; }
         var packedScene = new PackedScene();
         packedScene.Pack(sourceFly);
         // Pack() copies the node's state into the resource, it doesn't take ownership

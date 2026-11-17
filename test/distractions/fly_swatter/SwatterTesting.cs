@@ -1,6 +1,7 @@
 using Godot;
 using GdUnit4;
 using static GdUnit4.Assertions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -196,25 +197,56 @@ public class SwatterTesting
         AssertThat(smackFx.Visible).IsTrue();
     }
 
+    // Defensive test to check improper object instancing or scene layout isn't tolerated
+    [TestCase("HitScan")]
+    [TestCase("SmackFx")]
+    [TestCase("SwatterSprite")]
+    public void ReadyThrowsWhenChildMissing(string child)
+    {
+        Swatter swatter = AutoFree(BuildSwatter(omit: child))!;
+
+        AssertThrown(() => swatter._Ready())
+            .IsInstanceOf<NullReferenceException>()
+            .HasMessage($"Swatter: missing required child '{child}'");
+    }
+
+    // GetNode<T>() throws its own cast exception for a present-but-wrong-type child, before the guard
+    [TestCase("HitScan")]
+    [TestCase("SmackFx")]
+    [TestCase("SwatterSprite")]
+    public void ReadyThrowsWhenChildHasTheWrongType(string child)
+    {
+        Swatter swatter = AutoFree(BuildSwatter(omit: child))!;
+        swatter.AddChild(new Node { Name = child });
+
+        AssertThrown(() => swatter._Ready()).IsInstanceOf<InvalidCastException>();
+    }
+
     // Helper building a minimal Swatter (testing independent from any scene): only the child
-    // nodes Swatter.cs's own script logic actually touches
-    private static Swatter BuildSwatter()
+    // nodes Swatter.cs's own script logic actually touches, leaving out "omit" if given
+    private static Swatter BuildSwatter(string? omit = null)
     {
         var swatter = new Swatter();
 
-        swatter.AddChild(new ShapeCast2D
+        if (omit != "HitScan")
         {
-            Name = "HitScan",
-            Shape = new RectangleShape2D { Size = new Vector2(20, 20) },
-            CollideWithAreas = true,
-            CollideWithBodies = false
-        });
+            swatter.AddChild(new ShapeCast2D
+            {
+                Name = "HitScan",
+                Shape = new RectangleShape2D { Size = new Vector2(20, 20) },
+                CollideWithAreas = true,
+                CollideWithBodies = false
+            });
+        }
 
-        var smackFrames = new SpriteFrames();
-        smackFrames.AddAnimation("smack");
-        swatter.AddChild(new AnimatedSprite2D { Name = "SmackFx", SpriteFrames = smackFrames, Visible = true });
+        if (omit != "SmackFx")
+        {
+            var smackFrames = new SpriteFrames();
+            smackFrames.AddAnimation("smack");
+            swatter.AddChild(new AnimatedSprite2D { Name = "SmackFx", SpriteFrames = smackFrames, Visible = true });
+        }
 
-        swatter.AddChild(new Sprite2D { Name = "SwatterSprite" });
+        if (omit != "SwatterSprite") { swatter.AddChild(new Sprite2D { Name = "SwatterSprite" }); }
 
         return swatter;
     }

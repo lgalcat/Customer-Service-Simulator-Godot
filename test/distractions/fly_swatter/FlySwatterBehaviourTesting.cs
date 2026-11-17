@@ -5,6 +5,8 @@ using System.Linq;
 
 // TestSuite for FlySwatter-specific behaviour
 // (see DistractionTesting/FlySwatterDistractionTesting for the contract-level checks)
+// The real scene runs on its authored fallback values (catalog and override cleared), so these cases don't roll a
+// WIP level per run; level choice is FlySwatterSetupTesting's, every playable level FlySwatterLevelContentTesting's
 [TestSuite]
 [RequireGodotRuntime]
 public class FlySwatterBehaviourTesting : DistractionTesting
@@ -15,7 +17,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
     protected override Distraction CreateDistraction()
     {
         // Full scene instancing (as opposed to barebones object instancing)
-        return GD.Load<PackedScene>(ScenePath).Instantiate<FlySwatter>();
+        return InstantiateOnFallback();
     }
 
     // Flags this run as input/timing-sensitive (see InputSensitiveNotice) - fires once per test
@@ -101,7 +103,7 @@ public class FlySwatterBehaviourTesting : DistractionTesting
     [TestCase]
     public void VictoryStopsTheSpawnerWaveTimer()
     {
-        var flySwatter = GD.Load<PackedScene>(ScenePath).Instantiate<FlySwatter>();
+        FlySwatter flySwatter = InstantiateOnFallback();
         flySwatter.Setup(1);
         using ISceneRunner runner = ISceneRunner.Load(flySwatter, true, true);
         FlySpawner flySpawner = flySwatter.GetNode<FlySpawner>("Stage/FlySpawner");
@@ -113,6 +115,40 @@ public class FlySwatterBehaviourTesting : DistractionTesting
             flySpawner.FlyDied?.Invoke();
         }
 
+        AssertThat(waveTimer.IsStopped()).IsTrue();
+    }
+
+    // The winning kill's Victory() stops the spawner before the spawner's own refill check runs, so a stage left
+    // low by that kill gets no last wave. In-memory level: win 2, refill below 3 alive, first wave 3, waves of 1
+    // This test case requires a working SceneTree
+    [TestCase]
+    public void WinningKillDoesNotBringARefill()
+    {
+        FlySwatter flySwatter = GD.Load<PackedScene>(ScenePath).Instantiate<FlySwatter>();
+        flySwatter.LevelOverride = new FlySwatterLevel
+        {
+            MinWinScore = 2, MaxWinScore = 2,
+            MinSpareFlies = 10, MaxSpareFlies = 10,
+            MinFirstWaveSize = 3, MaxFirstWaveSize = 3,
+            MinFliesPerWave = 1, MaxFliesPerWave = 1,
+            MinWaveInterval = 4, MaxWaveInterval = 4,
+            RefillThreshold = 3
+        };
+        flySwatter.Setup(1);
+        using ISceneRunner runner = ISceneRunner.Load(flySwatter, true, true);
+        FlySpawner flySpawner = flySwatter.GetNode<FlySpawner>("Stage/FlySpawner");
+        Timer waveTimer = flySpawner.GetChildren().OfType<Timer>().First();
+        var firstWave = flySpawner.GetChildren().OfType<Fly>().ToList();
+        bool victoryCalled = false;
+        flySwatter.OnVictory = () => { victoryCalled = true; };
+        // A non-winning kill leaves 2 alive and refills, so refills are live in this round
+        firstWave[0].Swat();
+        AssertThat(flySpawner.GetChildren().OfType<Fly>().Count()).IsEqual(4);
+
+        firstWave[1].Swat();
+
+        AssertThat(victoryCalled).IsTrue();
+        AssertThat(flySpawner.GetChildren().OfType<Fly>().Count()).IsEqual(4);
         AssertThat(waveTimer.IsStopped()).IsTrue();
     }
 
@@ -184,6 +220,15 @@ public class FlySwatterBehaviourTesting : DistractionTesting
         float flyHitboxDiameter = FlyHitboxDiameter(fly);
         AssertThat(hitScanShape.Size.X).IsGreater(flyHitboxDiameter);
         AssertThat(hitScanShape.Size.Y).IsGreater(flyHitboxDiameter);
+    }
+
+    // The real scene with its level catalog and override cleared, so Setup() keeps the authored fallback values
+    private static FlySwatter InstantiateOnFallback()
+    {
+        FlySwatter flySwatter = GD.Load<PackedScene>(ScenePath).Instantiate<FlySwatter>();
+        flySwatter.Set("_levelCatalog", new Variant());
+        flySwatter.LevelOverride = null;
+        return flySwatter;
     }
 
     // Helper to find a Fly's hittable width (assumes shape is a CircleShape2D)
