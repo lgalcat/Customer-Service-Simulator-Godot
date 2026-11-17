@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://ckwuh5ioc50xq"]
 
 [ext_resource type="Script" uid="uid://b1wxiytbp22hq" path="res://assets/scripts/distractions/platformer/Platformer.cs" id="1_platformer"]
-[ext_resource type="PackedScene" uid="uid://cuaf3v1hvfvdt" path="res://assets/scenes/distractions/platformer/platformer_level0.tscn" id="2_abgnl"]
+[ext_resource type="PackedScene" uid="uid://drciveo1tc6ml" path="res://assets/scenes/distractions/platformer/layouts/platformer_layout_00.tscn" id="2_abgnl"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/platformer/platformer_layouts.tres" id="3_catalog"]
 
 [node name="Platformer" type="Node" unique_id=1165743226]
 script = ExtResource("1_platformer")
+_layoutCatalog = ExtResource("3_catalog")
 
 [node name="Stage" parent="." unique_id=1795318707 instance=ExtResource("2_abgnl")]

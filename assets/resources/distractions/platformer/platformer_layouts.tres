@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PlatformerLayoutCatalog" format=3 uid="uid://biqodweh578qs"]
+
+[ext_resource type="Script" uid="uid://bure43hgcmlp" path="res://assets/scripts/distractions/platformer/PlatformerLayoutCatalog.cs" id="1_catalog"]
+[ext_resource type="Script" uid="uid://jwo4u2gi6jio" path="res://assets/scripts/distractions/platformer/PlatformerLayoutEntry.cs" id="2_entry"]
+[ext_resource type="PackedScene" uid="uid://drciveo1tc6ml" path="res://assets/scenes/distractions/platformer/layouts/platformer_layout_00.tscn" id="3_layout_00"]
+
+[sub_resource type="Resource" id="Resource_layout_00"]
+script = ExtResource("2_entry")
+Layout = ExtResource("3_layout_00")
+
+[resource]
+script = ExtResource("1_catalog")
+Entries = Array[ExtResource("2_entry")]([SubResource("Resource_layout_00")])

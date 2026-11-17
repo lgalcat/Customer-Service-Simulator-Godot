@@ -9,10 +9,14 @@ public class PlatformerDistractionTesting : DistractionTesting
 {
     protected override Distraction CreateDistraction()
     {
-        // Barebones stand-in tree matching only the node names Setup() looks up (Stage/Goal)
+        // Barebones stand-in tree matching only the nodes Setup() and the layout's Validate() look up
+        // (Stage/Player/MainCamera, Stage/Goal); the camera's default limits enclose both at the origin
         var platformer = new Platformer();
-        var stage = new Node2D { Name = "Stage" };
+        var stage = new PlatformerLayout { Name = "Stage" };
         platformer.AddChild(stage);
+        var player = new Node2D { Name = "Player" };
+        stage.AddChild(player);
+        player.AddChild(new Camera2D { Name = "MainCamera" });
         stage.AddChild(new Goal { Name = "Goal" });
         return platformer;
     }

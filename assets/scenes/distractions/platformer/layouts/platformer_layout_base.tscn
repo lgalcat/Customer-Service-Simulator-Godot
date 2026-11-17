@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://bbk5ht2aq6j3n"]
+
+[ext_resource type="Script" uid="uid://ccvlqchyw3hjg" path="res://assets/scripts/distractions/platformer/PlatformerLayout.cs" id="1_layout"]
+[ext_resource type="Texture2D" uid="uid://cnl0i2p2l51nd" path="res://assets/textures/distractions/platformer/platformer_background_L0_wip.png" id="2_background_l0"]
+[ext_resource type="Texture2D" uid="uid://c72p3chor6tgx" path="res://assets/textures/distractions/platformer/platformer_background_L1_wip.png" id="3_background_l1"]
+[ext_resource type="Texture2D" uid="uid://duv22jwp6flmg" path="res://assets/textures/distractions/platformer/platformer_background_L3.png" id="4_background_l3"]
+[ext_resource type="Texture2D" uid="uid://bsntbms7tf3oy" path="res://assets/textures/distractions/platformer/platformer_background_L6_wip.png" id="5_background_l6"]
+[ext_resource type="TileSet" uid="uid://sq4jj5sco1lf" path="res://assets/resources/distractions/platformer/forest_tiles_wip.tres" id="6_tileset"]
+[ext_resource type="Script" uid="uid://c8esthvcm5587" path="res://assets/scripts/distractions/platformer/Player.cs" id="7_player"]
+[ext_resource type="SpriteFrames" uid="uid://cl18gt3df3wrj" path="res://assets/animations/distractions/platformer/jumpman_frames_wip.tres" id="8_player_frames"]
+[ext_resource type="Script" uid="uid://cqjsu41e0vtlg" path="res://assets/scripts/distractions/platformer/Goal.cs" id="9_goal"]
+[ext_resource type="SpriteFrames" uid="uid://dkc15swfba3er" path="res://assets/animations/distractions/platformer/star_frames_wip.tres" id="10_goal_frames"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(10, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_goal"]
+size = Vector2(12, 12)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_goal"]
+lifetime_randomness = 0.3
+particle_flag_disable_z = true
+angle_min = 1.0728835e-05
+angle_max = 1.0728835e-05
+spread = 180.0
+flatness = 1.0
+initial_velocity_min = 30.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -2.2351742e-06
+linear_accel_max = -2.2351742e-06
+damping_min = 10.0
+damping_max = 30.000002
+
+[node name="Stage" type="Node2D" unique_id=947272391]
+editor_description = "Base of every Platformer layout (layouts are inherited scenes of this one) and the root of the minigame's level.
+Layout authoring: paint Ground, place Player (the spawn) and Goal, and set Player/MainCamera's limits to the level's bounds.
+- The camera limits must enclose the spawn and the Goal (Setup throws otherwise).
+- Seal the playspace: no gap in Ground may let the player leave the camera limits.
+- Keep the Goal within one held jump of the platform beneath it."
+script = ExtResource("1_layout")
+
+[node name="ParallaxLayers" type="Node2D" parent="." unique_id=1101437489]
+editor_description = "All different parallax layers of the stage, scroll and offset must be calibrated for main scene values. Disable if playtesting within level scene"
+
+[node name="Layer4" type="Parallax2D" parent="ParallaxLayers" unique_id=2082428174]
+scroll_scale = Vector2(0, 0)
+scroll_offset = Vector2(0, 100)
+repeat_size = Vector2(512, 288)
+
+[node name="ParallaxSprite" type="Sprite2D" parent="ParallaxLayers/Layer4" unique_id=602703672]
+texture = ExtResource("2_background_l0")
+
+[node name="Layer3" type="Parallax2D" parent="ParallaxLayers" unique_id=1451485329]
+scroll_scale = Vector2(0.2, 0.2)
+scroll_offset = Vector2(0, 50)
+repeat_size = Vector2(512, 0)
+
+[node name="ParallaxSprite" type="Sprite2D" parent="ParallaxLayers/Layer3" unique_id=2025744511]
+texture = ExtResource("3_background_l1")
+
+[node name="Layer2" type="Parallax2D" parent="ParallaxLayers" unique_id=854398694]
+scroll_scale = Vector2(0.3, 0.2)
+scroll_offset = Vector2(0, 50)
+repeat_size = Vector2(512, 0)
+
+[node name="ParallaxSprite" type="Sprite2D" parent="ParallaxLayers/Layer2" unique_id=74526840]
+texture = ExtResource("4_background_l3")
+
+[node name="Layer1" type="Parallax2D" parent="ParallaxLayers" unique_id=424098454]
+scroll_scale = Vector2(0.4, 0.25)
+scroll_offset = Vector2(0, 50)
+repeat_size = Vector2(512, 0)
+
+[node name="ParallaxSprite" type="Sprite2D" parent="ParallaxLayers/Layer1" unique_id=1551379004]
+texture = ExtResource("5_background_l6")
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=1900128319]
+tile_set = ExtResource("6_tileset")
+navigation_enabled = false
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1379582570]
+position = Vector2(0, -17)
+script = ExtResource("7_player")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=1548013268]
+sprite_frames = ExtResource("8_player_frames")
+animation = &"falling"
+
+[node name="PlayerCollision" type="CollisionShape2D" parent="Player" unique_id=1510393704]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="MainCamera" type="Camera2D" parent="Player" unique_id=2019663192]
+position_smoothing_enabled = true
+editor_draw_limits = true
+
+[node name="Goal" type="Area2D" parent="." unique_id=207218050]
+position = Vector2(30, -17)
+script = ExtResource("9_goal")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Goal" unique_id=146249945]
+shape = SubResource("RectangleShape2D_goal")
+
+[node name="ParticleEmitter" type="GPUParticles2D" parent="Goal" unique_id=82882631]
+amount = 18
+visibility_rect = Rect2(-24, -24, 48, 48)
+process_material = SubResource("ParticleProcessMaterial_goal")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Goal" unique_id=1148532466]
+sprite_frames = ExtResource("10_goal_frames")
+autoplay = "default"
