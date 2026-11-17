@@ -19,10 +19,17 @@ public partial class Solitaire : Distraction
     /// </summary>
     public override int ViewportY { get => _viewportY; }
 
-    // "Switch" to alternate randomized deal generation and serialized deal loading
-    // [23/08/2026] As of today only randomized deal generation is implemented, so by default no cards are dealt
+    // Whether Setup() deals a randomized traditional deal when no BoardOverride is set
+    // [18/11/2026] Authored boards (BoardOverride) are an interim exploration source; the final deal sourcing is
+    // still undecided, so without either no cards are dealt
     [Export]
     private bool _randomizeDeal = false;
+
+    /// <summary>
+    /// Forces this authored board instead of the randomized deal; must be set before <see cref="Setup"/>
+    /// <para>Meant for tests and playtesting: leave it empty in the saved scene, or the real game always plays it</para>
+    /// </summary>
+    [Export] public SolitaireBoard? BoardOverride { get; set; }
 
     /// <summary>
     /// Scene instanced once per card during dealing.
@@ -75,7 +82,6 @@ public partial class Solitaire : Distraction
             string path = $"Stage/FoundationPiles/Foundation{(Suit)i}";
             FoundationPile foundation = GetNode<FoundationPile>(path);
             if (foundation == null) { throw new NullReferenceException($"Solitaire: missing required child '{path}'"); }
-            foundation.Filled += OnFoundationFilled;
             _foundations.Add(foundation);
         }
 
@@ -85,8 +91,24 @@ public partial class Solitaire : Distraction
         if (waste == null) { throw new NullReferenceException("Solitaire: missing required child 'Stage/WastePile'"); }
         stock.Waste = waste;
 
-        // [22/08/2026] TODO: alternate data-driven deal source goes here once implemented, in place of/alongside DealBuilder
-        if (_randomizeDeal) { DealBuilder.Deal(_cardScene, dragLayer, _tableaus, stock); }
+        // [18/11/2026] TODO: BoardOverride is an interim exploration source; replace or extend once the final
+        // deal sourcing (e.g. "short" boards) is decided
+        if (BoardOverride != null)
+        {
+            GD.Print($"Solitaire: BoardOverride forces '{BoardOverride.ResourcePath}'");
+            DealBuilder.DealBoard(BoardOverride.Parse(), _cardScene, dragLayer, _tableaus, _foundations, stock, waste);
+
+            // A pre-won board would otherwise sit there unwinnable (Filled only fires on a King being added)
+            int filledCount = CountFilledFoundations();
+            if (filledCount >= _foundationsRequiredToWin)
+            {
+                throw new InvalidOperationException($"Solitaire: board '{BoardOverride.ResourcePath}' is already won ({filledCount} foundations hold a King, {_foundationsRequiredToWin} required)");
+            }
+        }
+        else if (_randomizeDeal) { DealBuilder.Deal(_cardScene, dragLayer, _tableaus, stock); }
+
+        // Subscribed after dealing, so Kings a board places on foundations can't call Victory() from inside Setup()
+        foreach (FoundationPile foundation in _foundations) { foundation.Filled += OnFoundationFilled; }
     }
 
     /// <summary>
@@ -106,11 +128,17 @@ public partial class Solitaire : Distraction
     // Re-checks live foundation state on every fill rather than accumulating a counter, since foundation drag-off makes fills reversible
     private void OnFoundationFilled()
     {
+        if (CountFilledFoundations() >= _foundationsRequiredToWin) { Victory(); }
+    }
+
+    // How many foundations currently hold a King
+    private int CountFilledFoundations()
+    {
         int filledCount = 0;
         foreach (FoundationPile foundation in _foundations)
         {
             if (foundation.TopCard != null && foundation.TopCard.Rank == 13) { filledCount++; }
         }
-        if (filledCount >= _foundationsRequiredToWin) { Victory(); }
+        return filledCount;
     }
 }

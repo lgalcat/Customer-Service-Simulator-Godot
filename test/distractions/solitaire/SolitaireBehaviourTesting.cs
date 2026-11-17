@@ -64,6 +64,17 @@ public class SolitaireBehaviourTesting : DistractionTesting
         return card;
     }
 
+    // BoardOverride is for tests and playtesting only: saved in the shell, the real game would always play that board
+    [TestCase]
+    public void SavedShellHasNoBoardOverride()
+    {
+        Solitaire solitaire = AutoFree(GD.Load<PackedScene>(ScenePath).Instantiate<Solitaire>())!;
+
+        AssertThat(solitaire.BoardOverride)
+            .OverrideFailureMessage($"solitaire.tscn is saved with BoardOverride = '{solitaire.BoardOverride?.ResourcePath}'; clear it")
+            .IsNull();
+    }
+
     // Rule: a full standard 52-card deck is in play from the start, none of it sitting on foundations/waste.
     // Exercises DealBuilder via the real scene's _randomizeDeal = true wiring - once the alternate
     // data-driven deal source exists (and may become the scene's default), this test (and
