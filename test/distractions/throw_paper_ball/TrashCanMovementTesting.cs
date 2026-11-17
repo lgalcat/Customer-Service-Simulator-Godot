@@ -132,17 +132,56 @@ public class TrashCanMovementTesting
         AssertThat(root.GetNode<Path2D>("Path").Curve.PointCount).IsEqual(3);
     }
 
-    // Wrapper root holding a Path2D (at PathOrigin) and a TrashCan placed away from the path, with the only
-    // child its _Ready() requires
-    private static Node2D BuildRig(Vector2[] points, float speed, bool wirePath = true)
+    // The path's points are followed through its whole transform, not just its position (layouts scale their paths)
+    // Checks the snap and that one tick stays on the transformed first side, without assuming how far a tick goes
+    // under scale. The first point isn't the curve's origin, so a translation-only conversion can't land on it
+    [TestCase]
+    public void FollowsPathThroughItsTransform()
+    {
+        Vector2[] offsetSquare = { new(20, 0), new(120, 0), new(120, 100), new(20, 100), new(20, 0) };
+        const float rotation = Mathf.Pi / 2;
+        var scale = new Vector2(0.5f, 2);
+        var pathTransform = new Transform2D(rotation, scale, 0, PathOrigin);
+        Node2D root = BuildRig(offsetSquare, 40, pathRotation: rotation, pathScale: scale);
+        using ISceneRunner runner = ISceneRunner.Load(root, true, true);
+        TrashCan trashCan = GetTrashCan(root);
+
+        AssertNear(trashCan.GlobalPosition, pathTransform * offsetSquare[0]);
+
+        trashCan._PhysicsProcess(0.5);
+
+        Vector2 local = pathTransform.AffineInverse() * trashCan.GlobalPosition;
+        AssertThat(Mathf.Abs(local.Y)).IsLess(Tolerance);
+        AssertThat(local.X).IsBetween(20.5f, 119.5f);
+    }
+
+    // The can stays upright as it moves: it never takes the path's direction, so its authored rotation is kept
+    [TestCase]
+    public void MovementKeepsAuthoredRotation()
+    {
+        const float canRotation = 0.5f;
+        Node2D root = BuildRig(ClosedSquare, 40, canRotation: canRotation);
+        using ISceneRunner runner = ISceneRunner.Load(root, true, true);
+        TrashCan trashCan = GetTrashCan(root);
+
+        // 160 px: past the first corner, where a can taking the path's direction would have turned
+        for (int i = 0; i < 4; i++) { trashCan._PhysicsProcess(1.0); }
+
+        AssertThat(Mathf.Abs(trashCan.GlobalRotation - canRotation)).IsLess(0.001f);
+    }
+
+    // Wrapper root holding a Path2D (at PathOrigin, optionally rotated/scaled) and a TrashCan placed away from the
+    // path, with the only child its _Ready() requires
+    private static Node2D BuildRig(Vector2[] points, float speed, bool wirePath = true,
+        float pathRotation = 0, Vector2? pathScale = null, float canRotation = 0)
     {
         var root = new Node2D();
         var curve = new Curve2D();
         foreach (Vector2 point in points) { curve.AddPoint(point); }
-        var path = new Path2D { Name = "Path", Position = PathOrigin, Curve = curve };
+        var path = new Path2D { Name = "Path", Position = PathOrigin, Rotation = pathRotation, Scale = pathScale ?? Vector2.One, Curve = curve };
         root.AddChild(path);
 
-        var trashCan = new TrashCan { Name = "TrashCan", Position = new Vector2(-50, -50) };
+        var trashCan = new TrashCan { Name = "TrashCan", Position = new Vector2(-50, -50), Rotation = canRotation };
         trashCan.AddChild(new Area2D { Name = "TrashCanInside" });
         if (wirePath) { trashCan.Set("_movementPath", path); }
         trashCan.Set("_movementSpeed", speed);
