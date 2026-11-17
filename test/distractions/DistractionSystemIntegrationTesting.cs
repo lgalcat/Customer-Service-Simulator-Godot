@@ -4,7 +4,7 @@ using static GdUnit4.Assertions;
 using System.Linq;
 using System.Threading.Tasks;
 
-// Integration suite: the real distraction_manager.tscn against all four real minigame scenes via
+// Integration suite: the real distraction_manager.tscn against all five real minigame scenes via
 // DistractionFactory.CreateDefault() (InitialFactory left unset) - the end-to-end path nothing
 // else in the suite drives, which is exactly what let the now-removed OwnHostControl self-hosting
 // seam ship a real runtime crash past a full test-green run
@@ -23,6 +23,7 @@ public class DistractionSystemIntegrationTesting
     [TestCase(DistractionType.FlySwatter)]
     [TestCase(DistractionType.Solitaire)]
     [TestCase(DistractionType.Platformer)]
+    [TestCase(DistractionType.Minesweeper)]
     public async Task RequestDistractionHostsAndTearsDownRealMinigame(DistractionType type)
     {
         await RunFullCycle(type);

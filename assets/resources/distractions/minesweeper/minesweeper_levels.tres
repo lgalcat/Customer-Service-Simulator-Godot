@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="MinesweeperLevelCatalog" format=3 uid="uid://cywlu6mre4tp3"]
+
+[ext_resource type="Script" uid="uid://cu3n6iodx67qh" path="res://assets/scripts/distractions/minesweeper/MinesweeperLevelCatalog.cs" id="1_catalog"]
+[ext_resource type="Script" uid="uid://coxuq6l2dhnte" path="res://assets/scripts/distractions/minesweeper/MinesweeperLevelEntry.cs" id="2_entry"]
+[ext_resource type="Resource" uid="uid://2ydeoj0ydvdd" path="res://assets/resources/distractions/minesweeper/minesweeper_level_9x9.tres" id="3_9x9"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/minesweeper/minesweeper_level_12x12.tres" id="4_12x12"]
+[ext_resource type="Resource" path="res://assets/resources/distractions/minesweeper/minesweeper_level_16x16.tres" id="5_16x16"]
+
+[sub_resource type="Resource" id="Resource_9x9"]
+script = ExtResource("2_entry")
+Level = ExtResource("3_9x9")
+MaxDifficulty = 4
+
+[sub_resource type="Resource" id="Resource_12x12"]
+script = ExtResource("2_entry")
+Level = ExtResource("4_12x12")
+MinDifficulty = 3
+MaxDifficulty = 5
+
+[sub_resource type="Resource" id="Resource_16x16"]
+script = ExtResource("2_entry")
+Level = ExtResource("5_16x16")
+MinDifficulty = 5
+MaxDifficulty = 6
+
+[resource]
+script = ExtResource("1_catalog")
+Entries = Array[ExtResource("2_entry")]([SubResource("Resource_9x9"), SubResource("Resource_12x12"), SubResource("Resource_16x16")])

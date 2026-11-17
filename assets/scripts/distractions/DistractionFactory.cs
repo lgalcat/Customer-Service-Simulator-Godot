@@ -50,6 +50,7 @@ public class DistractionFactory
             { DistractionType.FlySwatter, GD.Load<PackedScene>("res://assets/scenes/distractions/fly_swatter/fly_swatter.tscn") },
             { DistractionType.Solitaire, GD.Load<PackedScene>("res://assets/scenes/distractions/solitaire/solitaire.tscn") },
             { DistractionType.Platformer, GD.Load<PackedScene>("res://assets/scenes/distractions/platformer/platformer.tscn") },
+            { DistractionType.Minesweeper, GD.Load<PackedScene>("res://assets/scenes/distractions/minesweeper/minesweeper.tscn") },
         };
         return new DistractionFactory(scenes);
     }

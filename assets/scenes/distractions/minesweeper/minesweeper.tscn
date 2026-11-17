@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://c6h5s116w722f"]
+
+[ext_resource type="Script" uid="uid://kssopmq10uye" path="res://assets/scripts/distractions/minesweeper/Minesweeper.cs" id="1_root"]
+[ext_resource type="Script" uid="uid://1xpcnlksyvlq" path="res://assets/scripts/distractions/minesweeper/MinesweeperBoard.cs" id="2_board"]
+[ext_resource type="TileSet" uid="uid://bvtp20yjrt6fp" path="res://assets/resources/distractions/minesweeper/minesweeper_tiles_wip.tres" id="3_tiles"]
+[ext_resource type="Resource" uid="uid://cywlu6mre4tp3" path="res://assets/resources/distractions/minesweeper/minesweeper_levels.tres" id="4_levels"]
+
+[node name="Minesweeper" type="Node" unique_id=1584818851]
+script = ExtResource("1_root")
+_levelCatalog = ExtResource("4_levels")
+
+[node name="Stage" type="Node2D" parent="." unique_id=1106329376]
+position = Vector2(80, 88)
+
+[node name="Background" type="ColorRect" parent="Stage" unique_id=1880071507]
+offset_left = -80.0
+offset_top = -88.0
+offset_right = 80.0
+offset_bottom = 88.0
+mouse_filter = 2
+color = Color(0.32, 0.33, 0.38, 1)
+
+[node name="MinesCounter" type="Label" parent="Stage" unique_id=2090141300]
+offset_left = -72.0
+offset_top = -80.0
+offset_right = 72.0
+offset_bottom = -64.0
+theme_override_font_sizes/font_size = 12
+text = "10"
+vertical_alignment = 1
+
+[node name="Board" type="TileMapLayer" parent="Stage" unique_id=947364896]
+position = Vector2(-72, -64)
+tile_set = ExtResource("3_tiles")
+script = ExtResource("2_board")

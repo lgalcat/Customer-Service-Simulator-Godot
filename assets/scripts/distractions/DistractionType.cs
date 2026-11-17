@@ -7,4 +7,5 @@ public enum DistractionType
     FlySwatter,
     Solitaire,
     Platformer,
+    Minesweeper,
 }

@@ -130,7 +130,7 @@ public class DistractionFactoryTesting
     // (actually requesting/completing each one through a live DistractionManager) lives in
     // DistractionSystemIntegrationTesting
     [TestCase]
-    public void CreateDefaultMapsAllFourDistractionTypes()
+    public void CreateDefaultMapsEveryDistractionType()
     {
         DistractionFactory factory = DistractionFactory.CreateDefault();
 

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MinesweeperLevel" format=3 uid="uid://2ydeoj0ydvdd"]
+
+[ext_resource type="Script" uid="uid://clt7x830s4pla" path="res://assets/scripts/distractions/minesweeper/MinesweeperLevel.cs" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+MaxMines = 16
