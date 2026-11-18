@@ -22,12 +22,11 @@ color = Color(0.32, 0.33, 0.38, 1)
 
 [node name="MinesCounter" type="Label" parent="Stage" unique_id=2090141300]
 offset_left = -72.0
-offset_top = -80.0
+offset_top = -85.0
 offset_right = 72.0
-offset_bottom = -64.0
+offset_bottom = -68.0
 theme_override_font_sizes/font_size = 12
 text = "10"
-vertical_alignment = 1
 
 [node name="Board" type="TileMapLayer" parent="Stage" unique_id=947364896]
 position = Vector2(-72, -64)

@@ -25,4 +25,4 @@ MaxDifficulty = 6
 
 [resource]
 script = ExtResource("1_catalog")
-Entries = Array[ExtResource("2_entry")]([SubResource("Resource_9x9"), SubResource("Resource_12x12"), SubResource("Resource_16x16")])
+Entries = [SubResource("Resource_9x9"), SubResource("Resource_12x12"), SubResource("Resource_16x16")]

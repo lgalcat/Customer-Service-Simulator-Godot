@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SolitaireBoard" format=3]
+
+[ext_resource type="Script" path="res://assets/scripts/distractions/solitaire/SolitaireBoard.cs" id="1_board"]
+
+[resource]
+script = ExtResource("1_board")
+Tableau2 = "| 9S 8H"
+Tableau3 = "KH QH | KS QD JC 10H 9C"
+Tableau6 = "| KD QC JH 10C 9H 8C 7H 6C"
+HeartsHeight = 5
+DiamondsHeight = 10
+ClubsHeight = 5
+SpadesHeight = 8
+Stock = "QS 7C 10S 6H JS"
+Waste = "KC JD"
